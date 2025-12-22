@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DJ | My Space</title>
+    <title>DJ | Earendel</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
@@ -12,8 +12,22 @@
             --glass-border: rgba(255, 255, 255, 0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: none; }
-        body { background: #000; color: #fff; font-family: sans-serif; overflow-x: hidden; height: 300vh; }
+        /* FIX: Changed touch-action from none to pan-y to allow mobile scrolling */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            touch-action: pan-y; 
+        }
+
+        body { 
+            background: #000; 
+            color: #fff; 
+            font-family: sans-serif; 
+            overflow-x: hidden; 
+            height: 400vh; /* Slightly increased for better mobile feel */
+        }
+
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
 
         section {
@@ -125,7 +139,7 @@
 
         const smallStars = addStars(6000, 0.2, 160, 160);
         const bigStars = addStars(400, 1.2, 140, 140); 
-        const megaStars = addStars(80, 4.5, 120, 120); // MASSIVE COLOURFUL STARS
+        const megaStars = addStars(80, 4.5, 120, 120);
         scene.add(smallStars, bigStars, megaStars);
 
         const showers = [];
@@ -153,7 +167,10 @@
 
         camera.position.z = 12;
         let tX = 0, tY = 0;
-        window.addEventListener('pointermove', (e) => { tX = (e.clientX/window.innerWidth-0.5); tY = (e.clientY/window.innerHeight-0.5); });
+        window.addEventListener('pointermove', (e) => { 
+            tX = (e.clientX/window.innerWidth-0.5); 
+            tY = (e.clientY/window.innerHeight-0.5); 
+        });
 
         function animate() {
             requestAnimationFrame(animate);
@@ -185,7 +202,9 @@
             voyager.visible = scroll > 0.1;
 
             document.querySelectorAll('section').forEach(s => {
-                if(s.getBoundingClientRect().top < window.innerHeight*0.8) s.classList.add('active');
+                const rect = s.getBoundingClientRect();
+                if(rect.top < window.innerHeight*0.8) s.classList.add('active');
+                else s.classList.remove('active'); // Added to allow re-triggering
             });
             renderer.render(scene, camera);
         }
