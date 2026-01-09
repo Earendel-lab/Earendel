@@ -12,7 +12,6 @@
             --glass-border: rgba(255, 255, 255, 0.15);
         }
 
-        /* FIX: Changed touch-action from none to pan-y to allow mobile scrolling */
         * { 
             margin: 0; 
             padding: 0; 
@@ -23,9 +22,9 @@
         body { 
             background: #000; 
             color: #fff; 
-            font-family: sans-serif; 
+            font-family: 'Inter', sans-serif; 
             overflow-x: hidden; 
-            height: 400vh; /* Slightly increased for better mobile feel */
+            height: 500vh; 
         }
 
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
@@ -54,14 +53,40 @@
             text-align: center;
         }
 
-        h1, h2 { font-size: clamp(2rem, 7vw, 4rem); font-weight: 800; margin-bottom: 15px; }
-        p { font-size: clamp(1rem, 2.5vw, 1.2rem); color: #ddd; line-height: 1.6; margin-bottom: 20px; }
+        h1, h2, h3 { font-size: clamp(2rem, 7vw, 4rem); font-weight: 800; margin-bottom: 15px; }
+        p { font-size: clamp(1rem, 2.5vw, 1.1rem); color: #ccc; line-height: 1.6; margin-bottom: 20px; }
+        
         .pill { display: inline-block; background: var(--accent-red); color: #fff; padding: 5px 15px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
 
-        .contact-pill { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); padding: 10px 20px; border-radius: 50px; margin: 8px; display: inline-block; text-decoration: none; color: white; }
-        .label { font-size: 0.6rem; color: #aaa; display: block; }
-        .value { font-size: 1.1rem; font-weight: bold; }
-        .red-alert { color: var(--accent-red); font-weight: bold; margin-top: 20px; }
+        /* Project Links Styling */
+        .project-list { text-align: left; margin: 20px 0; }
+        .project-item { 
+            display: block; 
+            text-decoration: none; 
+            color: #fff; 
+            padding: 15px; 
+            border-bottom: 1px solid var(--glass-border); 
+            transition: 0.3s;
+        }
+        .project-item:hover { background: rgba(255,255,255,0.05); }
+        .project-name { font-weight: bold; color: var(--accent-red); display: block; }
+        .project-desc { font-size: 0.9rem; color: #aaa; }
+
+        .contact-pill { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--glass-border); 
+            padding: 12px 20px; 
+            border-radius: 50px; 
+            margin: 8px; 
+            display: inline-block; 
+            text-decoration: none; 
+            color: white; 
+            transition: 0.3s;
+        }
+        .contact-pill:hover { background: var(--glass-border); }
+        .label { font-size: 0.6rem; color: #aaa; display: block; text-transform: uppercase; }
+        .value { font-size: 1rem; font-weight: bold; }
+        .red-alert { color: var(--accent-red); font-size: 0.8rem; font-weight: bold; margin-top: 20px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -71,23 +96,59 @@
             <div class="glass-box">
                 <span class="pill">Who I Am</span>
                 <h1>I hunt bugs.</h1>
-                <p>I love the <b>Cosmos</b> and tech. I find the mistakes in apps that others miss. I make your projects work perfectly.</p>
+                <p>I find mistakes in apps that others miss. I make your projects work perfectly through rigorous testing and <b>precision</b>.</p>
             </div>
         </section>
+
         <section>
             <div class="glass-box">
-                <span class="pill">My Dream</span>
+                <span class="pill">Design DNA</span>
+                <h2>Minimalism.</h2>
+                <p>I love <b>Minimalism</b>. I build apps that are clean, fast, and focused. No clutter, just flow.</p>
+            </div>
+        </section>
+
+        <section>
+            <div class="glass-box">
+                <span class="pill">Lab Work</span>
+                <h2>My Projects.</h2>
+                <div class="project-list">
+                    <a href="https://github.com/Earendel-lab/Currency" class="project-item">
+                        <span class="project-name">Currency</span>
+                        <span class="project-desc">Minimalist converter inspired by Nothing OS.</span>
+                    </a>
+                    <a href="https://github.com/Earendel-lab/Lumina" class="project-item">
+                        <span class="project-name">Lumina</span>
+                        <span class="project-desc">Privacy-first Material 3 utility for light and strobes.</span>
+                    </a>
+                    <a href="https://github.com/Earendel-lab/Flow" class="project-item">
+                        <span class="project-name">Flow</span>
+                        <span class="project-desc">A Pomodoro web app designed to flow with time.</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="glass-box">
+                <span class="pill">The Vision</span>
                 <h2>Project Starshot.</h2>
-                <p>I want to live to see the launch of <b>Project Starshot</b>. Until then, I spend my time exploring code and hunting glitches.</p>
+                <p>I dream of seeing the launch of <b>Project Starshot</b>. I spend my time exploring the <b>Cosmos</b> through code.</p>
             </div>
         </section>
+
         <section>
             <div class="glass-box">
-                <span class="pill">Contact</span>
-                <h2>Send me your project.</h2>
-                <p>Building an app? Send it to me for a test. I will find every bug before your users do.</p>
-                <div class="contact-pill"><span class="label">EMAIL</span><span class="value">zwebuse@gmail.com</span></div>
-                <div class="contact-pill"><span class="label">DISCORD</span><span class="value">dj044680</span></div>
+                <span class="pill">Connect</span>
+                <h2>Let's build.</h2>
+                <p>Building an app? Send it for a test. I find every bug before your users do.</p>
+                
+                <div class="contact-links">
+                    <a href="mailto:zwebuse@gmail.com" class="contact-pill"><span class="label">Email</span><span class="value">zwebuse@gmail.com</span></a>
+                    <a href="https://discord.com/users/dj044680" class="contact-pill"><span class="label">Discord</span><span class="value">dj044680</span></a>
+                    <a href="https://nothing.community/u/D_J" class="contact-pill"><span class="label">Nothing</span><span class="value">@D_J</span></a>
+                </div>
+                
                 <p class="red-alert">🚀 STANDBY FOR LAUNCH... (DM ONLY)</p>
             </div>
         </section>
@@ -199,12 +260,12 @@
             voyager.scale.set(vScale, vScale, vScale);
             voyager.position.x = 3.5 + (tX * 2);
             voyager.position.y = -1 + (-tY * 2) + (scroll * 2.5);
-            voyager.visible = scroll > 0.1;
+            voyager.visible = scroll > 0.05;
 
             document.querySelectorAll('section').forEach(s => {
                 const rect = s.getBoundingClientRect();
                 if(rect.top < window.innerHeight*0.8) s.classList.add('active');
-                else s.classList.remove('active'); // Added to allow re-triggering
+                else s.classList.remove('active');
             });
             renderer.render(scene, camera);
         }
