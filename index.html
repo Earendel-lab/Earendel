@@ -1,266 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DJ | Earendel</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <style>
-        :root {
-            --accent-red: #ff3b30;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>DJ | Earendel Lab</title>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Space+Grotesk:wght@700;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+	
+	<style>
+		:root {
+			--accent: #6366f1;
+			--terminal: #07C12F;
+			--glass: rgba(255, 255, 255, 0.03);
+			--glass-border: rgba(255, 255, 255, 0.08);
+			--text-main: #ffffff;
+			--text-sub: #94a3b8;
+			--radius: 32px;
+		}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: pan-y; scroll-behavior: smooth; }
+		/* --- SELECTION COLOR UPDATE --- */
+		::selection { background: var(--terminal); color: #000; }
+		::-moz-selection { background: var(--terminal); color: #000; }
 
-        body { 
-            background: #000; color: #fff; font-family: 'Inter', sans-serif; 
-            overflow-x: hidden; height: 550vh; 
-        }
+		/* --- CORE SETUP --- */
+		html { scroll-behavior: smooth; }
+		* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+		body { background: #000; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
 
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+		/* --- CUSTOM CURSOR --- */
+		#cursor-dot, #cursor-ring {
+			position: fixed; top: 0; left: 0; width: 8px; height: 8px; background: #fff;
+			border-radius: 50%; pointer-events: none; z-index: 9999;
+		}
+		#cursor-ring {
+			width: 40px; height: 40px; background: transparent; border: 1.5px solid rgba(255,255,255,0.5);
+			transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+		}
+		@media (hover: none) { #cursor-dot, #cursor-ring { display: none; } * { cursor: auto !important; } }
+		@media (hover: hover) { * { cursor: none !important; } }
 
-        header {
-            position: fixed; top: 0; width: 100%; padding: 25px 20px; z-index: 100;
-            display: flex; justify-content: center; gap: clamp(10px, 4vw, 30px);
-            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-        }
+		#bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100vw; height: 100vh; filter: blur(45px); }
 
-        .nav-link {
-            color: #888; text-decoration: none; font-size: 0.65rem; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
-        }
-        .nav-link:hover { color: var(--accent-red); }
+		/* --- TYPOGRAPHY --- */
+		h1, h2 { 
+			font-family: 'Space Grotesk'; font-weight: 900; 
+			background: linear-gradient(135deg, #ffffff 0%, #94a3b8 50%, #ffffff 100%);
+			-webkit-background-clip: text; -webkit-text-fill-color: transparent;
+			background-size: 200% auto; animation: shine 6s linear infinite;
+		}
+		@keyframes shine { to { background-position: 200% center; } }
+		h1 { font-size: clamp(3.5rem, 15vw, 9rem); line-height: 0.85; letter-spacing: -0.05em; margin-bottom: 30px; }
+		h2 { font-size: clamp(2.2rem, 8vw, 4rem); margin-bottom: 40px; }
 
-        section {
-            min-height: 100vh; display: flex; justify-content: center; align-items: center;
-            padding: 20px; opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out;
-        }
-        section.active { opacity: 1; transform: translateY(0); }
+		/* --- TERMINAL --- */
+		.intro-wrapper { font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+		.terminal-text { font-family: 'JetBrains Mono', monospace; color: var(--terminal); text-shadow: 0 0 15px rgba(7, 193, 47, 0.3); }
+		#typewriter::after { content: '_'; animation: blink 1s infinite; }
+		@keyframes blink { 50% { opacity: 0; } }
 
-        .glass-box {
-            background: var(--glass-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border); border-radius: 40px;
-            padding: 40px; max-width: 700px; width: 100%; text-align: center;
-        }
+		/* --- NAVIGATION --- */
+		nav {
+			position: fixed; top: 0; width: 100%; height: 70px; z-index: 1000;
+			display: flex; justify-content: center; align-items: center;
+			background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px); border-bottom: 1px solid var(--glass-border);
+		}
+		.nav-container { width: 100%; max-width: 1200px; display: flex; justify-content: space-between; padding: 0 6%; align-items: center; }
+		.nav-item { color: #fff; text-decoration: none; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; opacity: 0.5; transition: 0.3s; }
+		.nav-item:hover { opacity: 1; color: var(--accent); }
 
-        h1, h2 { font-size: clamp(2rem, 7vw, 4rem); font-weight: 800; margin-bottom: 15px; }
-        p { font-size: clamp(1rem, 2.5vw, 1.1rem); color: #ccc; line-height: 1.6; margin-bottom: 20px; }
-        
-        .pill { display: inline-block; background: var(--accent-red); color: #fff; padding: 5px 15px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 10px; }
+		section { min-height: 100vh; padding: 140px 6% 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+		.container { width: 100%; max-width: 1100px; margin: 0 auto; }
+		.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+		
+		/* --- LAB STACK --- */
+		.tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 20px; }
+		.tech-item { background: var(--glass); border: 1px solid var(--glass-border); padding: 30px 20px; border-radius: 24px; text-align: center; pointer-events: none; }
+		.tech-item i { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: 0.8; }
 
-        .project-list { text-align: left; margin: 20px 0; }
-        .project-item { 
-            display: block; text-decoration: none; color: #fff; padding: 15px; 
-            border-bottom: 1px solid var(--glass-border); transition: 0.3s;
-        }
-        .project-item:hover { background: rgba(255,255,255,0.05); }
-        .project-name { font-weight: bold; color: var(--accent-red); display: block; }
-        .project-desc { font-size: 0.9rem; color: #aaa; }
+		/* --- PROJECT CARDS --- */
+		.project-card { 
+			padding: 45px 35px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); 
+			text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px;
+			transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		.project-card:hover { border-color: #fff; transform: translateY(-10px); background: rgba(255,255,255,0.06); }
 
-        .contact-links { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
-        .contact-pill { 
-            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); 
-            padding: 12px 20px; border-radius: 50px; margin: 8px; 
-            display: inline-block; text-decoration: none; color: white; transition: 0.3s;
-            text-align: left; min-width: 160px; cursor: pointer;
-        }
-        .contact-pill:hover { background: var(--glass-border); transform: scale(1.05); }
-        .label { font-size: 0.6rem; color: #aaa; display: block; text-transform: uppercase; }
-        .value { font-size: 0.9rem; font-weight: bold; }
+		/* --- CONTACT ACTION BOX --- */
+		.action-box { background: #ffffff; color: #000; padding: 80px 40px; border-radius: var(--radius); text-align: center; }
+		.btn { padding: 18px 36px; border-radius: 100px; background: #000; color: #fff; font-weight: 800; text-decoration: none; display: inline-block; text-transform: uppercase; font-size: 0.75rem; border:none; transition: 0.3s; }
+		.btn:hover { background: var(--accent); }
 
-        footer { text-align: center; padding: 60px 20px; color: #444; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; }
-        .heart { color: var(--accent-red); }
+		#popup { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #000; color: #fff; padding: 15px 30px; border-radius: 100px; font-weight: 800; z-index: 2000; transition: 0.5s; }
+		#popup.show { bottom: 40px; }
 
-        #copy-toast {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--accent-red); color: white; padding: 10px 20px;
-            border-radius: 50px; font-size: 0.8rem; font-weight: bold; opacity: 0; transition: 0.3s; z-index: 1000;
-        }
-    </style>
+		.fade-in { opacity: 0; transform: translateY(30px); transition: 1s cubic-bezier(0.16, 1, 0.3, 1); }
+		.fade-in.visible { opacity: 1; transform: translateY(0); }
+		footer { padding: 80px 0; text-align: center; color: var(--text-sub); font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; }
+	</style>
 </head>
 <body>
-    <canvas id="bg-canvas"></canvas>
-    <div id="copy-toast">Email copied!</div>
 
-    <header>
-        <a href="#about" class="nav-link">About</a>
-        <a href="#design" class="nav-link">Design</a>
-        <a href="#projects" class="nav-link">Work</a>
-        <a href="#vision" class="nav-link">Vision</a>
-        <a href="#contact" class="nav-link">Connect</a>
-    </header>
+	<div id="cursor-dot"></div>
+	<div id="cursor-ring"></div>
+	<canvas id="bg-canvas"></canvas>
+	<div id="popup">SIGNAL COPIED</div>
 
-    <main>
-        <section id="about" class="active">
-            <div class="glass-box">
-                <span class="pill">Who I Am</span>
-                <h1>I hunt bugs.</h1>
-                <p>I find mistakes in apps that others miss. I make your projects work perfectly through rigorous testing and <b>precision</b>.</p>
-                <p>Open-source contributor and non-coder enthusiast. I explore the <b>Cosmos</b> and enhance projects.</p>
-            </div>
-        </section>
+	<nav>
+		<div class="nav-container">
+			<div style="font-family:'Space Grotesk'; font-weight:900;">EARENDEL LAB</div>
+			<div style="display:flex; gap:20px;">
+				<a href="#home" class="nav-item">Home</a>
+				<a href="#work" class="nav-item">Lab</a>
+				<a href="#starshot" class="nav-item">Vision</a>
+				<a href="#contact" class="nav-item">Contact</a>
+			</div>
+		</div>
+	</nav>
 
-        <section id="design">
-            <div class="glass-box">
-                <span class="pill">Design DNA</span>
-                <h2>Minimalism.</h2>
-                <p>I love <b>Minimalism</b>. I build apps that are clean, fast, and focused. No clutter, just flow.</p>
-            </div>
-        </section>
+	<main>
+		<section id="home">
+			<div class="container">
+				<div class="intro-wrapper fade-in">
+					<span style="font-family:'Space Grotesk'; color:#fff;">Hey, I am</span>
+					<span class="terminal-text" id="typewriter"></span>
+				</div>
+				<p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px;" class="fade-in">The cosmos exists; I wonder how.🌀</p>
+				<h1 class="fade-in">LOGIC<br>ARCHITECT</h1>
+			</div>
+		</section>
 
-        <section id="projects">
-            <div class="glass-box">
-                <span class="pill">Lab Work</span>
-                <h2>My Projects.</h2>
-                <div class="project-list">
-                    <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-item"><span class="project-name">Currency</span><span class="project-desc">Minimalist converter inspired by Nothing OS.</span></a>
-                    <a href="https://github.com/Earendel-lab/Lumina" target="_blank" class="project-item"><span class="project-name">Lumina</span><span class="project-desc">Privacy-first Material 3 utility.</span></a>
-                    <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-item"><span class="project-name">Flow</span><span class="project-desc">A Pomodoro web app.</span></a>
-                </div>
-            </div>
-        </section>
+		<section id="stack">
+			<div class="container fade-in">
+				<h2 style="font-size: 2rem; margin-bottom: 20px;">LAB STACK</h2>
+				<div class="tech-grid">
+					<div class="tech-item"><i class="devicon-java-plain"></i><span>Java</span></div>
+					<div class="tech-item"><i class="devicon-androidstudio-plain"></i><span>Android</span></div>
+					<div class="tech-item"><i class="devicon-git-plain"></i><span>Git</span></div>
+					<div class="tech-item"><i class="devicon-vscode-plain"></i><span>VS Code</span></div>
+					<div class="tech-item"><i class="devicon-html5-plain"></i><span>HTML5</span></div>
+				</div>
+			</div>
+		</section>
 
-        <section id="vision">
-            <div class="glass-box">
-                <span class="pill">The Vision</span>
-                <h2>Project Starshot.</h2>
-                <p>I dream of seeing the success of <b>Project Starshot</b> as it travels to <b>Proxima Centauri</b> at <b>20% the speed of light</b>.</p>
-                <p>I look forward to seeing the resulting <b>data and images</b> it sends back as I explore the <b>Cosmos</b> through code.</p>
-            </div>
-        </section>
+		<section id="work">
+			<div class="container">
+				<h2 class="fade-in">LAB OUTPUT</h2>
+				<div class="grid">
+					<a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-card fade-in reactive">
+						<div><h3>Currency</h3><p style="color:var(--text-sub); margin-top:10px;">Minimalist Nothing-OS aesthetic converter.</p></div>
+						<div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
+					</a>
+					<a href="https://github.com/Earendel-lab/Lumina" target="_blank" class="project-card fade-in reactive">
+						<div><h3>Lumina</h3><p style="color:var(--text-sub); margin-top:10px;">Modern Android brightness and system utility.</p></div>
+						<div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
+					</a>
+					<a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-card fade-in reactive">
+						<div><h3>Flow</h3><p style="color:var(--text-sub); margin-top:10px;">Countdown timer focused on deep work flow.</p></div>
+						<div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
+					</a>
+				</div>
+			</div>
+		</section>
 
-        <section id="contact">
-            <div class="glass-box">
-                <span class="pill">Connect</span>
-                <h2>Let's build.</h2>
-                <div class="contact-links">
-                    <div class="contact-pill" onclick="copyEmail('zwebuse@gmail.com')"><span class="label">Email (Tap to Copy)</span><span class="value">zwebuse@gmail.com</span></div>
-                    <a href="https://github.com/Earendel-lab" target="_blank" class="contact-pill"><span class="label">GitHub</span><span class="value">Earendel-lab</span></a>
-                    <a href="https://discord.com/users/dj044680" target="_blank" class="contact-pill"><span class="label">Discord</span><span class="value">dj044680</span></a>
-                    <a href="https://nothing.community/u/D_J" target="_blank" class="contact-pill"><span class="label">Nothing</span><span class="value">@D_J</span></a>
-                </div>
-                <p style="color:var(--accent-red); margin-top:20px; font-weight:bold; letter-spacing:1px;">🚀 STANDBY FOR LAUNCH... (DM ONLY)</p>
-            </div>
-        </section>
-    </main>
+		<section id="starshot">
+			<div class="container" style="text-align: center;">
+				<h2 class="fade-in">PROJECT STARSHOT</h2>
+				<p class="fade-in" style="font-size: 1.4rem; color: var(--text-sub); max-width: 900px; margin: 0 auto; line-height: 1.8;">
+					I dream of seeing the success of <b>Project Starshot</b> as it travels to <b>Proxima Centauri</b> at 20% the speed of light.
+					<br><br>
+					I look forward to seeing the resulting <b>data and images</b> it sends back as I explore the <b>Cosmos</b> through code.
+				</p>
+			</div>
+		</section>
 
-    <footer><p>© 2026 DJ-Earendel • Made with <span class="heart">❤</span> using HTML, CSS & JS</p></footer>
+		<section id="contact">
+			<div class="container">
+				<div class="action-box fade-in">
+					<h2 style="background: linear-gradient(135deg, #000 0%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INITIATE AUDIT</h2>
+					<div style="display:flex; gap:15px; justify-content:center; margin-top:30px; flex-wrap: wrap;">
+						<button class="btn reactive" onclick="copyMail()">Copy Email</button>
+						<a href="https://github.com/Earendel-lab" target="_blank" class="btn reactive" style="background:#333;">GitHub</a>
+						<a href="https://discord.com/users/dj044680" target="_blank" class="btn reactive" style="background:#5865f2;">Discord</a>
+					</div>
+				</div>
+				<footer>© 2026 EARENDEL LAB</footer>
+			</div>
+		</section>
+	</main>
 
-    <script>
-        function copyEmail(email) {
-            navigator.clipboard.writeText(email).then(() => {
-                const toast = document.getElementById('copy-toast');
-                toast.style.opacity = '1';
-                setTimeout(() => { toast.style.opacity = '0'; }, 2000);
-            });
-        }
+	<script>
+		/* --- CURSOR SCRIPT --- */
+		const dot = document.getElementById('cursor-dot');
+		const ring = document.getElementById('cursor-ring');
+		document.addEventListener('mousemove', (e) => {
+			dot.style.transform = `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
+			ring.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+		});
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true, alpha: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+		document.querySelectorAll('.reactive, .nav-item').forEach(el => {
+			el.addEventListener('mouseenter', () => {
+				ring.style.width = '60px'; ring.style.height = '60px';
+				ring.style.transform = `translate(${event.clientX - 30}px, ${event.clientY - 30}px)`;
+				ring.style.borderColor = '#07C12F'; ring.style.background = 'rgba(7, 193, 47, 0.1)';
+			});
+			el.addEventListener('mouseleave', () => {
+				ring.style.width = '40px'; ring.style.height = '40px';
+				ring.style.borderColor = 'rgba(255,255,255,0.5)'; ring.style.background = 'transparent';
+			});
+		});
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-        const pointLight = new THREE.PointLight(0xffffff, 2.5);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
+		/* --- TYPING LOGIC --- */
+		const words = ["DJ", "Earendel"];
+		const el = document.getElementById('typewriter');
+		let wordIdx = 0, charIdx = 0, isDeleting = false;
+		function type() {
+			const current = words[wordIdx];
+			el.textContent = isDeleting ? current.substring(0, charIdx - 1) : current.substring(0, charIdx + 1);
+			charIdx = isDeleting ? charIdx - 1 : charIdx + 1;
+			let speed = isDeleting ? 80 : 150;
+			if (!isDeleting && charIdx === current.length) { speed = 2000; isDeleting = true; }
+			else if (isDeleting && charIdx === 0) { isDeleting = false; wordIdx = (wordIdx + 1) % words.length; speed = 500; }
+			setTimeout(type, speed);
+		}
+		type();
 
-        function createStarTex() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 128; canvas.height = 128;
-            const ctx = canvas.getContext('2d');
-            const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 60);
-            grad.addColorStop(0, 'rgba(255,255,255,1)');
-            grad.addColorStop(0.2, 'rgba(255,255,255,0.6)');
-            grad.addColorStop(0.5, 'rgba(255,255,255,0.1)');
-            grad.addColorStop(1, 'transparent');
-            ctx.fillStyle = grad; ctx.fillRect(0, 0, 128, 128);
-            return new THREE.CanvasTexture(canvas);
-        }
-        const starTexture = createStarTex();
+		/* --- THREE.JS --- */
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000);
+		camera.position.z = 100;
+		const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true });
+		renderer.setSize(window.innerWidth, window.innerHeight);
 
-        function addStars(count, size, range, spread) {
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            const cols = new Float32Array(count * 3);
-            const palette = [0xff0080, 0x00ffff, 0xffbb00, 0x7b00ff, 0xffffff];
-            for(let i=0; i<count*3; i+=3) {
-                pos[i] = (Math.random()-0.5)*range;
-                pos[i+1] = (Math.random()-0.5)*range;
-                pos[i+2] = (Math.random()-0.5)*spread;
-                const col = new THREE.Color(palette[Math.floor(Math.random()*palette.length)]);
-                cols[i] = col.r; cols[i+1] = col.g; cols[i+2] = col.b;
-            }
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-            geo.setAttribute('color', new THREE.BufferAttribute(cols, 3));
-            return new THREE.Points(geo, new THREE.PointsMaterial({ size, map: starTexture, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
-        }
+		const blobs = [];
+		const fluidGroup = new THREE.Group();
+		const colors = [0x0f172a, 0x1e1b4b, 0x020617, 0x1e3a8a];
+		for(let i=0; i<6; i++) {
+			const mesh = new THREE.Mesh(new THREE.CircleGeometry(15, 64), new THREE.MeshBasicMaterial({ color: colors[i%4], transparent: true, opacity: 0.28 }));
+			mesh.position.set((Math.random()-0.5)*150, (Math.random()-0.5)*150, -20);
+			const s = 4 + Math.random()*6; mesh.scale.set(s,s,1);
+			blobs.push({ mesh, phase: Math.random()*Math.PI*2 });
+			fluidGroup.add(mesh);
+		}
+		scene.add(fluidGroup);
 
-        const smallStars = addStars(6000, 0.2, 160, 160);
-        const bigStars = addStars(400, 1.2, 140, 140); 
-        const megaStars = addStars(80, 4.5, 120, 120);
-        scene.add(smallStars, bigStars, megaStars);
+		const starCount = 600;
+		const starGeo = new THREE.BufferGeometry();
+		const starPos = new Float32Array(starCount * 3);
+		for(let i=0; i<starCount; i++) { starPos[i*3]=(Math.random()-0.5)*1500; starPos[i*3+1]=(Math.random()-0.5)*1500; starPos[i*3+2]=Math.random()*1000; }
+		starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+		const starField = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.9, transparent: true, opacity: 0.7 }));
+		scene.add(starField);
 
-        const showers = [];
-        for(let i=0; i<8; i++) {
-            const g = new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array([0,0,0, 0,0,-12]), 3));
-            const l = new THREE.Line(g, new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
-            scene.add(l);
-            showers.push(l);
-        }
+		let speedMult = 0.4;
+		const visionObs = new IntersectionObserver((entries) => { speedMult = entries[0].isIntersecting ? 25 : 0.4; }, { threshold: 0.1 });
+		visionObs.observe(document.getElementById('starshot'));
 
-        const voyager = new THREE.Group();
-        const metalMat = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 1.0, roughness: 0.1 });
-        const dish = new THREE.Mesh(new THREE.SphereGeometry(1.4, 32, 32, 0, Math.PI*2, 0, 0.4), metalMat);
-        dish.rotation.x = -Math.PI/2;
-        voyager.add(dish);
-        scene.add(voyager);
-        voyager.position.set(3.5, -1, 3);
+		function animate() {
+			requestAnimationFrame(animate);
+			blobs.forEach(b => { b.phase += 0.004; b.mesh.position.y += Math.sin(b.phase)*0.15; b.mesh.position.x += Math.cos(b.phase)*0.08; });
+			const pos = starGeo.attributes.position.array;
+			for(let i=0; i<starCount; i++) { pos[i*3+2]+=speedMult; if(pos[i*3+2]>1000) pos[i*3+2]=0; }
+			starGeo.attributes.position.needsUpdate = true;
+			renderer.render(scene, camera);
+		}
+		animate();
 
-        camera.position.z = 12;
-        let tX = 0, tY = 0;
-        window.addEventListener('pointermove', (e) => { 
-            tX = (e.clientX/window.innerWidth-0.5); 
-            tY = (e.clientY/window.innerHeight-0.5); 
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const scroll = window.scrollY / (document.body.scrollHeight - window.innerHeight);
-            camera.position.z = 12 - (scroll * 9); 
-            
-            smallStars.rotation.y += 0.0004;
-            bigStars.rotation.y += 0.0002;
-            megaStars.rotation.y += 0.0001;
-            
-            showers.forEach(s => {
-                if(s.material.opacity > 0) { s.translateZ(2.5); s.material.opacity -= 0.02; }
-                else if(Math.random() > 0.98) {
-                    s.position.set((Math.random()-0.5)*80, (Math.random()-0.5)*80, -50);
-                    s.lookAt(new THREE.Vector3(s.position.x, s.position.y, 60));
-                    s.material.opacity = 1;
-                }
-            });
-
-            voyager.rotation.y += 0.005;
-            voyager.position.x = 3.5 + (tX * 2);
-            voyager.position.y = -1 + (-tY * 2) + (scroll * 2.5);
-
-            document.querySelectorAll('section').forEach(s => {
-                const rect = s.getBoundingClientRect();
-                if(rect.top < window.innerHeight*0.8) s.classList.add('active');
-            });
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
+		function copyMail() { navigator.clipboard.writeText('zwebuse@gmail.com'); const p = document.getElementById('popup'); p.classList.add('show'); setTimeout(()=>p.classList.remove('show'), 2000); }
+		const reveal = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+		document.querySelectorAll('.fade-in').forEach(el => reveal.observe(el));
+		window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+	</script>
 </body>
 </html>
