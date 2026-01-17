@@ -1,6 +1,7 @@
 index.html linguist-language=Java
 index.html linguist-language=Python
-index.html linguist-language=C++
 index.html linguist-language=Rust
-index.html linguist-language=JavaScript
-index.html linguist-language=CSS
+index.html linguist-language=C++
+index.html linguist-language=TypeScript
+index.html linguist-language=Kotlin
+index.html linguist-language=Go
