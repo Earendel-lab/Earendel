@@ -28,21 +28,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { background: #000; color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
 
-        /* --- STICKY CURSOR CSS --- */
+        /* --- STICKY CURSOR CSS (FIXED FOR VISIBILITY) --- */
         #cursor-dot {
             position: fixed; top: 0; left: 0; width: 6px; height: 6px; 
             background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
             transition: opacity 0.3s ease;
+            mix-blend-mode: difference; /* Inverts color on white backgrounds */
         }
         #cursor-ring {
             position: fixed; top: 0; left: 0; width: 34px; height: 34px; 
-            background: transparent; border: 1.5px solid rgba(255,255,255,0.4);
+            background: transparent; border: 1.5px solid #fff;
             border-radius: 50%; pointer-events: none; z-index: 9999;
             transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
                         height 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
                         margin 0.4s cubic-bezier(0.23, 1, 0.32, 1),
                         border-color 0.5s ease, 
                         background 0.5s ease;
+            mix-blend-mode: difference; /* Inverts color on white backgrounds */
         }
         @media (hover: none) { #cursor-dot, #cursor-ring { display: none; } * { cursor: auto !important; } }
         @media (hover: hover) { * { cursor: none !important; } }
@@ -248,7 +250,7 @@
                 dot.style.opacity = '1';
                 ring.style.width = '34px'; ring.style.height = '34px';
                 ring.style.margin = '0';
-                ring.style.borderColor = 'rgba(255,255,255,0.4)'; ring.style.background = 'transparent';
+                ring.style.borderColor = '#fff'; ring.style.background = 'transparent';
             });
         });
 
