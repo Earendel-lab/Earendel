@@ -1,13 +1,11 @@
-# --- FORCE LANGUAGE DETECTION ---
-# Treat your main file as a mix of high-level logic
+
 index.html linguist-language=Java
 index.html linguist-language=Python
 index.html linguist-language=C++
 
-# Ensure all files in your 'lab' folder are counted
+
 lab/* linguist-detectable=true
 
-# Map the lab files to specific languages for the rainbow effect
 lab/*.java linguist-language=Java
 lab/*.py linguist-language=Python
 lab/*.cpp linguist-language=C++
