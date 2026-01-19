@@ -74,7 +74,7 @@
         /* --- TITLES --- */
         h1, h2 { font-family: 'Space Grotesk'; font-weight: 900; background: linear-gradient(135deg, #ffffff 0%, #94a3b8 50%, #ffffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: shine 6s linear infinite; }
         @keyframes shine { to { background-position: 200% center; } }
-        h1 { font-size: clamp(3.5rem, 15vw, 9rem); line-height: 0.85; letter-spacing: -0.05em; margin-bottom: 30px; }
+        h1 { font-size: clamp(3.5rem, 15vw, 9rem); line-height: 1.1; letter-spacing: -0.05em; margin-bottom: 30px; padding-left: 5px; }
         h2 { font-size: clamp(2.2rem, 8vw, 4rem); margin-bottom: 40px; }
 
         /* --- SECTIONS --- */
@@ -147,7 +147,7 @@
                     <span style="font-family:'JetBrains Mono'; color:var(--terminal);" id="typewriter"></span>
                 </div>
                 <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px;" class="fade-in">The cosmos exists; I wonder how.🌀</p>
-                <h1 class="fade-in">LOGIC<br>ARCHITECT</h1>
+                <h1 class="fade-in">QA ANALYST</h1>
             </div>
         </section>
 
@@ -227,12 +227,15 @@
                         <a href="https://discord.com/users/dj044680" target="_blank" class="btn btn-discord reactive">Discord</a>
                     </div>
                 </div>
-                <footer>© 2026 EARENDEL LAB</footer>
+                <footer>© <span id="year"></span> EARENDEL LAB</footer>
             </div>
         </section>
     </main>
 
     <script>
+        /* --- DYNAMIC YEAR UPDATE --- */
+        document.getElementById('year').textContent = new Date().getFullYear();
+
         /* --- SERVICE WORKER REGISTRATION --- */
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js')
