@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DJ | Earendel Lab</title>
+    <title>DJ|Earendel Lab</title>
     
     <link rel="icon" type="image/jpeg" href="Logo.jpg">
     <link rel="apple-touch-icon" href="Logo.jpg">
@@ -39,6 +39,7 @@
             width: 10px; height: 10px; 
             background: #fff; border-radius: 50%; pointer-events: none; z-index: 10000;
             mix-blend-mode: difference;
+            will-change: transform;
         }
         #cursor-ring {
             position: fixed; top: 0; left: 0; 
@@ -47,6 +48,7 @@
             border-radius: 50%; pointer-events: none; z-index: 9999;
             transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
             mix-blend-mode: difference;
+            will-change: transform;
         }
         
         @media (hover: none) { #cursor-dot, #cursor-ring { display: none; } * { cursor: auto !important; } }
@@ -235,17 +237,18 @@
     </main>
 
     <script>
-        /* --- DYNAMIC YEAR --- */
         document.getElementById('year').textContent = new Date().getFullYear();
 
-        /* --- STATIC CURSOR ENGINE (NO LAG) --- */
+        /* --- STATIC CURSOR (INSTANT FOLLOW) --- */
         const dot = document.getElementById('cursor-dot');
         const ring = document.getElementById('cursor-ring');
 
         window.addEventListener('mousemove', e => {
-            // No lerp, purely static mapping to mouse coordinates
-            dot.style.transform = `translate3d(${e.clientX - 5}px, ${e.clientY - 5}px, 0)`;
-            ring.style.transform = `translate3d(${e.clientX - 21}px, ${e.clientY - 21}px, 0)`;
+            const x = e.clientX;
+            const y = e.clientY;
+            // Immediate positioning without lerp
+            dot.style.transform = `translate3d(${x - 5}px, ${y - 5}px, 0)`;
+            ring.style.transform = `translate3d(${x - 21}px, ${y - 21}px, 0)`;
         });
 
         document.querySelectorAll('.reactive, .nav-item, a, button').forEach(el => {
@@ -261,7 +264,6 @@
             });
         });
 
-        /* --- TYPING --- */
         const words = ["DJ", "Earendel"];
         const typeEl = document.getElementById('typewriter');
         let wIdx = 0, cIdx = 0, isDel = false;
@@ -281,7 +283,7 @@
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 2000);
         camera.position.z = 100;
         const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true, alpha: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         const blobs = [];
@@ -323,7 +325,6 @@
         }
         animate();
 
-        /* --- UI HELPERS --- */
         function copyMail() { 
             navigator.clipboard.writeText('zwebuse@gmail.com'); 
             const p = document.getElementById('popup'); 
