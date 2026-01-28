@@ -23,7 +23,7 @@
 
 ## 📬 Reach Out
 * **Building an app?** Send it to me for a test. I will find every bug.
-* **Discord**: `dj044680` 
+* **Discord**: `Earendel_lab` 
 * **Email**: `zwebuse@gmail.com` 
 
 ---
