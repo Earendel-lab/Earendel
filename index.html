@@ -18,8 +18,8 @@
         :root {
             --accent: #6366f1;
             --terminal: #07C12F;
-            --glass: rgba(255, 255, 255, 0.02);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --text-main: #ffffff;
             --text-sub: #94a3b8;
             --radius: 32px;
@@ -76,16 +76,16 @@
         section { min-height: 100vh; padding: 140px 6% 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .container { width: 100%; max-width: 1100px; margin: 0 auto; }
         
-        /* Permanent Glass Blur - Removed animations for instant load */
-        .glass-card { 
+        /* Unified Heavy Glass Effect */
+        .glass-card, .tech-item, .project-card { 
             background: var(--glass); 
             border: 1px solid var(--glass-border); 
-            padding: 50px 40px; 
-            border-radius: var(--radius); 
-            backdrop-filter: blur(50px) saturate(180%);
-            -webkit-backdrop-filter: blur(50px) saturate(180%);
+            backdrop-filter: blur(50px) saturate(200%);
+            -webkit-backdrop-filter: blur(50px) saturate(200%);
             box-shadow: inset 0 0 40px rgba(255,255,255,0.02);
         }
+
+        .glass-card { padding: 50px 40px; border-radius: var(--radius); }
         .tab-item h4 { color: var(--terminal); font-size: 1.2rem; margin-bottom: 12px; font-family: 'Space Grotesk'; }
         .tab-item p { color: var(--text-sub); line-height: 1.7; font-size: 0.95rem; }
 
@@ -93,10 +93,7 @@
         .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
         .tech-item { 
-            background: var(--glass); border: 1px solid var(--glass-border); 
             padding: 45px 25px; border-radius: 28px; text-align: center; 
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
             transition: 0.3s border-color ease;
         }
         .tech-item i { font-size: 3.2rem; display: block; margin-bottom: 15px; opacity: 0.9; color: #fff; }
@@ -104,10 +101,8 @@
 
         .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
         .project-card { 
-            padding: 45px 35px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); 
+            padding: 45px 35px; border-radius: var(--radius);
             text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px;
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
             transition: 0.4s border-color ease, 0.4s transform cubic-bezier(0.16, 1, 0.3, 1);
         }
         .project-card:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-10px); }
@@ -119,9 +114,6 @@
 
         #popup { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 15px 30px; border-radius: 100px; font-weight: 800; z-index: 2000; transition: 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #popup.show { bottom: 40px; }
-        
-        /* Removed movement animation - Keep content visible immediately */
-        .fade-in { opacity: 1; transform: none; }
         
         footer { padding: 80px 0; text-align: center; color: var(--text-sub); font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; }
 
