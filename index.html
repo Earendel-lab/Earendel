@@ -76,13 +76,14 @@
         section { min-height: 100vh; padding: 140px 6% 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .container { width: 100%; max-width: 1100px; margin: 0 auto; }
         
-        /* Enhanced Glass Depth */
+        /* Permanent Glass Blur - Removed animations for instant load */
         .glass-card { 
             background: var(--glass); 
             border: 1px solid var(--glass-border); 
             padding: 50px 40px; 
             border-radius: var(--radius); 
             backdrop-filter: blur(50px) saturate(180%);
+            -webkit-backdrop-filter: blur(50px) saturate(180%);
             box-shadow: inset 0 0 40px rgba(255,255,255,0.02);
         }
         .tab-item h4 { color: var(--terminal); font-size: 1.2rem; margin-bottom: 12px; font-family: 'Space Grotesk'; }
@@ -94,7 +95,9 @@
         .tech-item { 
             background: var(--glass); border: 1px solid var(--glass-border); 
             padding: 45px 25px; border-radius: 28px; text-align: center; 
-            transition: 0.3s ease; backdrop-filter: blur(30px);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            transition: 0.3s border-color ease;
         }
         .tech-item i { font-size: 3.2rem; display: block; margin-bottom: 15px; opacity: 0.9; color: #fff; }
         .tech-item span { font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; color: var(--text-sub); }
@@ -103,9 +106,11 @@
         .project-card { 
             padding: 45px 35px; border-radius: var(--radius); background: var(--glass); border: 1px solid var(--glass-border); 
             text-decoration: none; color: inherit; display: flex; flex-direction: column; justify-content: space-between; min-height: 320px;
-            transition: 0.5s cubic-bezier(0.16, 1, 0.3, 1); backdrop-filter: blur(40px);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            transition: 0.4s border-color ease, 0.4s transform cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .project-card:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-10px); background: rgba(255,255,255,0.05); }
+        .project-card:hover { border-color: rgba(255,255,255,0.4); transform: translateY(-10px); }
 
         .action-box { background: #ffffff; color: #000; padding: 80px 40px; border-radius: var(--radius); text-align: center; }
         .btn { padding: 18px 36px; border-radius: 100px; font-weight: 800; text-decoration: none; display: inline-block; text-transform: uppercase; font-size: 0.75rem; border:none; transition: 0.3s; cursor: pointer; }
@@ -115,8 +120,8 @@
         #popup { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 15px 30px; border-radius: 100px; font-weight: 800; z-index: 2000; transition: 0.5s; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         #popup.show { bottom: 40px; }
         
-        .fade-in { opacity: 0; transform: translateY(30px); transition: 1s cubic-bezier(0.16, 1, 0.3, 1); }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        /* Removed movement animation - Keep content visible immediately */
+        .fade-in { opacity: 1; transform: none; }
         
         footer { padding: 80px 0; text-align: center; color: var(--text-sub); font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; }
 
@@ -164,17 +169,17 @@
     <main>
         <section id="home">
             <div class="container">
-                <div class="fade-in" style="font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; margin-bottom: 10px;">
+                <div style="font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 700; margin-bottom: 10px;">
                     <span style="font-family:'Space Grotesk'; color:#fff;">Hey, I am</span>
                     <span style="font-family:'JetBrains Mono'; color:var(--terminal);" id="typewriter"></span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px;" class="fade-in">The cosmos exists; I wonder how.🌀</p>
-                <h1 class="fade-in">QA ANALYST</h1>
+                <p style="font-size: 0.8rem; color: var(--accent); letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px;">The cosmos exists; I wonder how.🌀</p>
+                <h1>QA ANALYST</h1>
             </div>
         </section>
 
         <section id="about">
-            <div class="container fade-in">
+            <div class="container">
                 <div class="glass-card">
                     <h2>CORE SCOPE</h2>
                     <div class="scope-grid">
@@ -200,7 +205,7 @@
         </section>
 
         <section id="stack">
-            <div class="container fade-in">
+            <div class="container">
                 <h2 style="font-size: 2rem; margin-bottom: 20px;">LAB STACK</h2>
                 <div class="tech-grid">
                     <div class="tech-item"><i class="devicon-java-plain"></i><span>Java</span></div>
@@ -215,21 +220,21 @@
 
         <section id="work">
             <div class="container">
-                <h2 class="fade-in">LAB OUTPUT</h2>
+                <h2>LAB OUTPUT</h2>
                 <div class="project-grid">
-                    <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-card fade-in reactive">
+                    <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-card reactive">
                         <div><h3>Currency</h3><p style="color:var(--text-sub); margin-top:10px;">Minimalist Nothing-OS aesthetic converter.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
                     </a>
-                    <a href="https://github.com/Earendel-lab/Lumina" target="_blank" class="project-card fade-in reactive">
+                    <a href="https://github.com/Earendel-lab/Lumina" target="_blank" class="project-card reactive">
                         <div><h3>Lumina</h3><p style="color:var(--text-sub); margin-top:10px;">Modern Android brightness utility.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
                     </a>
-                    <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-card fade-in reactive">
+                    <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-card reactive">
                         <div><h3>Flow</h3><p style="color:var(--text-sub); margin-top:10px;">Countdown timer for deep work flow.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
                     </a>
-                    <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-card fade-in reactive">
+                    <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-card reactive">
                         <div><h3>Compass</h3><p style="color:var(--text-sub); margin-top:10px;">Simple and beautiful compass app.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
                     </a>
@@ -239,8 +244,8 @@
 
         <section id="starshot">
             <div class="container" style="text-align: center;">
-                <h2 class="fade-in">PROJECT STARSHOT</h2>
-                <p class="fade-in" style="font-size: 1.4rem; color: var(--text-sub); max-width: 900px; margin: 0 auto; line-height: 1.8;">
+                <h2>PROJECT STARSHOT</h2>
+                <p style="font-size: 1.4rem; color: var(--text-sub); max-width: 900px; margin: 0 auto; line-height: 1.8;">
                     I dream of seeing the success of <b>Project Starshot</b>.
                     <br><br>
                     I look forward to seeing the <b>data and images</b> it sends back as I explore the <b>Cosmos</b> through code.
@@ -250,7 +255,7 @@
 
         <section id="contact">
             <div class="container">
-                <div class="action-box fade-in">
+                <div class="action-box">
                     <h2 style="background: linear-gradient(135deg, #000 0%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INITIATE AUDIT</h2>
                     <div style="display:flex; gap:15px; justify-content:center; margin-top:30px; flex-wrap: wrap;">
                         <button class="btn btn-black reactive" onclick="handleEmail()">Email Me</button>
@@ -312,7 +317,6 @@
         }
         type();
 
-        // --- HEAVY GLASS DEPTH LIQUID ---
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), antialias: true });
@@ -335,44 +339,29 @@
 
                 void main() {
                     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-                    
-                    // Thicker, heavier wave movement
                     float waveX = sin(modelPosition.x * 0.5 + uTime * 0.3) * 0.4;
                     float waveZ = cos(modelPosition.z * 0.5 + uTime * 0.3) * 0.4;
                     float elevation = waveX + waveZ;
-                    
-                    // Magnetic, targeted raise effect
                     float dist = distance(modelPosition.xz, uMouse * 14.0);
                     float ripple = sin(dist * 1.5 - uTime * 1.2) * exp(-dist * 0.35) * 1.2;
-                    
                     elevation += ripple;
                     elevation += sin(uScroll * 0.002 + modelPosition.x * 1.5) * 0.2;
-
                     modelPosition.y += elevation;
                     vElevation = elevation;
-
                     gl_Position = projectionMatrix * viewMatrix * modelPosition;
                 }
             `,
             fragmentShader: `
                 varying float vElevation;
-
                 void main() {
-                    // Deep abyss liquid color
                     float intensity = vElevation * 0.5 + 0.2;
-                    vec3 base = vec3(0.005, 0.005, 0.02); // Darker base
-                    vec3 peak = vec3(0.1, 0.15, 0.35);    // More saturated blue-black
-                    
+                    vec3 base = vec3(0.005, 0.005, 0.02);
+                    vec3 peak = vec3(0.1, 0.15, 0.35);
                     vec3 color = mix(base, peak, intensity);
-                    
-                    // High-end glass reflection glint
                     float glint = smoothstep(0.2, 0.6, vElevation);
                     color += glint * 0.25;
-                    
-                    // Subtle edge darkening for depth perception
                     float vignette = 1.0 - length(gl_FragCoord.xy / vec2(2000.0)) * 0.2;
                     color *= vignette;
-
                     gl_FragColor = vec4(color, 1.0);
                 }
             `
@@ -410,11 +399,6 @@
             }, 1000); 
         }
 
-        const reveal = new IntersectionObserver((entries) => { 
-            entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); 
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.fade-in').forEach(el => reveal.observe(el));
-        
         window.addEventListener('resize', () => { 
             camera.aspect = window.innerWidth/window.innerHeight; 
             camera.updateProjectionMatrix(); 
