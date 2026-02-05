@@ -75,13 +75,17 @@
 
         section { min-height: 100vh; padding: 140px 6% 80px; display: flex; flex-direction: column; justify-content: center; position: relative; }
         .container { width: 100%; max-width: 1100px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        
+        .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
         
         .glass-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 50px 40px; border-radius: var(--radius); backdrop-filter: blur(10px); }
         .tab-item h4 { color: var(--terminal); font-size: 1.2rem; margin-bottom: 12px; font-family: 'Space Grotesk'; }
         .tab-item p { color: var(--text-sub); line-height: 1.7; font-size: 0.95rem; }
 
-        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 24px; }
+        .scope-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+        
+        .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
         .tech-item { 
             background: var(--glass); border: 1px solid var(--glass-border); 
             padding: 45px 25px; border-radius: 28px; text-align: center; 
@@ -110,11 +114,20 @@
         
         footer { padding: 80px 0; text-align: center; color: var(--text-sub); font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; }
 
+        @media (max-width: 1024px) {
+            .scope-grid { grid-template-columns: repeat(2, 1fr); }
+            .tech-grid { grid-template-columns: repeat(3, 1fr); }
+            .project-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
         @media (max-width: 768px) {
             .nav-container { padding: 0 4%; }
             .nav-item { font-size: 0.6rem; gap: 10px; }
             .nav-item:nth-child(4) { display: none; }
             .glass-card { padding: 30px 20px; }
+            .scope-grid { grid-template-columns: 1fr; }
+            .tech-grid { grid-template-columns: repeat(2, 1fr); }
+            .project-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -158,7 +171,7 @@
             <div class="container fade-in">
                 <div class="glass-card">
                     <h2>CORE SCOPE</h2>
-                    <div class="grid">
+                    <div class="scope-grid">
                         <div class="tab-item">
                             <h4>App Testing</h4>
                             <p>Identifying critical logic vulnerabilities and edge-case failures before production. Ensuring bulletproof application stability.</p>
@@ -170,6 +183,10 @@
                         <div class="tab-item">
                             <h4>Logic Audit</h4>
                             <p>Systematic review of UX interaction patterns and backend behavioral consistency to eliminate system errors.</p>
+                        </div>
+                        <div class="tab-item">
+                            <h4>Icon Designing</h4>
+                            <p>Focused on crafting simple and minimal icon designs that enhance user experience through clarity and precision.</p>
                         </div>
                     </div>
                 </div>
@@ -185,6 +202,7 @@
                     <div class="tech-item"><i class="devicon-git-plain"></i><span>Git</span></div>
                     <div class="tech-item"><i class="devicon-vscode-plain"></i><span>VS Code</span></div>
                     <div class="tech-item"><i class="devicon-html5-plain"></i><span>HTML5</span></div>
+                    <div class="tech-item"><i class="devicon-figma-plain"></i><span>Figma</span></div>
                 </div>
             </div>
         </section>
@@ -192,7 +210,7 @@
         <section id="work">
             <div class="container">
                 <h2 class="fade-in">LAB OUTPUT</h2>
-                <div class="grid">
+                <div class="project-grid">
                     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-card fade-in reactive">
                         <div><h3>Currency</h3><p style="color:var(--text-sub); margin-top:10px;">Minimalist Nothing-OS aesthetic converter.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
@@ -204,7 +222,7 @@
                     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-card fade-in reactive">
                         <div><h3>Flow</h3><p style="color:var(--text-sub); margin-top:10px;">Countdown timer for deep work flow.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
-                         </a>
+                    </a>
                     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-card fade-in reactive">
                         <div><h3>Compass</h3><p style="color:var(--text-sub); margin-top:10px;">Simple and beautiful compass app.</p></div>
                         <div style="color:var(--accent); font-weight:800; font-size:0.7rem; margin-top:20px;">VISIT LAB →</div>
@@ -229,7 +247,7 @@
                 <div class="action-box fade-in">
                     <h2 style="background: linear-gradient(135deg, #000 0%, #444 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">INITIATE AUDIT</h2>
                     <div style="display:flex; gap:15px; justify-content:center; margin-top:30px; flex-wrap: wrap;">
-                        <button class="btn btn-black reactive" onclick="copyMail()">Copy Email</button>
+                        <button class="btn btn-black reactive" onclick="handleEmail()">Email Me</button>
                         <a href="https://github.com/Earendel-lab" target="_blank" class="btn btn-black reactive">GitHub</a>
                         <a href="https://discord.com/users/1393491217299275778" target="_blank" class="btn btn-discord reactive">Discord</a>
                     </div>
@@ -288,11 +306,8 @@
         }
         type();
 
-        /* --- FIXED PERSPECTIVE FLOW ENGINE --- */
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-        
-        // Locked Camera Base
         const BASE_Y = 25; 
         const BASE_Z = 60;
         camera.position.set(0, BASE_Y, BASE_Z);
@@ -304,7 +319,7 @@
         const geometry = new THREE.PlaneGeometry(280, 280, 110, 110);
         const material = new THREE.MeshBasicMaterial({ color: 0x1e3a8a, transparent: true, opacity: 0.38 });
         const waveMesh = new THREE.Mesh(geometry, material);
-        waveMesh.rotation.x = -Math.PI / 2; // Perfectly Flat Plane
+        waveMesh.rotation.x = -Math.PI / 2; 
         scene.add(waveMesh);
 
         const starGeo = new THREE.BufferGeometry();
@@ -336,47 +351,39 @@
             currentSpeed += (targetSpeed - currentSpeed) * 0.01;
             time += 0.007 * currentSpeed;
             requestAnimationFrame(animate);
-            
             const pos = geometry.attributes.position;
             for (let i = 0; i < pos.count; i++) {
                 const x = pos.getX(i);
                 const y = pos.getY(i);
-                
-                // Stable Waves
                 const w1 = Math.sin(x * 0.05 + time * 1.0) * 4.5;
                 const w2 = Math.cos(y * 0.08 + time * 0.8) * 4.5;
                 pos.setZ(i, w1 + w2);
             }
             pos.needsUpdate = true;
-
-            // NEW: FIXED PERSPECTIVE LOGIC
-            // Side-wise movement (mouseX) and Up-down slide (mouseY)
-            // We never change camera rotation, only position, to keep the view wide.
             const driftX = Math.sin(time * 0.3) * 15;
             const driftY = Math.cos(time * 0.25) * 5;
-
             camera.position.x += (mouseX + driftX - camera.position.x) * 0.05;
             camera.position.y += (BASE_Y - mouseY + driftY - camera.position.y) * 0.05;
-            
-            // Look slightly ahead to maintain the "wide" ocean feel
             camera.lookAt(0, -10, -20);
-
             stars.rotation.y += 0.0004 * currentSpeed;
             renderer.render(scene, camera);
         }
         animate();
 
-        function copyMail() { 
-            navigator.clipboard.writeText('zwebuse@gmail.com'); 
+        function handleEmail() { 
+            const mail = 'zwebuse@gmail.com';
+            navigator.clipboard.writeText(mail); 
             const p = document.getElementById('popup'); 
             p.classList.add('show'); 
-            setTimeout(()=>p.classList.remove('show'), 2000); 
+            setTimeout(()=> {
+                p.classList.remove('show');
+                window.location.href = `mailto:${mail}`;
+            }, 1000); 
         }
 
         const reveal = new IntersectionObserver((entries) => { 
             entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); 
         }, { threshold: 0.1 });
-        
         document.querySelectorAll('.fade-in').forEach(el => reveal.observe(el));
         
         window.addEventListener('resize', () => { 
@@ -387,6 +394,3 @@
     </script>
 </body>
 </html>
-
-
-
