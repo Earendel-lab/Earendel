@@ -2,7 +2,7 @@ const CACHE_NAME = 'earendel-v1';
 const ASSETS = [
   '/',
   '/index.html',
-  '/Logo.jpg',
+  '/Logo.png',
   '/manifest.json',
   'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
   'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css'
