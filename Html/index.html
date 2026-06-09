@@ -233,12 +233,12 @@ nav{
 section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 @media(max-width:768px){section{padding:var(--s8) var(--s5);}}
 
-.{
+.scope-title{
   font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);
   letter-spacing:var(--tracking-widest);text-transform:uppercase;
   margin-bottom:var(--s5);display:flex;align-items:center;gap:var(--s3);
 }
-.::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
+.scope-title::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
 .sec-h2{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(2.8rem,7vw,6rem);color:var(--ink);
@@ -504,41 +504,25 @@ footer{
 }
 @media(min-width:769px){.proj-list-line{display:block;}}
 
-/* ─── Scroll-Scrub Video Transition ──────────────────────── */
-#svs-section{
-  position:relative;
-  height:300vh;
+.scr-vid-container{
+  position:fixed;inset:0;z-index:-2;
+  display:flex;align-items:center;justify-content:center;
   pointer-events:none;
-  user-select:none;
+  transition:opacity var(--dur-slow) var(--ease-in-out);
 }
-.svs-sticky{
-  position:sticky;
-  top:0;
-  width:100%;
-  height:100vh;
-  overflow:hidden;
-  pointer-events:none;
+[data-theme="light"] .scr-vid-container{opacity:0.12;}
+[data-theme="dark"] .scr-vid-container{opacity:0.85;}
+.scr-vid-container video{
+  width:100%;height:100%;
+  object-fit:cover;
 }
-.svs-blend{
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-}
-/* Light theme: multiply makes white pixels vanish → only dark ink visible */
-[data-theme="light"] .svs-blend{ mix-blend-mode:multiply; }
-/* Dark theme: screen makes black pixels vanish → light ink glows on dark bg */
-[data-theme="dark"]  .svs-blend{ mix-blend-mode:screen; }
-#svs-canvas{
-  display:block;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-}
-/* Invert the video so dark ink becomes light → works with screen blend on dark bg */
-[data-theme="dark"] #svs-canvas{ filter:invert(1); }
 </style>
 </head>
 <body>
+
+<div class="scr-vid-container">
+  <video id="scrollAnimVideo" src="liquid.mp4" playsinline muted preload="auto"></video>
+</div>
 
 <div id="progress"></div>
 <div id="c-ring"></div>
@@ -601,25 +585,6 @@ footer{
   </div>
 </section>
 
-<!-- ── Scroll-Scrub Video Transition ── -->
-<div id="svs-section">
-  <div class="svs-sticky">
-    <!--
-      The video is hidden (offscreen). Canvas renders each frame manually.
-      Keep this MP4 in the same folder as index.html.
-    -->
-    <video id="svs-vid"
-      src="vecteezy_hand-drawn-liquid-wave-fluid-transition-on-alpha-channel_74609827.mp4"
-      playsinline muted preload="auto"
-      style="display:none;visibility:hidden;position:absolute;pointer-events:none;">
-    </video>
-    <!-- blend wrapper – mix-blend-mode applied here so filter on canvas works separately -->
-    <div class="svs-blend">
-      <canvas id="svs-canvas"></canvas>
-    </div>
-  </div>
-</div>
-
 <div class="marquee-wrap">
   <div class="marquee-track">
     <span>App Testing</span><span class="dot">·</span>
@@ -640,7 +605,7 @@ footer{
 </div>
 
 <section id="about">
-  <div class=" reveal">Core Scope</div>
+  <div class="scope-title reveal">Core Scope</div>
   <h2 class="sec-h2 reveal reveal-d1">What I Do</h2>
 
   <div class="bento-grid">
@@ -686,7 +651,7 @@ footer{
 </section>
 
 <section id="work">
-  <div class=" reveal">Lab Output</div>
+  <div class="scope-title reveal">Lab Output</div>
   <h2 class="sec-h2 reveal reveal-d1">Projects</h2>
 
   <div class="proj-header-row reveal reveal-d2">
@@ -721,7 +686,7 @@ footer{
 </section>
 
 <section id="stack">
-  <div class=" reveal">Tech</div>
+  <div class="scope-title reveal">Tech</div>
   <h2 class="sec-h2 reveal reveal-d1">Lab Stack</h2>
   <div class="stack-grid">
 
@@ -798,13 +763,12 @@ footer{
       <span>Figma</span>
     </div>
 
-
   </div>
 </section>
 
 <section id="starshot">
   <div class="vision-inner">
-    <div class=" reveal">Vision — Project Starshot</div>
+    <div class="scope-title reveal">Vision — Project Starshot</div>
     <p class="vision-quote reveal reveal-d1">
       I dream of seeing the success of <em>Project Starshot</em>. I look forward to seeing the data and images it sends back as I explore the <em>Cosmos</em> through code.
     </p>
@@ -814,7 +778,7 @@ footer{
 <section id="contact">
   <div class="contact-grid">
     <div>
-      <div class=" reveal">Contact</div>
+      <div class="scope-title reveal">Contact</div>
       <div class="contact-title reveal reveal-d1">Let's<br>Talk.</div>
       <p class="contact-sub reveal reveal-d2">Open to QA work, collaborations, and interesting problems. The cosmos is vast — let's build something in it.</p>
     </div>
@@ -899,11 +863,28 @@ document.querySelectorAll('.btn').forEach(btn => {
 });
 
 const bar = document.getElementById('progress');
+const animVid = document.getElementById('scrollAnimVideo');
+let targetTime = 0;
+let currentTime = 0;
+
 window.addEventListener('scroll', () => {
   const s = document.documentElement.scrollTop;
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  bar.style.width = (s/h*100)+'%';
+  bar.style.width = (s / h * 100) + '%';
+  
+  if (h > 0 && animVid.duration) {
+    targetTime = (s / h) * animVid.duration;
+  }
 }, {passive:true});
+
+function render() {
+  currentTime += (targetTime - currentTime) * 0.08;
+  if (animVid.duration) {
+    animVid.currentTime = currentTime;
+  }
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
 
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);} });
@@ -931,67 +912,6 @@ function handleEmail(){
   t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
-
-// ─── Scroll-Scrub Video ──────────────────────────────────────────
-(function(){
-  // Bail for users who prefer no motion
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-    var s=document.getElementById('svs-section');
-    if(s) s.style.height='0';
-    return;
-  }
-
-  var section = document.getElementById('svs-section');
-  var vid     = document.getElementById('svs-vid');
-  var canvas  = document.getElementById('svs-canvas');
-  if(!section || !vid || !canvas) return;
-  var ctx = canvas.getContext('2d');
-
-  /* ── 1. Size canvas to match the viewport exactly ── */
-  function svsResize(){
-    canvas.width  = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  svsResize();
-  window.addEventListener('resize', svsResize, {passive:true});
-
-  /* ── 2. Continuous render loop ─────────────────────
-     drawImage() always pulls the latest decoded frame
-     so setting vid.currentTime + this RAF = smooth scrub */
-  (function svsLoop(){
-    requestAnimationFrame(svsLoop);
-    if(vid.readyState < 2) return;            // waiting for data
-    var vw=vid.videoWidth, vh=vid.videoHeight;
-    if(!vw || !vh) return;
-    /* "cover" scale: fill canvas, crop edges */
-    var scale = Math.max(canvas.width/vw, canvas.height/vh);
-    var dw=vw*scale, dh=vh*scale;
-    var dx=(canvas.width-dw)/2, dy=(canvas.height-dh)/2;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(vid, dx, dy, dw, dh);
-  })();
-
-  /* ── 3. Map scroll position → video currentTime ────
-     Progress 0→1 spans the section's "sticky window"
-     (sectionHeight - viewportHeight) pixels of scroll   */
-  function svsOnScroll(){
-    if(!vid.duration) return;
-    var sTop = section.offsetTop;
-    var sH   = section.offsetHeight;   // 300 vh
-    var wH   = window.innerHeight;
-    var progress = Math.max(0, Math.min(1,
-      (window.scrollY - sTop) / (sH - wH)
-    ));
-    vid.currentTime = progress * vid.duration;
-  }
-  window.addEventListener('scroll', svsOnScroll, {passive:true});
-  window.addEventListener('resize', svsOnScroll, {passive:true});
-
-  vid.load();
-  // Initialise position in case page was reloaded mid-scroll
-  vid.addEventListener('loadedmetadata', svsOnScroll, {once:true});
-  svsOnScroll();
-})();
 </script>
 </body>
 </html>
