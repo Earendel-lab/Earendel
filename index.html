@@ -233,12 +233,12 @@ nav{
 section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 @media(max-width:768px){section{padding:var(--s8) var(--s5);}}
 
-.{
+.scope-title{
   font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);
   letter-spacing:var(--tracking-widest);text-transform:uppercase;
   margin-bottom:var(--s5);display:flex;align-items:center;gap:var(--s3);
 }
-.::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
+.scope-title::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
 .sec-h2{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(2.8rem,7vw,6rem);color:var(--ink);
@@ -503,9 +503,26 @@ footer{
   display:none;
 }
 @media(min-width:769px){.proj-list-line{display:block;}}
+
+.scr-vid-container{
+  position:fixed;inset:0;z-index:-2;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+  transition:opacity var(--dur-slow) var(--ease-in-out);
+}
+[data-theme="light"] .scr-vid-container{opacity:0.12;}
+[data-theme="dark"] .scr-vid-container{opacity:0.85;}
+.scr-vid-container video{
+  width:100%;height:100%;
+  object-fit:cover;
+}
 </style>
 </head>
 <body>
+
+<div class="scr-vid-container">
+  <video id="scrollAnimVideo" src="liquid.mp4" playsinline muted preload="auto"></video>
+</div>
 
 <div id="progress"></div>
 <div id="c-ring"></div>
@@ -588,7 +605,7 @@ footer{
 </div>
 
 <section id="about">
-  <div class=" reveal">Core Scope</div>
+  <div class="scope-title reveal">Core Scope</div>
   <h2 class="sec-h2 reveal reveal-d1">What I Do</h2>
 
   <div class="bento-grid">
@@ -634,7 +651,7 @@ footer{
 </section>
 
 <section id="work">
-  <div class=" reveal">Lab Output</div>
+  <div class="scope-title reveal">Lab Output</div>
   <h2 class="sec-h2 reveal reveal-d1">Projects</h2>
 
   <div class="proj-header-row reveal reveal-d2">
@@ -669,7 +686,7 @@ footer{
 </section>
 
 <section id="stack">
-  <div class=" reveal">Tech</div>
+  <div class="scope-title reveal">Tech</div>
   <h2 class="sec-h2 reveal reveal-d1">Lab Stack</h2>
   <div class="stack-grid">
 
@@ -746,13 +763,12 @@ footer{
       <span>Figma</span>
     </div>
 
-
   </div>
 </section>
 
 <section id="starshot">
   <div class="vision-inner">
-    <div class=" reveal">Vision — Project Starshot</div>
+    <div class="scope-title reveal">Vision — Project Starshot</div>
     <p class="vision-quote reveal reveal-d1">
       I dream of seeing the success of <em>Project Starshot</em>. I look forward to seeing the data and images it sends back as I explore the <em>Cosmos</em> through code.
     </p>
@@ -762,7 +778,7 @@ footer{
 <section id="contact">
   <div class="contact-grid">
     <div>
-      <div class=" reveal">Contact</div>
+      <div class="scope-title reveal">Contact</div>
       <div class="contact-title reveal reveal-d1">Let's<br>Talk.</div>
       <p class="contact-sub reveal reveal-d2">Open to QA work, collaborations, and interesting problems. The cosmos is vast — let's build something in it.</p>
     </div>
@@ -847,10 +863,16 @@ document.querySelectorAll('.btn').forEach(btn => {
 });
 
 const bar = document.getElementById('progress');
+const animVid = document.getElementById('scrollAnimVideo');
+
 window.addEventListener('scroll', () => {
   const s = document.documentElement.scrollTop;
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   bar.style.width = (s/h*100)+'%';
+  
+  if (h > 0 && animVid.duration) {
+    animVid.currentTime = (s / h) * animVid.duration;
+  }
 }, {passive:true});
 
 const io = new IntersectionObserver(entries => {
