@@ -233,12 +233,12 @@ nav{
 section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 @media(max-width:768px){section{padding:var(--s8) var(--s5);}}
 
-.{
+.sec-label{
   font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);
   letter-spacing:var(--tracking-widest);text-transform:uppercase;
   margin-bottom:var(--s5);display:flex;align-items:center;gap:var(--s3);
 }
-.::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
+.sec-label::before{content:'';display:inline-block;width:22px;height:1px;background:var(--ink-3);}
 .sec-h2{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(2.8rem,7vw,6rem);color:var(--ink);
@@ -291,16 +291,17 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 .bento-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
 .bento-icon svg{width:18px;height:18px;}
 
+/* ── Projects Section ── */
 #work{padding-bottom:var(--s10);}
 .proj-header-row{
-  display:grid;grid-template-columns:64px 1fr 260px 80px;
+  display:grid;grid-template-columns:72px 1fr 260px 80px;
   padding:var(--s3) var(--s4);border-bottom:1px solid var(--border-hi);gap:var(--s5);
   margin-bottom:4px;
 }
 .proj-col-label{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
 .proj-row{
-  display:grid;grid-template-columns:64px 1fr 260px 80px;
-  padding:26px var(--s4);border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:72px 1fr 260px 80px;
+  padding:20px var(--s4);border-bottom:1px solid var(--border);
   text-decoration:none;color:inherit;align-items:center;gap:var(--s5);
   position:relative;
   border-radius:var(--r-md);
@@ -319,12 +320,31 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
   padding-right:calc(var(--s4) + 10px);
 }
 .proj-row:hover::before{border-color:var(--border-hi);}
-.proj-num{
-  font-family:'DM Mono',monospace;font-size:var(--text-xs);
-  color:var(--proj-num-color);font-weight:400;
-  transition:color var(--dur-mid);
+
+/* ── App Icon in Project Row ── */
+.proj-icon-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.proj-row:hover .proj-num{color:var(--ink-3);}
+.proj-icon-img{
+  width:48px;
+  height:48px;
+  border-radius:var(--r-md);
+  border:1px solid var(--border);
+  object-fit:cover;
+  transition:
+    border-color var(--dur-mid),
+    transform var(--dur-mid) var(--ease-expo),
+    box-shadow var(--dur-mid);
+  flex-shrink:0;
+}
+.proj-row:hover .proj-icon-img{
+  border-color:var(--border-hi);
+  transform:scale(1.08);
+  box-shadow:0 6px 22px rgba(0,0,0,0.28);
+}
+
 .proj-name{
   font-family:'Bebas Neue',sans-serif;
   font-size:clamp(1.7rem,3.8vw,3rem);
@@ -355,37 +375,26 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 @media(max-width:768px){
   .proj-header-row{display:none;}
   .proj-row{
-    grid-template-columns:44px 1fr 44px;
+    display:grid;
+    grid-template-columns:48px 1fr 44px;
+    grid-template-rows:auto auto;
     margin:0;width:100%;
-    padding:20px 12px;
+    padding:18px 12px;
     border-radius:var(--r-md);
+    gap:var(--s3);
+    align-items:start;
   }
   .proj-row:hover{padding-left:18px;padding-right:18px;}
+  .proj-icon-wrap{grid-column:1;grid-row:1/3;align-self:center;}
+  .proj-icon-img{width:38px;height:38px;border-radius:10px;}
+  .proj-name{grid-column:2;grid-row:1;font-size:1.5rem;}
   .proj-desc{
-    display:block;
-    grid-column:2/3;
-    grid-row:2/3;
-    font-size:0.8rem;
-    color:var(--ink-2);
-    margin-top:4px;
-    line-height:1.55;
+    grid-column:2;grid-row:2;
+    display:block;font-size:0.8rem;
+    color:var(--ink-2);margin-top:2px;line-height:1.55;
   }
-  .proj-name-cell{
-    display:flex;flex-direction:column;
-  }
-  .proj-num{font-size:0.7rem;}
+  .proj-arrow{grid-column:3;grid-row:1;font-size:1.2rem;}
   .proj-tag{display:none;}
-}
-
-@media(max-width:768px){
-  .proj-row{
-    grid-template-columns:44px 1fr 44px;
-    grid-template-rows:auto auto;
-  }
-  .proj-num{grid-column:1;grid-row:1;}
-  .proj-name{grid-column:2;grid-row:1;}
-  .proj-desc{grid-column:2;grid-row:2;display:block;font-size:0.8rem;color:var(--ink-2);margin-top:3px;line-height:1.55;}
-  .proj-arrow{grid-column:3;grid-row:1;}
 }
 
 #stack{padding:var(--s10) var(--s7);}
@@ -496,7 +505,7 @@ footer{
 
 .proj-list{position:relative;padding:0 0 var(--s3) 0;}
 .proj-list-line{
-  position:absolute;left:64px;top:0;bottom:0;width:1px;
+  position:absolute;left:72px;top:0;bottom:0;width:1px;
   background:linear-gradient(to bottom, var(--border-hi), transparent);
   pointer-events:none;
   opacity:0.4;
@@ -588,7 +597,7 @@ footer{
 </div>
 
 <section id="about">
-  <div class=" reveal">Core Scope</div>
+  <div class="sec-label reveal">Core Scope</div>
   <h2 class="sec-h2 reveal reveal-d1">What I Do</h2>
 
   <div class="bento-grid">
@@ -634,11 +643,11 @@ footer{
 </section>
 
 <section id="work">
-  <div class=" reveal">Lab Output</div>
+  <div class="sec-label reveal">Lab Output</div>
   <h2 class="sec-h2 reveal reveal-d1">Projects</h2>
 
   <div class="proj-header-row reveal reveal-d2">
-    <span class="proj-col-label">No.</span>
+    <span class="proj-col-label">App</span>
     <span class="proj-col-label">Project</span>
     <span class="proj-col-label">Description</span>
     <span class="proj-col-label" style="text-align:right">Link</span>
@@ -647,34 +656,50 @@ footer{
   <div class="proj-list">
     <div class="proj-list-line"></div>
 
+    <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="proj-row reveal reveal-d2">
-      <span class="proj-num">01</span>
+      <div class="proj-icon-wrap">
+        <img src="Currency.png" alt="Currency" class="proj-icon-img" loading="lazy">
+      </div>
       <span class="proj-name">Currency<span class="proj-tag">Forex</span></span>
       <span class="proj-desc">Minimalist Nothing-OS aesthetic currency converter for Android.</span>
       <span class="proj-arrow">↗</span>
     </a>
+
+    <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="proj-row reveal reveal-d3">
-      <span class="proj-num">02</span>
+      <div class="proj-icon-wrap">
+        <img src="Flow.png" alt="Flow" class="proj-icon-img" loading="lazy">
+      </div>
       <span class="proj-name">Flow<span class="proj-tag">Focus</span></span>
       <span class="proj-desc">Focused countdown timer made for deep work sessions.</span>
       <span class="proj-arrow">↗</span>
     </a>
+
+    <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="proj-row reveal reveal-d4">
-      <span class="proj-num">03</span>
+      <div class="proj-icon-wrap">
+        <img src="Compass.png" alt="Compass" class="proj-icon-img" loading="lazy">
+      </div>
       <span class="proj-name">Compass<span class="proj-tag">Navigation</span></span>
       <span class="proj-desc">Simple, beautiful compass app with a clean minimal interface.</span>
       <span class="proj-arrow">↗</span>
     </a>
+
+    <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="proj-row reveal reveal-d5">
-      <span class="proj-num">04</span>
+      <div class="proj-icon-wrap">
+        <img src="Glyphtorch.png" alt="Glyph Torch" class="proj-icon-img" loading="lazy">
+      </div>
       <span class="proj-name">Glyph Torch<span class="proj-tag">Glyph</span></span>
       <span class="proj-desc">Android app for letting the nothing phone glyphs glow on trigger.</span>
       <span class="proj-arrow">↗</span>
+    </a>
   </div>
 </section>
 
 <section id="stack">
-  <div class=" reveal">Tech</div>
+  <div class="sec-label reveal">Tech</div>
   <h2 class="sec-h2 reveal reveal-d1">Lab Stack</h2>
   <div class="stack-grid">
 
@@ -751,13 +776,12 @@ footer{
       <span>Figma</span>
     </div>
 
-
   </div>
 </section>
 
 <section id="starshot">
   <div class="vision-inner">
-    <div class=" reveal">Vision — Project Starshot</div>
+    <div class="sec-label reveal">Vision — Project Starshot</div>
     <p class="vision-quote reveal reveal-d1">
       I dream of seeing the success of <em>Project Starshot</em>. I look forward to seeing the data and images it sends back as I explore the <em>Cosmos</em> through code.
     </p>
@@ -767,7 +791,7 @@ footer{
 <section id="contact">
   <div class="contact-grid">
     <div>
-      <div class=" reveal">Contact</div>
+      <div class="sec-label reveal">Contact</div>
       <div class="contact-title reveal reveal-d1">Let's<br>Talk.</div>
       <p class="contact-sub reveal reveal-d2">Open to QA work, collaborations, and interesting problems. The cosmos is vast — let's build something in it.</p>
     </div>
