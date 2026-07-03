@@ -69,6 +69,21 @@ body::after{
 
 ::selection{background:var(--ink);color:var(--bg);}
 
+#svg-scroll-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+#scroll-path {
+  transition: stroke-dashoffset 0.1s linear;
+}
+
 #c-ring{
   position:fixed;top:0;left:0;z-index:9998;
   width:38px;height:38px;border-radius:50%;
@@ -125,6 +140,7 @@ nav{
   padding-bottom:var(--s9);
   padding-top:56px;
   position:relative;overflow:hidden;
+  z-index:1;
 }
 #home::before{
   content:'';position:absolute;top:-20%;right:-10%;
@@ -230,7 +246,7 @@ nav{
   .hero-letter{-webkit-text-stroke:1.5px var(--hero-stroke);}
 }
 
-section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
+section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;position:relative;z-index:1;}
 @media(max-width:768px){section{padding:var(--s8) var(--s5);}}
 
 .sec-label{
@@ -250,7 +266,7 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 .reveal.on{opacity:1;transform:translateY(0);}
 .reveal-d1{transition-delay:.07s;}.reveal-d2{transition-delay:.14s;}.reveal-d3{transition-delay:.21s;}.reveal-d4{transition-delay:.28s;}
 
-.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--s3) 0;white-space:nowrap;}
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--s3) 0;white-space:nowrap;position:relative;z-index:1;}
 .marquee-track{display:inline-block;animation:marquee 30s linear infinite;}
 .marquee-track:hover{animation-play-state:paused;}
 .marquee-track span{font-family:'Bebas Neue',sans-serif;font-size:clamp(0.9rem,1.8vw,1.35rem);color:var(--ink-2);letter-spacing:0.05em;padding:0 var(--s5);}
@@ -291,7 +307,6 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 .bento-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
 .bento-icon svg{width:18px;height:18px;}
 
-/* ── Projects Section ── */
 #work{padding-bottom:var(--s10);}
 .proj-header-row{
   display:grid;grid-template-columns:72px 1fr 260px 80px;
@@ -321,7 +336,6 @@ section{padding:var(--s10) var(--s7);max-width:1600px;margin:0 auto;width:100%;}
 }
 .proj-row:hover::before{border-color:var(--border-hi);}
 
-/* ── App Icon in Project Row ── */
 .proj-icon-wrap{
   display:flex;
   align-items:center;
@@ -490,6 +504,7 @@ footer{
   padding:var(--s7) var(--s7);border-top:1px solid var(--border);
   display:flex;justify-content:space-between;align-items:center;
   flex-wrap:wrap;gap:var(--s4);
+  position:relative;z-index:1;
 }
 .footer-copy{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
 
@@ -515,6 +530,12 @@ footer{
 </style>
 </head>
 <body>
+
+<div id="svg-scroll-container">
+  <svg preserveAspectRatio="none" viewBox="0 0 100 100" style="width: 100%; height: 100%;">
+    <path id="scroll-path" d="M 50,0 C 90,20 10,80 50,100" fill="none" stroke="var(--ink-3)" stroke-width="0.3" opacity="0.3" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+</div>
 
 <div id="progress"></div>
 <div id="c-ring"></div>
@@ -656,7 +677,6 @@ footer{
   <div class="proj-list">
     <div class="proj-list-line"></div>
 
-    <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="proj-row reveal reveal-d2">
       <div class="proj-icon-wrap">
         <img src="Currency.png" alt="Currency" class="proj-icon-img" loading="lazy">
@@ -666,7 +686,6 @@ footer{
       <span class="proj-arrow">↗</span>
     </a>
 
-    <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="proj-row reveal reveal-d3">
       <div class="proj-icon-wrap">
         <img src="Flow.png" alt="Flow" class="proj-icon-img" loading="lazy">
@@ -676,7 +695,6 @@ footer{
       <span class="proj-arrow">↗</span>
     </a>
 
-    <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="proj-row reveal reveal-d4">
       <div class="proj-icon-wrap">
         <img src="Compass.png" alt="Compass" class="proj-icon-img" loading="lazy">
@@ -686,7 +704,6 @@ footer{
       <span class="proj-arrow">↗</span>
     </a>
 
-    <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="proj-row reveal reveal-d5">
       <div class="proj-icon-wrap">
         <img src="Glyphtorch.png" alt="Glyph Torch" class="proj-icon-img" loading="lazy">
@@ -908,6 +925,17 @@ function handleEmail(){
   t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
+
+const scrollPath = document.getElementById('scroll-path');
+const pathLen = scrollPath.getTotalLength();
+scrollPath.style.strokeDasharray = pathLen + ' ' + pathLen;
+scrollPath.style.strokeDashoffset = pathLen;
+window.addEventListener('scroll', () => {
+  const scrollPos = document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollMax = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrollPercent = scrollPos / scrollMax;
+  scrollPath.style.strokeDashoffset = pathLen - (pathLen * scrollPercent);
+}, {passive:true});
 </script>
 </body>
 </html>
