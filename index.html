@@ -19,7 +19,7 @@
   --transition: cubic-bezier(0.16,1,0.3,1);
   --transition-smooth: cubic-bezier(0.65,0,0.35,1);
   --transition-bounce: cubic-bezier(0.34,1.56,0.64,1);
-  --speed-fast:160ms;--speed-mid:360ms;--speed-slow:680ms;--speed-xslow:1080ms;
+  --speed-fast:160ms;--speed-mid:360ms;--speed-slow:220ms;--speed-xslow:1080ms;
   --r-sm:6px;--r-md:14px;--r-lg:22px;--r-xl:28px;--r-full:9999px;
   --tracking-tight:-0.02em;--tracking-wide:0.08em;--tracking-wider:0.14em;--tracking-widest:0.2em;
 }
@@ -29,7 +29,7 @@
   --border:rgba(255,255,255,0.065);--border-hi:rgba(255,255,255,0.13);--border-focus:rgba(255,255,255,0.22);
   --ink:#eeeeee;--ink-2:#aaaaaa;--ink-3:#707070;--ink-4:#424242;
   --accent-glow:rgba(238,238,238,0.06);
-  --nav-bg:rgba(8,8,8,0.82);
+  --nav-bg:rgba(8,8,8,0.94);
   --intro-stroke:rgba(255,255,255,0.18);
   --space-vg-invert:0;
   --meta-color: #c8c8c8;
@@ -41,7 +41,7 @@
   --border:rgba(0,0,0,0.065);--border-hi:rgba(0,0,0,0.13);--border-focus:rgba(0,0,0,0.22);
   --ink:#0e0e0e;--ink-2:#4f4f4f;--ink-3:#797979;--ink-4:#b0b0b0;
   --accent-glow:rgba(0,0,0,0.055);
-  --nav-bg:rgba(244,243,239,0.88);
+  --nav-bg:rgba(244,243,239,0.95);
   --intro-stroke:rgba(0,0,0,0.18);
   --space-vg-invert:1;
   --meta-color: #333333;
@@ -52,10 +52,10 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;font-size:16px;}
 body{
-  background:var(--bg);color:var(--ink);
+  background-color:var(--bg);color:var(--ink);
   font-family:'DM Sans',sans-serif;font-weight:300;
   overflow-x:hidden;
-  transition:background var(--speed-slow) var(--transition-smooth),color var(--speed-slow) var(--transition-smooth);
+  transition:background-color var(--speed-slow) var(--transition-smooth),color var(--speed-slow) var(--transition-smooth);
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   line-height:1.6;
 }
@@ -69,30 +69,60 @@ body::after{
 
 ::selection{background:var(--ink);color:var(--bg);}
 
-#c-ring{
-  position:fixed;top:0;left:0;z-index:9998;
-  width:38px;height:38px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,0.32);
-  pointer-events:none;
-  transform:translate(-50%,-50%);
-  transition:width .32s var(--transition),height .32s var(--transition),border-color .28s,opacity .28s;
+/* ── Falling bug background ── */
+.bug-field{
+  position:fixed;inset:0;z-index:-1;
+  overflow:hidden;pointer-events:none;
+}
+.bug{
+  position:absolute;
+  top:-10vh;
+  left:var(--x,50%);
+  font-size:var(--size,20px);
+  opacity:0.2;
+  animation:bugFall linear infinite;
+  animation-duration:var(--dur,18s);
+  animation-delay:var(--delay,0s);
   will-change:transform;
 }
-[data-theme="light"] #c-ring{border-color:rgba(0,0,0,0.28);}
-body.cur-hover #c-ring{width:54px;height:54px;border-color:var(--ink);}
-@media(hover:none){#c-ring{display:none;}}
+.bug-inner{
+  display:inline-block;
+  animation:bugSway ease-in-out infinite alternate;
+  animation-duration:var(--sway-dur,4s);
+  transform:rotate(var(--rot,0deg));
+}
+@keyframes bugFall{
+  from{ transform:translateY(0); }
+  to  { transform:translateY(125vh); }
+}
+@keyframes bugSway{
+  0%{   margin-left:calc(-1 * var(--sway,18px)); }
+  100%{ margin-left:var(--sway,18px); }
+}
 
-#progress{position:fixed;top:0;left:0;z-index:9500;height:1px;width:0%;background:var(--ink);opacity:0.38;transition:width .07s linear;}
+#c-ring{
+  position:fixed;top:0;left:0;z-index:9998;
+  width:34px;height:34px;
+  pointer-events:none;
+  font-size:24px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  transition:font-size .32s var(--transition),opacity .28s;
+  will-change:transform;
+  filter:drop-shadow(0 2px 5px rgba(0,0,0,0.45));
+}
+body.cur-hover #c-ring{font-size:34px;}
+@media(hover:none){#c-ring{display:none;}}
+@media(hover:hover){ html,body,a,button,.project-row,.feature-card,.tech-item,.theme-btn{cursor:none;} }
+
+#progress{position:fixed;top:0;left:0;z-index:9500;height:1px;width:100%;background:var(--ink);opacity:0.38;transform:scaleX(0);transform-origin:0 0;will-change:transform;}
 
 nav{
   position:fixed;top:0;left:0;right:0;z-index:1000;height:56px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 var(--space-7);
   background:var(--nav-bg);
-  backdrop-filter:blur(20px) saturate(170%);
-  -webkit-backdrop-filter:blur(20px) saturate(170%);
   border-bottom:1px solid var(--border);
-  transition:background var(--speed-slow) var(--transition-smooth),border-color var(--speed-slow) var(--transition-smooth);
+  transition:background-color var(--speed-slow) var(--transition-smooth),border-color var(--speed-slow) var(--transition-smooth);
 }
 .nav-left{display:flex;align-items:center;gap:var(--space-3);}
 .nav-logo{width:24px;height:24px;border-radius:5px;object-fit:cover;border:1px solid var(--border-hi);flex-shrink:0;}
@@ -515,8 +545,9 @@ footer{
 </head>
 <body>
 
+<div class="bug-field" id="bugField"></div>
 <div id="progress"></div>
-<div id="c-ring"></div>
+<div id="c-ring">🐛</div>
 <div id="toast">✓ Email copied to clipboard</div>
 
 <nav>
@@ -634,9 +665,9 @@ footer{
 
   <div class="project-header-row fade-in fade-in-d2">
     <span class="project-col-label">App</span>
-    <span class="project-col-label">Project</span>
+    <span class="project-col-label"></span>
     <span class="project-col-label">Description</span>
-    <span class="project-col-label" style="text-align:right">Link</span>
+    <span class="project-col-label" style="text-align:right"></span>
   </div>
 
   <div class="project-list">
@@ -776,7 +807,6 @@ footer{
 <section id="contact">
   <div class="contact-grid">
     <div>
-      <div class="sec-label fade-in">Contact </div>
       <div class="contact-title fade-in fade-in-d1">Let's<br>Talk.</div>
       <p class="contact-sub fade-in fade-in-d2">If you're building something interesting or need another pair of eyes for testing, feel free to get in touch.</p>
     </div>
@@ -794,6 +824,39 @@ footer{
 
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ── Falling bugs ── */
+(function spawnBugs(){
+  const field = document.getElementById('bugField');
+  const COUNT = 14;
+  const SPECIES = ['🐛','🪲','🐞','🕷️','🦗','🐜'];
+  for (let i = 0; i < COUNT; i++) {
+    const bug = document.createElement('div');
+    bug.className = 'bug';
+    const inner = document.createElement('span');
+    inner.className = 'bug-inner';
+    inner.textContent = SPECIES[Math.floor(Math.random() * SPECIES.length)];
+    bug.appendChild(inner);
+
+    const x = Math.random() * 100;               // vw position
+    const size = 14 + Math.random() * 26;         // 14-40px
+    const dur = 12 + Math.random() * 20;          // 12-32s fall
+    const delay = -Math.random() * dur;           // stagger start
+    const rot = -45 + Math.random() * 90;         // -45..45deg tilt
+    const sway = 8 + Math.random() * 55;          // horizontal drift px
+    const swayDur = 2.5 + Math.random() * 4;      // sway speed
+
+    bug.style.setProperty('--x', x + 'vw');
+    bug.style.setProperty('--size', size + 'px');
+    bug.style.setProperty('--dur', dur + 's');
+    bug.style.setProperty('--delay', delay + 's');
+    inner.style.setProperty('--rot', rot + 'deg');
+    inner.style.setProperty('--sway', sway + 'px');
+    inner.style.setProperty('--sway-dur', swayDur + 's');
+
+    field.appendChild(bug);
+  }
+})();
 
 function buildLetterLine(el, text) {
   el.innerHTML = '';
@@ -832,24 +895,39 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 });
 
 const ring = document.getElementById('c-ring');
-let mx=0,my=0,rx=0,ry=0;
-window.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
-(function tickCursor() {
-  rx += (mx-rx)*0.10; ry += (my-ry)*0.10;
-  ring.style.transform = `translate(${rx-19}px,${ry-19}px)`;
-  requestAnimationFrame(tickCursor);
-})();
+let cx = 0, cy = 0, cursorTicking = false;
+function updateCursor(){
+  ring.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
+  cursorTicking = false;
+}
+window.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  if (!cursorTicking) { requestAnimationFrame(updateCursor); cursorTicking = true; }
+}, {passive:true});
 document.querySelectorAll('a,button,.project-row,.feature-card,.tech-item').forEach(el => {
   el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
   el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
 });
 
+let cardTicking = false;
+let pendingCardEvent = null;
 document.querySelectorAll('.feature-card,.tech-item').forEach(card => {
   card.addEventListener('mousemove', e => {
-    const r = card.getBoundingClientRect();
-    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-    card.style.setProperty('--my', ((e.clientY - r.top)  / r.height * 100).toFixed(1) + '%');
-  });
+    pendingCardEvent = { card, clientX: e.clientX, clientY: e.clientY };
+    if (!cardTicking) {
+      requestAnimationFrame(() => {
+        if (pendingCardEvent) {
+          const { card, clientX, clientY } = pendingCardEvent;
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mx', ((clientX - r.left) / r.width * 100).toFixed(1) + '%');
+          card.style.setProperty('--my', ((clientY - r.top)  / r.height * 100).toFixed(1) + '%');
+          pendingCardEvent = null;
+        }
+        cardTicking = false;
+      });
+      cardTicking = true;
+    }
+  }, {passive:true});
 });
 
 document.querySelectorAll('.btn').forEach(btn => {
@@ -861,10 +939,15 @@ document.querySelectorAll('.btn').forEach(btn => {
 });
 
 const bar = document.getElementById('progress');
-window.addEventListener('scroll', () => {
+let scrollTicking = false;
+function updateProgress(){
   const s = document.documentElement.scrollTop;
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-  bar.style.width = (s/h*100)+'%';
+  bar.style.transform = `scaleX(${h > 0 ? s / h : 0})`;
+  scrollTicking = false;
+}
+window.addEventListener('scroll', () => {
+  if (!scrollTicking) { requestAnimationFrame(updateProgress); scrollTicking = true; }
 }, {passive:true});
 
 const io = new IntersectionObserver(entries => {
