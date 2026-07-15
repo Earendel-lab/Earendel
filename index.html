@@ -84,20 +84,24 @@ body::after{
   animation-duration:var(--dur,18s);
   animation-delay:var(--delay,0s);
   will-change:transform;
+  transform:translateZ(0);
 }
 .bug-inner{
   display:inline-block;
-  animation:bugSway ease-in-out infinite alternate;
-  animation-duration:var(--sway-dur,4s);
-  transform:rotate(var(--rot,0deg));
+  animation:bugSway var(--sway-dur,4s) var(--sway-ease, ease-in-out) infinite;
+  animation-delay:var(--delay,0s);
+  transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0);
+  will-change:transform;
+  backface-visibility:hidden;
 }
 @keyframes bugFall{
-  from{ transform:translateY(0); }
-  to  { transform:translateY(125vh); }
+  from{ transform:translateY(0) translateZ(0); }
+  to  { transform:translateY(125vh) translateZ(0); }
 }
 @keyframes bugSway{
-  0%{   margin-left:calc(-1 * var(--sway,18px)); }
-  100%{ margin-left:var(--sway,18px); }
+  0%   { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0); }
+  50%  { transform:rotate(calc(-1 * var(--rot,0deg))) translateX(var(--sway,18px)) translateZ(0); }
+  100% { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0); }
 }
 
 #c-ring{
@@ -830,6 +834,8 @@ document.getElementById('yr').textContent = new Date().getFullYear();
   const field = document.getElementById('bugField');
   const COUNT = 14;
   const SPECIES = ['🐛','🪲','🐞','🕷️','🦗','🐜'];
+  const EASES = ['ease-in-out','cubic-bezier(0.45,0,0.55,1)','cubic-bezier(0.37,0,0.63,1)'];
+
   for (let i = 0; i < COUNT; i++) {
     const bug = document.createElement('div');
     bug.className = 'bug';
@@ -838,13 +844,14 @@ document.getElementById('yr').textContent = new Date().getFullYear();
     inner.textContent = SPECIES[Math.floor(Math.random() * SPECIES.length)];
     bug.appendChild(inner);
 
-    const x = Math.random() * 100;               // vw position
-    const size = 14 + Math.random() * 26;         // 14-40px
-    const dur = 12 + Math.random() * 20;          // 12-32s fall
-    const delay = -Math.random() * dur;           // stagger start
-    const rot = -45 + Math.random() * 90;         // -45..45deg tilt
-    const sway = 8 + Math.random() * 55;          // horizontal drift px
-    const swayDur = 2.5 + Math.random() * 4;      // sway speed
+    const x = Math.random() * 100;                    // vw position
+    const size = 14 + Math.random() * 26;              // 14-40px
+    const dur = 10 + Math.random() * 25;                // 10-35s fall (more desync)
+    const delay = -Math.random() * dur;                 // stagger start
+    const rot = -35 + Math.random() * 70;               // -35..35deg tilt
+    const sway = 8 + Math.random() * 45;                // horizontal drift px
+    const swayDur = 2.5 + Math.random() * 4;            // sway speed
+    const swayEase = EASES[Math.floor(Math.random() * EASES.length)];
 
     bug.style.setProperty('--x', x + 'vw');
     bug.style.setProperty('--size', size + 'px');
@@ -853,6 +860,7 @@ document.getElementById('yr').textContent = new Date().getFullYear();
     inner.style.setProperty('--rot', rot + 'deg');
     inner.style.setProperty('--sway', sway + 'px');
     inner.style.setProperty('--sway-dur', swayDur + 's');
+    inner.style.setProperty('--sway-ease', swayEase);
 
     field.appendChild(bug);
   }
