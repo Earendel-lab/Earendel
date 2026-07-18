@@ -90,7 +90,7 @@ body::after{
   display:inline-block;
   animation:bugSway var(--sway-dur,4s) var(--sway-ease, ease-in-out) infinite;
   animation-delay:var(--delay,0s);
-  transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0);
+  transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0);
   will-change:transform;
   backface-visibility:hidden;
 }
@@ -99,9 +99,9 @@ body::after{
   to  { transform:translateY(125vh) translateZ(0); }
 }
 @keyframes bugSway{
-  0%   { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0); }
-  50%  { transform:rotate(calc(-1 * var(--rot,0deg))) translateX(var(--sway,18px)) translateZ(0); }
-  100% { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) translateZ(0); }
+  0%   { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0); }
+  50%  { transform:rotate(calc(-1 * var(--rot,0deg))) translateX(var(--sway,18px)) scaleY(var(--flip,-1)) translateZ(0); }
+  100% { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0); }
 }
 
 #c-ring{
@@ -236,11 +236,10 @@ nav{
 
 .intro-bottom{
   display:flex;align-items:flex-end;justify-content:space-between;
-  padding-top:var(--space-6);border-top:1px solid var(--border);
+  padding-top:var(--space-6);
   opacity:0;animation:fadeUp var(--speed-slow) var(--transition) 0.75s forwards;
 }
 .intro-sub{font-size:var(--text-base);color:var(--ink-2);font-weight:300;line-height:1.72;max-width:300px;font-style:italic;letter-spacing:0.01em;}
-.intro-cta-group{display:flex;gap:var(--space-3);flex-wrap:wrap;}
 .intro-scroll-hint{
   font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-3);
   letter-spacing:var(--tracking-wider);text-transform:uppercase;
@@ -282,21 +281,14 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .fade-in.on{opacity:1;transform:translateY(0);}
 .fade-in-d1{transition-delay:.07s;}.fade-in-d2{transition-delay:.14s;}.fade-in-d3{transition-delay:.21s;}.fade-in-d4{transition-delay:.28s;}
 
-.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--space-3) 0;white-space:nowrap;}
-.marquee-track{display:inline-block;animation:marquee 30s linear infinite;}
-.marquee-track:hover{animation-play-state:paused;}
-.marquee-track span{font-family:'Bebas Neue',sans-serif;font-size:clamp(0.9rem,1.8vw,1.35rem);color:var(--ink-2);letter-spacing:0.05em;padding:0 var(--space-5);}
-.marquee-track span.dot{color:var(--ink-3);padding:0 var(--space-3);}
-@keyframes marquee{to{transform:translateX(-50%);}}
-
 #about{padding-top:var(--space-10);}
 .feature-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:auto;gap:10px;}
 .feature-card{     display:flex;     flex-direction:column;
-  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-xl);
+  background:var(--bg-card);border-radius:var(--r-xl);
   padding:var(--space-7) var(--space-6);position:relative;overflow:hidden;
-  transition:border-color var(--speed-mid),background var(--speed-mid),transform var(--speed-mid) var(--transition),box-shadow var(--speed-mid);
+  transition:background var(--speed-mid);
 }
-.feature-card:hover{border-color:var(--border-hi);background:var(--bg-card2);transform:translateY(-2px);}
+.feature-card:hover{background:var(--bg-card2);}
 .feature-card::after{
   content:'';position:absolute;inset:0;border-radius:var(--r-xl);
   background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.045),transparent 45%);
@@ -311,14 +303,12 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .feature-label{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;margin-bottom:var(--space-3);position:relative;z-index:1;}
 .feature-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--ink);line-height:1;margin-bottom:var(--space-3);transition:color var(--speed-slow);position:relative;z-index:1;}
 .feature-body{font-size:var(--text-sm);color:var(--ink-2);font-weight:300;line-height:1.78;max-width:none;letter-spacing:0.008em;position:relative;z-index:1;}
-.feature-num{font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,10vw,8rem);color:var(--border);position:absolute;bottom:-8px;right:var(--space-5);line-height:1;pointer-events:none;transition:color var(--speed-slow);user-select:none;}
-.feature-card:hover .feature-num{color:var(--border-hi);}
 .feature-icon-row{display:flex;gap:var(--space-3);margin-top:var(--space-5);flex-wrap:wrap;position:relative;z-index:1;}
 .feature-icon{
   width:42px;height:42px;border-radius:var(--r-sm);
   border:1px solid var(--border);background:var(--bg-raised);
   display:flex;align-items:center;justify-content:center;
-  color:var(--ink-2);
+  color:var(--ink-2);text-decoration:none;
   transition:border-color var(--speed-fast),background var(--speed-fast),color var(--speed-fast),transform var(--speed-fast) var(--transition-bounce);
 }
 .feature-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
@@ -327,32 +317,41 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 /* ── Projects Section ── */
 #work{padding-bottom:var(--space-10);}
 .project-header-row{
-  display:grid;grid-template-columns:72px 1fr 260px 80px;
-  padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-hi);gap:var(--space-5);
-  margin-bottom:4px;
+  display:grid;grid-template-columns:72px 1fr 260px;
+  padding:var(--space-3) var(--space-5);gap:var(--space-5);
+  margin-bottom:var(--space-3);
 }
 .project-col-label{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
 .project-row{
-  display:grid;grid-template-columns:72px 1fr 260px 80px;
-  padding:20px var(--space-4);border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:72px 1fr 260px;
+  padding:22px var(--space-5);
   text-decoration:none;color:inherit;align-items:center;gap:var(--space-5);
   position:relative;
-  border-radius:var(--r-md);
-  transition:padding var(--speed-mid) var(--transition),background var(--speed-mid),border-color var(--speed-mid);
-  margin:0 -16px;
-  width:calc(100% + 32px);
+  border-radius:var(--r-lg);
+  background:var(--bg-card);
+  overflow:hidden;
+  transition:background var(--speed-mid),transform var(--speed-mid) var(--transition),box-shadow var(--speed-mid);
+  margin:0 0 10px 0;
+  width:100%;
 }
 .project-row::before{
-  content:'';position:absolute;left:0;right:0;top:0;bottom:0;
-  border:1px solid transparent;border-radius:var(--r-md);
-  transition:border-color var(--speed-mid);pointer-events:none;
+  content:'';position:absolute;top:0;left:-80%;width:55%;height:100%;
+  background:linear-gradient(115deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 32%,
+    rgba(255,255,255,0.22) 50%,
+    rgba(255,255,255,0.05) 68%,
+    transparent 100%);
+  transform:skewX(-18deg);
+  pointer-events:none;
+  transition:left 1.35s var(--transition);
+  z-index:1;
 }
 .project-row:hover{
-  background:var(--project-hover-bg);
-  padding-left:calc(var(--space-4) + 10px);
-  padding-right:calc(var(--space-4) + 10px);
+  background:var(--bg-card2);
+  box-shadow:0 12px 32px rgba(0,0,0,0.22);
 }
-.project-row:hover::before{border-color:var(--border-hi);}
+.project-row:hover::before{left:140%;}
 
 /* ── App Icon in Project Row ── */
 .project-icon-wrap{
@@ -363,19 +362,12 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .project-icon-img{
   width:48px;
   height:48px;
-  border-radius:var(--r-md);
-  border:1px solid var(--border);
-  object-fit:cover;
-  transition:
-    border-color var(--speed-mid),
-    transform var(--speed-mid) var(--transition),
-    box-shadow var(--speed-mid);
+  object-fit:contain;
+  transition:transform var(--speed-mid) var(--transition);
   flex-shrink:0;
 }
 .project-row:hover .project-icon-img{
-  border-color:var(--border-hi);
   transform:scale(1.08);
-  box-shadow:0 6px 22px rgba(0,0,0,0.28);
 }
 
 .project-name{
@@ -389,11 +381,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   font-size:var(--text-sm);color:var(--ink-2);font-weight:300;
   line-height:1.65;letter-spacing:0.01em;
 }
-.project-arrow{
-  font-size:var(--text-xl);color:var(--ink-3);text-align:right;
-  transition:transform var(--speed-mid) var(--transition),color var(--speed-fast);
-}
-.project-row:hover .project-arrow{transform:translate(3px,-3px);color:var(--ink);}
 .project-tag{
   display:inline-flex;align-items:center;
   font-family:'DM Mono',monospace;font-size:0.6rem;
@@ -409,24 +396,22 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   .project-header-row{display:none;}
   .project-row{
     display:grid;
-    grid-template-columns:48px 1fr 44px;
+    grid-template-columns:48px 1fr;
     grid-template-rows:auto auto;
-    margin:0;width:100%;
-    padding:18px 12px;
+    margin:0 0 10px 0;width:100%;
+    padding:18px 14px;
     border-radius:var(--r-md);
     gap:var(--space-3);
     align-items:start;
   }
-  .project-row:hover{padding-left:18px;padding-right:18px;}
   .project-icon-wrap{grid-column:1;grid-row:1/3;align-self:center;}
-  .project-icon-img{width:38px;height:38px;border-radius:10px;}
+  .project-icon-img{width:38px;height:38px;}
   .project-name{grid-column:2;grid-row:1;font-size:1.5rem;}
   .project-desc{
     grid-column:2;grid-row:2;
     display:block;font-size:0.8rem;
     color:var(--ink-2);margin-top:2px;line-height:1.55;
   }
-  .project-arrow{grid-column:3;grid-row:1;font-size:1.2rem;}
   .project-tag{display:none;}
 }
 
@@ -437,12 +422,12 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   gap:12px;
 }
 .tech-item{
-  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-lg);
+  background:var(--bg-card);border-radius:var(--r-lg);
   padding:var(--space-6) var(--space-4);
   display:flex;flex-direction:column;align-items:center;gap:14px;
   min-height:148px;justify-content:center;
   position:relative;overflow:hidden;cursor:default;
-  transition:border-color 0.3s,background 0.3s,transform 0.3s var(--transition),box-shadow 0.3s;
+  transition:background 0.3s;
 }
 .tech-item::before{
   content:'';position:absolute;inset:0;
@@ -458,19 +443,11 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .tech-item:hover::after{transform:scaleX(1);}
 .tech-item:hover{
-  border-color:var(--border-hi);
   background:var(--bg-card2);
-  transform:translateY(-5px) scale(1.02);
-  box-shadow:0 14px 40px rgba(0,0,0,0.4);
 }
 .tech-icon-wrap{
   display:flex;align-items:center;justify-content:center;
   width:60px;height:60px;
-  transition:transform 0.38s var(--transition-bounce),filter 0.38s;
-}
-.tech-item:hover .tech-icon-wrap{
-  transform:scale(1.18) translateY(-2px);
-  filter:drop-shadow(0 4px 14px rgba(255,255,255,0.10));
 }
 .tech-item svg.tech-icon{width:60px;height:60px;display:block;}
 .tech-item span{
@@ -496,12 +473,16 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
 
-#contact{padding:var(--space-10) var(--space-7);border-top:1px solid var(--border);}
+#contact{padding:var(--space-10) var(--space-7);}
 .contact-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--space-8);}
 .contact-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,11vw,9.5rem);color:var(--ink);line-height:0.9;letter-spacing:var(--tracking-tight);transition:color var(--speed-slow);}
 .contact-sub{font-size:var(--text-sm);color:var(--ink-2);font-weight:300;line-height:1.78;max-width:320px;margin-top:var(--space-5);letter-spacing:0.01em;}
 .contact-actions{display:flex;flex-direction:column;gap:10px;min-width:200px;}
-@media(max-width:768px){.contact-grid{grid-template-columns:1fr;}.contact-actions{flex-direction:row;flex-wrap:wrap;}}
+@media(max-width:768px){
+  .contact-grid{grid-template-columns:1fr;}
+  .contact-actions{flex-direction:row;flex-wrap:nowrap;gap:8px;min-width:0;}
+  .contact-actions .btn{flex:1 1 0;padding:12px 8px;font-size:0.68rem;gap:6px;}
+}
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:var(--space-3);
@@ -519,9 +500,31 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 .btn-discord{background:#5865f2;color:#fff;border-color:#5865f2;}
 .btn-discord:hover{background:#6672f3;border-color:#6672f3;}
 
+/* Always-on shimmer for contact card buttons */
+.contact-actions .btn::after{
+  content:'';
+  position:absolute;top:0;left:-60%;width:35%;height:100%;
+  background:linear-gradient(115deg,
+    transparent 0%,
+    rgba(255,255,255,0.45) 50%,
+    transparent 100%);
+  transform:skewX(-18deg);
+  mix-blend-mode:overlay;
+  pointer-events:none;
+  animation:contactShimmer 3.2s ease-in-out infinite;
+}
+.contact-actions .btn:nth-child(1)::after{animation-delay:0s;}
+.contact-actions .btn:nth-child(2)::after{animation-delay:0.6s;}
+.contact-actions .btn:nth-child(3)::after{animation-delay:1.2s;}
+@keyframes contactShimmer{
+  0%{left:-60%;}
+  55%{left:130%;}
+  100%{left:130%;}
+}
+
 footer{
   padding:var(--space-7) var(--space-7);border-top:1px solid var(--border);
-  display:flex;justify-content:space-between;align-items:center;
+  display:flex;justify-content:center;align-items:center;
   flex-wrap:wrap;gap:var(--space-4);
 }
 .footer-copy{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
@@ -536,15 +539,8 @@ footer{
 }
 #toast.show{bottom:28px;}
 
-.project-list{position:relative;padding:0 0 var(--space-3) 0;}
-.project-list-line{
-  position:absolute;left:72px;top:0;bottom:0;width:1px;
-  background:linear-gradient(to bottom, var(--border-hi), transparent);
-  pointer-events:none;
-  opacity:0.4;
-  display:none;
-}
-@media(min-width:769px){.project-list-line{display:block;}}
+.project-list{position:relative;padding:0;}
+.project-list-line{display:none;}
 </style>
 </head>
 <body>
@@ -600,34 +596,11 @@ footer{
 
   <div class="intro-bottom">
     <p class="intro-sub">The cosmos exists; I wonder how.🌀</p>
-    <div class="intro-cta-group">
-      <button class="btn btn-solid" onclick="handleEmail()">Email Me</button>
-      <a href="https://github.com/Earendel-lab" target="_blank" class="btn btn-ghost">GitHub ↗</a>
-    </div>
     <div class="intro-scroll-hint">
       <div class="scroll-line"></div>
     </div>
   </div>
 </section>
-
-<div class="marquee-wrap">
-  <div class="marquee-track">
-    <span>App Testing</span><span class="dot">·</span>
-    <span>Logic Audits</span><span class="dot">·</span>
-    <span>Documentation</span><span class="dot">·</span>
-    <span>Icon Design</span><span class="dot">·</span>
-    <span>Android Dev</span><span class="dot">·</span>
-    <span>Edge Cases</span><span class="dot">·</span>
-    <span>QA Engineering</span><span class="dot">·</span>
-    <span>App Testing</span><span class="dot">·</span>
-    <span>Logic Audits</span><span class="dot">·</span>
-    <span>Documentation</span><span class="dot">·</span>
-    <span>Icon Design</span><span class="dot">·</span>
-    <span>Android Dev</span><span class="dot">·</span>
-    <span>Edge Cases</span><span class="dot">·</span>
-    <span>QA Engineering</span><span class="dot">·</span>
-  </div>
-</div>
 
 <section id="about">
   <h2 class="sec-h2 fade-in fade-in-d1">What I Do</h2>
@@ -636,21 +609,18 @@ footer{
     <div class="feature-card feature-wide fade-in fade-in-d1">
       <div class="feature-title">App Testing</div>
       <p class="feature-body">Finding bugs before users run into them, and making apps feel reliable every day.</p>
-      <div class="feature-num">01</div>
     </div>
 
     <div class="feature-card feature-med fade-in fade-in-d2">
       <div class="feature-title">Documentation</div>
       <p class="feature-body">Refining READMEs into professional technical resources that clearly communicate project quality.</p>
-      <div class="feature-num">02</div>
     </div>
 
     <div class="feature-card feature-half fade-in fade-in-d3">
       <div class="feature-title">Icon Designing</div>
       <p class="feature-body">Designing clean icons that match the personality of each app.</p>
-      <div class="feature-num">03</div>
       <div class="feature-icon-row">
-        <div class="feature-icon">
+        <a href="https://www.figma.com" target="_blank" rel="noopener" class="feature-icon" aria-label="Figma">
           <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path fill="#F24E1E" d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4z"/>
             <path fill="#FF7262" d="M4 12c0-2.208 1.792-4 4-4h4v8H8c-2.208 0-4-1.792-4-4z"/>
@@ -658,7 +628,7 @@ footer{
             <path fill="#1ABCFE" d="M12 0h4c2.208 0 4 1.792 4 4s-1.792 4-4 4h-4V0z"/>
             <path fill="#0ACF83" d="M20 12c0 2.208-1.792 4-4 4s-4-1.792-4-4 1.792-4 4-4 4 1.792 4 4z"/>
           </svg>
-        </div>
+        </a>
       </div>
     </div>
   </div>
@@ -671,7 +641,6 @@ footer{
     <span class="project-col-label">App</span>
     <span class="project-col-label"></span>
     <span class="project-col-label">Description</span>
-    <span class="project-col-label" style="text-align:right"></span>
   </div>
 
   <div class="project-list">
@@ -684,7 +653,6 @@ footer{
       </div>
       <span class="project-name">Currency<span class="project-tag">Forex</span></span>
       <span class="project-desc">Minimalist Nothing-OS aesthetic currency converter for Android.</span>
-      <span class="project-arrow">↗</span>
     </a>
 
     <!-- Flow -->
@@ -694,7 +662,6 @@ footer{
       </div>
       <span class="project-name">Flow<span class="project-tag">Focus</span></span>
       <span class="project-desc">Focused countdown timer made for deep work sessions.</span>
-      <span class="project-arrow">↗</span>
     </a>
 
     <!-- Compass -->
@@ -704,7 +671,6 @@ footer{
       </div>
       <span class="project-name">Compass<span class="project-tag">Navigation</span></span>
       <span class="project-desc">Simple, beautiful compass app with a clean minimal interface.</span>
-      <span class="project-arrow">↗</span>
     </a>
 
     <!-- Glyph Torch -->
@@ -714,7 +680,6 @@ footer{
       </div>
       <span class="project-name">Glyph Torch<span class="project-tag">Glyph</span></span>
       <span class="project-desc">Android app for letting the nothing phone glyphs glow on trigger.</span>
-      <span class="project-arrow">↗</span>
     </a>
   </div>
 </section>
@@ -725,42 +690,13 @@ footer{
 
     <div class="tech-item fade-in fade-in-d1">
       <div class="tech-icon-wrap">
-        <svg class="tech-icon" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#0074BD" d="M47.617 98.12s-4.767 2.774 3.397 3.71c9.892 1.13 14.947.968 25.845-1.092 0 0 2.871 1.795 6.873 3.351-24.439 10.47-55.308-.607-36.115-5.969zm-2.988-13.665s-5.348 3.959 2.823 4.805c10.567 1.091 18.91 1.18 33.354-1.6 0 0 1.993 2.025 5.132 3.131-29.542 8.64-62.446.68-41.309-6.336z"/>
-          <path fill="#EA2D2E" d="M69.802 61.271c6.025 6.935-1.58 13.17-1.58 13.17s15.289-7.891 8.269-17.777c-6.559-9.215-11.587-13.792 15.635-29.58 0 0-42.731 10.67-22.324 34.187z"/>
-          <path fill="#0074BD" d="M102.123 108.229s3.529 2.91-3.888 5.159c-14.102 4.272-58.706 5.56-71.094.171-4.451-1.938 3.899-4.625 6.526-5.192 2.739-.593 4.303-.485 4.303-.485-4.953-3.487-32.013 6.85-13.743 9.815 49.821 8.076 90.817-3.637 77.896-9.468zM49.912 70.294s-22.686 5.389-8.033 7.348c6.188.828 18.518.638 30.011-.326 9.39-.789 18.813-2.474 18.813-2.474s-3.308 1.419-5.704 3.053c-23.042 6.061-67.544 3.238-54.731-2.958 10.832-5.239 19.644-4.643 19.644-4.643zm40.697 22.747c23.421-12.167 12.591-23.86 5.032-22.285-1.848.385-2.677.72-2.677.72s.688-1.079 2-1.543c14.953-5.255 26.451 15.503-4.823 23.725 0 .001.362-.32.468-.617z"/>
-          <path fill="#EA2D2E" d="M76.491 1.587S89.459 14.563 64.188 34.51c-20.266 16.006-4.621 25.13-.007 35.559-11.831-10.673-20.509-20.07-14.688-28.815C58.041 28.42 81.722 22.195 76.491 1.587z"/>
-          <path fill="#0074BD" d="M52.214 126.021c22.476 1.437 57-.8 57.817-11.436 0 0-1.571 4.032-18.577 7.231-19.186 3.612-42.854 3.191-56.887.874 0 .001 2.875 2.381 17.647 3.331z"/>
-        </svg>
-      </div>
-      <span>Java</span>
-    </div>
-
-    <div class="tech-item fade-in fade-in-d1">
-      <div class="tech-icon-wrap">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/android.svg"
+        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/androidstudio.svg"
              width="56" height="56"
-             alt="Android"
+             alt="Android Studio"
              class="si-icon"
              style="filter:invert(71%) sepia(62%) saturate(478%) hue-rotate(88deg) brightness(95%) contrast(93%);">
       </div>
-      <span>Android</span>
-    </div>
-
-    <div class="tech-item fade-in fade-in-d2">
-      <div class="tech-icon-wrap">
-        <svg class="tech-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="kg2" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#E44857"/>
-              <stop offset="50%" stop-color="#C711E1"/>
-              <stop offset="100%" stop-color="#7F52FF"/>
-            </linearGradient>
-          </defs>
-          <path fill="url(#kg2)" d="M2 2h20L12 12l10 10H2V2z"/>
-        </svg>
-      </div>
-      <span>Kotlin</span>
+      <span>Android Studio</span>
     </div>
 
     <div class="tech-item fade-in fade-in-d2">
@@ -829,41 +765,67 @@ footer{
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-/* ── Falling bugs ── */
-(function spawnBugs(){
+/* ── Falling bug background ── */
+(function () {
   const field = document.getElementById('bugField');
-  const COUNT = 14;
-  const SPECIES = ['🐛','🪲','🐞','🕷️','🦗','🐜'];
-  const EASES = ['ease-in-out','cubic-bezier(0.45,0,0.55,1)','cubic-bezier(0.37,0,0.63,1)'];
+  const SPECIES = [
+    { ch: '🐛', flip: 1 },   // caterpillar - looks right falling as-is
+    { ch: '🪲', flip: -1 },  // beetle
+    { ch: '🐞', flip: -1 },  // ladybug
+    { ch: '🕷️', flip: -1 }, // spider
+    { ch: '🦗', flip: 1 },   // grasshopper - looks right falling as-is
+    { ch: '🐜', flip: 1 }    // ant - looks right falling as-is
+  ];
+  const EASES = ['ease-in-out', 'cubic-bezier(0.45,0,0.55,1)'];
+  const MAX_BUGS = 16;
 
-  for (let i = 0; i < COUNT; i++) {
+  function spawnBug(initial) {
+    if (field.children.length >= MAX_BUGS) return;
+
+    const species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
     const bug = document.createElement('div');
     bug.className = 'bug';
     const inner = document.createElement('span');
     inner.className = 'bug-inner';
-    inner.textContent = SPECIES[Math.floor(Math.random() * SPECIES.length)];
+    inner.textContent = species.ch;
     bug.appendChild(inner);
 
-    const x = Math.random() * 100;                    // vw position
-    const size = 14 + Math.random() * 26;              // 14-40px
-    const dur = 10 + Math.random() * 25;                // 10-35s fall (more desync)
-    const delay = -Math.random() * dur;                 // stagger start
-    const rot = -35 + Math.random() * 70;               // -35..35deg tilt
-    const sway = 8 + Math.random() * 45;                // horizontal drift px
-    const swayDur = 2.5 + Math.random() * 4;            // sway speed
+    const x = Math.random() * 100;                     // vw position
+    const size = 14 + Math.random() * 26;               // 14-40px
+    const dur = 12 + Math.random() * 22;                 // 12-34s fall
+    const delay = initial ? -Math.random() * dur : 0;    // stagger only the initial fill
+    const rot = -14 + Math.random() * 28;                // -14..14deg gentle tilt
+    const sway = 4 + Math.random() * 12;                 // 4-16px subtle horizontal drift
+    const swayDur = 4 + Math.random() * 3;               // slower, calmer sway
     const swayEase = EASES[Math.floor(Math.random() * EASES.length)];
+    const opacity = (0.1 + Math.random() * 0.2).toFixed(2); // depth variance
 
     bug.style.setProperty('--x', x + 'vw');
     bug.style.setProperty('--size', size + 'px');
     bug.style.setProperty('--dur', dur + 's');
     bug.style.setProperty('--delay', delay + 's');
+    bug.style.opacity = opacity;
     inner.style.setProperty('--rot', rot + 'deg');
     inner.style.setProperty('--sway', sway + 'px');
     inner.style.setProperty('--sway-dur', swayDur + 's');
     inner.style.setProperty('--sway-ease', swayEase);
+    inner.style.setProperty('--flip', species.flip);
 
     field.appendChild(bug);
+
+    // clean up once the bug has actually finished its fall, so bugs never pile up
+    const remaining = Math.max((dur - Math.abs(delay)), 0.3) * 1000 + 200;
+    setTimeout(() => bug.remove(), remaining);
   }
+
+  // fill the screen naturally on load (staggered negative delays = mid-fall already)
+  for (let i = 0; i < 9; i++) spawnBug(true);
+
+  // keep spawning new bugs at randomized, organic intervals forever
+  (function loop() {
+    spawnBug(false);
+    setTimeout(loop, 600 + Math.random() * 1600);
+  })();
 })();
 
 function buildLetterLine(el, text) {
