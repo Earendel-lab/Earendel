@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,200;0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,200;1,9..40,300;1,9..40,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Geist:wght@200;300;400;500&family=Geist+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 :root {
@@ -53,7 +53,7 @@
 html{scroll-behavior:smooth;font-size:16px;}
 body{
   background-color:var(--bg);color:var(--ink);
-  font-family:'DM Sans',sans-serif;font-weight:300;
+  font-family:'Geist',sans-serif;font-weight:300;
   overflow-x:hidden;
   transition:background-color var(--speed-slow) var(--transition-smooth),color var(--speed-slow) var(--transition-smooth);
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
@@ -130,7 +130,7 @@ nav{
 }
 .nav-left{display:flex;align-items:center;gap:var(--space-3);}
 .nav-logo{width:24px;height:24px;border-radius:5px;object-fit:cover;border:1px solid var(--border-hi);flex-shrink:0;}
-.nav-wordmark{font-family:'DM Mono',monospace;font-size:var(--text-2xs);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--ink);transition:color var(--speed-slow);font-weight:500;}
+.nav-wordmark{font-family:'Geist Mono',monospace;font-size:var(--text-2xs);letter-spacing:var(--tracking-widest);text-transform:uppercase;color:var(--ink);transition:color var(--speed-slow);font-weight:500;}
 .nav-links{display:flex;align-items:center;gap:2px;}
 .nav-a{font-size:var(--text-xs);font-weight:400;color:var(--ink-2);text-decoration:none;letter-spacing:0.045em;padding:6px 11px;border-radius:var(--r-sm);transition:color var(--speed-fast),background var(--speed-fast);}
 .nav-a:hover{color:var(--ink);background:var(--accent-glow);}
@@ -176,7 +176,7 @@ nav{
   animation:fadeUp var(--speed-mid) var(--transition) 0.2s forwards;
 }
 .intro-meta-text{
-  font-family:'DM Sans',sans-serif;
+  font-family:'Geist',sans-serif;
   font-size:clamp(1.05rem, 2.2vw, 1.45rem);
   color:var(--meta-color);
   font-weight:400;
@@ -184,7 +184,7 @@ nav{
 }
 #typewriter{
   color:var(--ink);
-  font-family:'DM Sans',sans-serif;
+  font-family:'Geist',sans-serif;
   font-size:clamp(1.05rem, 2.2vw, 1.45rem);
   font-weight:500;
   letter-spacing:0.01em;
@@ -241,7 +241,7 @@ nav{
 }
 .intro-sub{font-size:var(--text-base);color:var(--ink-2);font-weight:300;line-height:1.72;max-width:300px;font-style:italic;letter-spacing:0.01em;}
 .intro-scroll-hint{
-  font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-3);
+  font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-3);
   letter-spacing:var(--tracking-wider);text-transform:uppercase;
   display:flex;flex-direction:column;align-items:center;gap:10px;
 }
@@ -265,7 +265,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 @media(max-width:768px){section{padding:var(--space-8) var(--space-5);}}
 
 .sec-label{
-  font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);
+  font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);
   letter-spacing:var(--tracking-widest);text-transform:uppercase;
   margin-bottom:var(--space-5);display:flex;align-items:center;gap:var(--space-3);
 }
@@ -300,7 +300,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .feature-half{grid-column:1 / -1;}@media(max-width:1024px){.feature-wide,.feature-med,.feature-half{grid-column:span 12;}}
 @media(min-width:1025px) and (max-width:1280px){.feature-wide{grid-column:span 8;}.feature-med{grid-column:span 4;}}
 
-.feature-label{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;margin-bottom:var(--space-3);position:relative;z-index:1;}
+.feature-label{font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;margin-bottom:var(--space-3);position:relative;z-index:1;}
 .feature-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.5rem,3vw,2.5rem);color:var(--ink);line-height:1;margin-bottom:var(--space-3);transition:color var(--speed-slow);position:relative;z-index:1;}
 .feature-body{font-size:var(--text-sm);color:var(--ink-2);font-weight:300;line-height:1.78;max-width:none;letter-spacing:0.008em;position:relative;z-index:1;}
 .feature-icon-row{display:flex;gap:var(--space-3);margin-top:var(--space-5);flex-wrap:wrap;position:relative;z-index:1;}
@@ -321,7 +321,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   padding:var(--space-3) var(--space-5);gap:var(--space-5);
   margin-bottom:var(--space-3);
 }
-.project-col-label{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
+.project-col-label{font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
 .project-row{
   display:grid;grid-template-columns:72px 1fr 260px;
   padding:22px var(--space-5);
@@ -383,7 +383,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .project-tag{
   display:inline-flex;align-items:center;
-  font-family:'DM Mono',monospace;font-size:0.6rem;
+  font-family:'Geist Mono',monospace;font-size:0.6rem;
   color:var(--ink-3);letter-spacing:0.1em;text-transform:uppercase;
   border:1px solid var(--border);border-radius:var(--r-full);
   padding:2px 8px;margin-left:var(--space-3);
@@ -462,7 +462,7 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 #starshot{padding:var(--space-10) var(--space-7);display:flex;align-items:center;min-height:68vh;}
 .vision-inner{max-width:860px;}
 .vision-quote{
-  font-family:'DM Sans',sans-serif;
+  font-family:'Geist',sans-serif;
   font-size:clamp(1.5rem,3.8vw,2.8rem);
   font-weight:200;font-style:italic;color:var(--ink);line-height:1.46;
   letter-spacing:var(--tracking-tight);
@@ -527,14 +527,14 @@ footer{
   display:flex;justify-content:center;align-items:center;
   flex-wrap:wrap;gap:var(--space-4);
 }
-.footer-copy{font-family:'DM Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
+.footer-copy{font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;}
 
 #toast{
   position:fixed;bottom:-72px;left:50%;transform:translateX(-50%);
   background:var(--bg-card2);color:var(--ink);
   border:1px solid var(--border-hi);
   padding:11px 22px;border-radius:var(--r-full);
-  font-family:'DM Mono',monospace;font-size:var(--text-xs);letter-spacing:0.1em;
+  font-family:'Geist Mono',monospace;font-size:var(--text-xs);letter-spacing:0.1em;
   z-index:9000;transition:bottom .42s var(--transition);white-space:nowrap;
 }
 #toast.show{bottom:28px;}
