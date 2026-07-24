@@ -140,15 +140,26 @@ nav{
   width:34px;height:34px;border-radius:var(--r-full);
   border:1px solid var(--border-hi);background:transparent;color:var(--ink-2);
   display:flex;align-items:center;justify-content:center;
-  transition:color var(--speed-fast),border-color var(--speed-fast),background var(--speed-fast),transform var(--speed-mid) var(--transition);
+  transition:color var(--speed-fast),border-color var(--speed-fast),background var(--speed-fast),transform .42s var(--transition-bounce);
   overflow:hidden;position:relative;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.theme-btn:hover{color:var(--ink);background:var(--accent-glow);transform:rotate(18deg);}
-.theme-btn svg{width:14px;height:14px;position:absolute;transition:opacity .3s,transform .4s var(--transition);}
-.icon-moon{opacity:1;transform:scale(1);}
-.icon-sun{opacity:0;transform:scale(0.3) rotate(-40deg);}
-[data-theme="light"] .icon-moon{opacity:0;transform:scale(0.3) rotate(40deg);}
+.theme-btn:hover{color:var(--ink);background:var(--accent-glow);border-color:var(--border-focus);transform:scale(1.08) rotate(10deg);}
+.theme-btn:active{transform:scale(0.88) rotate(2deg);}
+.theme-btn svg{
+  width:16px;height:16px;position:absolute;
+}
+.icon-moon{opacity:1;transform:scale(1) rotate(0deg);}
+.icon-sun{opacity:0;transform:scale(0.35) rotate(-85deg);}
+[data-theme="light"] .icon-moon{opacity:0;transform:scale(0.35) rotate(85deg);}
 [data-theme="light"] .icon-sun{opacity:1;transform:scale(1) rotate(0deg);}
+
+/* Instant theme snap: everything re-paints immediately when the theme flips. */
+.theme-instant,
+.theme-instant *{
+  transition:none !important;
+  animation-duration:0s !important;
+}
 
 @media(max-width:768px){nav{padding:0 var(--space-5);}.nav-links{display:none;}}
 
@@ -564,19 +575,21 @@ footer{
   </div>
   <div class="nav-right">
     <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill="currentColor" d="M20.354 15.354A9 9 0 0 1 8.646 3.646a.75.75 0 0 0-.933-1.03A10.5 10.5 0 1 0 22.5 15.62a.75.75 0 0 0-2.146-.266Z"/>
       </svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4"/>
-        <line x1="12" y1="2"  x2="12" y2="5"/>
-        <line x1="12" y1="19" x2="12" y2="22"/>
-        <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
-        <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
-        <line x1="2"  y1="12" x2="5"  y2="12"/>
-        <line x1="19" y1="12" x2="22" y2="12"/>
-        <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
-        <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="4.1" fill="currentColor"/>
+        <g stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="12" y1="1.5" x2="12" y2="3.8"/>
+          <line x1="12" y1="20.2" x2="12" y2="22.5"/>
+          <line x1="1.5" y1="12" x2="3.8" y2="12"/>
+          <line x1="20.2" y1="12" x2="22.5" y2="12"/>
+          <line x1="4.4" y1="4.4" x2="6.05" y2="6.05"/>
+          <line x1="17.95" y1="17.95" x2="19.6" y2="19.6"/>
+          <line x1="4.4" y1="19.6" x2="6.05" y2="17.95"/>
+          <line x1="17.95" y1="6.05" x2="19.6" y2="4.4"/>
+        </g>
       </svg>
     </button>
   </div>
@@ -690,11 +703,10 @@ footer{
 
     <div class="tech-item fade-in fade-in-d1">
       <div class="tech-icon-wrap">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/androidstudio.svg"
+        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/androidstudio/androidstudio-original.svg"
              width="56" height="56"
              alt="Android Studio"
-             class="si-icon"
-             style="filter:invert(71%) sepia(62%) saturate(478%) hue-rotate(88deg) brightness(95%) contrast(93%);">
+             class="si-icon">
       </div>
       <span>Android Studio</span>
     </div>
@@ -712,11 +724,9 @@ footer{
 
     <div class="tech-item fade-in fade-in-d2">
       <div class="tech-icon-wrap">
-        <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/github.svg"
-             width="56" height="56"
-             alt="Git"
-             class="si-icon"
-             style="filter:invert(0%) sepia(0%) saturate(000%) hue-rotate(0deg) brightness(0%) contrast(0%);">
+        <svg class="tech-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="color:var(--ink);">
+          <path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
       </div>
       <span>Github</span>
     </div>
@@ -872,7 +882,13 @@ const root = document.documentElement;
 let dark = true;
 document.getElementById('themeBtn').addEventListener('click', () => {
   dark = !dark;
+  root.classList.add('theme-instant');
   root.setAttribute('data-theme', dark ? 'dark' : 'light');
+  // force a reflow so the attribute change paints with transitions already off
+  void root.offsetHeight;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => root.classList.remove('theme-instant'));
+  });
 });
 
 const ring = document.getElementById('c-ring');
