@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>DJ | Earendel Lab</title>
-<link rel="icon" type="image/jpeg" href="Logo.jpg">
-<link rel="apple-touch-icon" href="Logo.jpg">
+<link rel="icon" type="image/jpeg" href="icons/Logo.jpg">
+<link rel="apple-touch-icon" href="icons/Logo.jpg">
 <meta name="theme-color" content="#080808">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -552,9 +552,102 @@ footer{
 
 .project-list{position:relative;padding:0;}
 .project-list-line{display:none;}
+
+/* ── Dynamic Wallpaper Animated Background ── */
+.wall-bg-container {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+  pointer-events: none;
+  background-color: var(--bg);
+}
+
+.wall-bg-track-wrapper {
+  position: absolute;
+  top: -70%;
+  left: -70%;
+  width: 240vw;
+  height: 240vh;
+  display: flex;
+  justify-content: space-around;
+  gap: 22px;
+  transform: rotate(35deg);
+  transform-origin: center center;
+  opacity: 0.28;
+  filter: contrast(1.05) saturate(1.1);
+  transition: opacity var(--speed-slow) var(--transition-smooth);
+  will-change: transform;
+}
+
+[data-theme="dark"] .wall-bg-track-wrapper {
+  opacity: 0.22;
+}
+
+[data-theme="light"] .wall-bg-track-wrapper {
+  opacity: 0.16;
+}
+
+.wall-track {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  animation: wallScrollDown linear infinite;
+  will-change: transform;
+}
+
+.wall-card {
+  width: 250px;
+  height: 155px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-hi);
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+
+.wall-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@keyframes wallScrollDown {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.wall-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  transition: background var(--speed-slow) var(--transition-smooth);
+}
+
+[data-theme="dark"] .wall-bg-overlay {
+  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.68) 0%, rgba(8, 8, 8, 0.94) 85%);
+  backdrop-filter: blur(1.5px);
+}
+
+[data-theme="light"] .wall-bg-overlay {
+  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.72) 0%, rgba(244, 243, 239, 0.95) 85%);
+  backdrop-filter: blur(1.5px);
+}
 </style>
 </head>
 <body>
+
+<div class="wall-bg-container" id="wallBgContainer">
+  <div class="wall-bg-track-wrapper" id="wallBgTrackWrapper"></div>
+  <div class="wall-bg-overlay"></div>
+</div>
 
 <div class="bug-field" id="bugField"></div>
 <div id="progress"></div>
@@ -563,7 +656,7 @@ footer{
 
 <nav>
   <div class="nav-left">
-    <img src="Logo.jpg" alt="Earendel Lab" class="nav-logo" loading="lazy">
+    <img src="icons/Logo.jpg" alt="Earendel Lab" class="nav-logo" loading="lazy">
     <span class="nav-wordmark">Earendel Lab</span>
   </div>
   <div class="nav-links">
@@ -662,7 +755,7 @@ footer{
     <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-row fade-in fade-in-d2">
       <div class="project-icon-wrap">
-        <img src="Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
+        <img src="icons/Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
       </div>
       <span class="project-name">Currency<span class="project-tag">Forex</span></span>
       <span class="project-desc">Minimalist Nothing OS inspired currency converter for Android.</span>
@@ -671,7 +764,7 @@ footer{
     <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-row fade-in fade-in-d3">
       <div class="project-icon-wrap">
-        <img src="Flow.png" alt="Flow" class="project-icon-img" loading="lazy">
+        <img src="icons/Flow.png" alt="Flow" class="project-icon-img" loading="lazy">
       </div>
       <span class="project-name">Flow<span class="project-tag">Focus</span></span>
       <span class="project-desc">Focused countdown timer made for deep work sessions.</span>
@@ -680,7 +773,7 @@ footer{
     <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-row fade-in fade-in-d4">
       <div class="project-icon-wrap">
-        <img src="Compass.png" alt="Compass" class="project-icon-img" loading="lazy">
+        <img src="icons/Compass.png" alt="Compass" class="project-icon-img" loading="lazy">
       </div>
       <span class="project-name">Compass<span class="project-tag">Navigation</span></span>
       <span class="project-desc">Simple, beautiful compass app with a clean minimal interface.</span>
@@ -689,7 +782,7 @@ footer{
     <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="project-row fade-in fade-in-d5">
       <div class="project-icon-wrap">
-        <img src="Glyphtorch.png" alt="Glyph Torch" class="project-icon-img" loading="lazy">
+        <img src="icons/Glyphtorch.png" alt="Glyph Torch" class="project-icon-img" loading="lazy">
       </div>
       <span class="project-name">Glyph Torch<span class="project-tag">Glyph</span></span>
       <span class="project-desc">Android app for letting the Nothing Phone glyphs glow on trigger.</span>
@@ -973,6 +1066,116 @@ function handleEmail(){
   t.classList.add('show');
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
+
+/* ── Dynamic GitHub Wallpaper Background Engine ── */
+(function initWallpaperBackground() {
+  const GITHUB_USER = 'Earendel-lab';
+  const GITHUB_REPO = 'Portfolio';
+  const FOLDER_NAME = 'WALL';
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function getFallbackWallpapers() {
+    const list = [];
+    for (let i = 1; i <= 100; i++) {
+      list.push(`WALL/Wall (${i}).jpg`);
+    }
+    return list;
+  }
+
+  async function fetchWallpaperUrls() {
+    let user = GITHUB_USER;
+    let repo = GITHUB_REPO;
+
+    if (window.location.hostname.endsWith('.github.io')) {
+      user = window.location.hostname.split('.')[0];
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      if (pathParts.length > 0) {
+        repo = pathParts[0];
+      }
+    }
+
+    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${FOLDER_NAME}`;
+
+    try {
+      const res = await fetch(apiUrl);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const imageFiles = data.filter(file =>
+            file.type === 'file' && /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(file.name)
+          );
+          if (imageFiles.length > 0) {
+            return imageFiles.map(f => `${FOLDER_NAME}/${encodeURIComponent(f.name)}`);
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('GitHub API fetch failed or offline, using local WALL list:', err);
+    }
+    return getFallbackWallpapers();
+  }
+
+  async function buildWallpaperGrid() {
+    const container = document.getElementById('wallBgTrackWrapper');
+    if (!container) return;
+
+    const urls = await fetchWallpaperUrls();
+    if (!urls || urls.length === 0) return;
+
+    const shuffled = shuffle(urls);
+    const trackCount = Math.max(8, Math.ceil(window.innerWidth * 2.4 / 270));
+    const itemsPerTrack = 10;
+
+    let urlIdx = 0;
+    const fragment = document.createDocumentFragment();
+
+    for (let t = 0; t < trackCount; t++) {
+      const track = document.createElement('div');
+      track.className = 'wall-track';
+      
+      const speed = 110 + (t % 5) * 14 + Math.random() * 10;
+      track.style.animationDuration = `${speed}s`;
+      track.style.animationDelay = `-${(t * 15) % 60}s`;
+
+      const trackUrls = [];
+      for (let i = 0; i < itemsPerTrack; i++) {
+        trackUrls.push(shuffled[urlIdx % shuffled.length]);
+        urlIdx++;
+      }
+
+      const fullList = [...trackUrls, ...trackUrls];
+
+      fullList.forEach(url => {
+        const card = document.createElement('div');
+        card.className = 'wall-card';
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Background Wallpaper';
+        img.loading = 'lazy';
+        card.appendChild(img);
+        track.appendChild(card);
+      });
+
+      fragment.appendChild(track);
+    }
+
+    container.appendChild(fragment);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
+  } else {
+    buildWallpaperGrid();
+  }
+})();
 </script>
 </body>
 </html>
