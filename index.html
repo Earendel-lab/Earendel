@@ -69,41 +69,6 @@ body::after{
 
 ::selection{background:var(--ink);color:var(--bg);}
 
-/* ── Falling bug background ── */
-.bug-field{
-  position:fixed;inset:0;z-index:-1;
-  overflow:hidden;pointer-events:none;
-}
-.bug{
-  position:absolute;
-  top:-10vh;
-  left:var(--x,50%);
-  font-size:var(--size,20px);
-  opacity:0.2;
-  animation:bugFall linear infinite;
-  animation-duration:var(--dur,18s);
-  animation-delay:var(--delay,0s);
-  will-change:transform;
-  transform:translateZ(0);
-}
-.bug-inner{
-  display:inline-block;
-  animation:bugSway var(--sway-dur,4s) var(--sway-ease, ease-in-out) infinite;
-  animation-delay:var(--delay,0s);
-  transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0);
-  will-change:transform;
-  backface-visibility:hidden;
-}
-@keyframes bugFall{
-  from{ transform:translateY(0) translateZ(0); }
-  to  { transform:translateY(125vh) translateZ(0); }
-}
-@keyframes bugSway{
-  0%   { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0); }
-  50%  { transform:rotate(calc(-1 * var(--rot,0deg))) translateX(var(--sway,18px)) scaleY(var(--flip,-1)) translateZ(0); }
-  100% { transform:rotate(var(--rot,0deg)) translateX(calc(-1 * var(--sway,18px))) scaleY(var(--flip,-1)) translateZ(0); }
-}
-
 #c-ring{
   position:fixed;top:0;left:0;z-index:9998;
   width:34px;height:34px;
@@ -561,65 +526,85 @@ footer{
   overflow: hidden;
   pointer-events: none;
   background-color: var(--bg);
+  will-change: transform, opacity, clip-path, filter;
+  clip-path: circle(0% at 50% 50%);
+  opacity: 0;
+  filter: blur(14px);
+  transform: scale(1.12);
+  transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.wall-bg-container.reveal-active {
+  clip-path: circle(150% at 50% 50%);
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
 }
 
 .wall-bg-track-wrapper {
   position: absolute;
-  top: -70%;
-  left: -70%;
-  width: 240vw;
-  height: 240vh;
+  top: -50%;
+  left: -20%;
+  width: 170vw;
+  height: 200vh;
   display: flex;
   justify-content: space-around;
-  gap: 22px;
-  transform: rotate(35deg);
-  transform-origin: center center;
-  opacity: 0.28;
-  filter: contrast(1.05) saturate(1.1);
-  transition: opacity var(--speed-slow) var(--transition-smooth);
+  gap: 24px;
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
   will-change: transform;
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
-  opacity: 0.22;
+  opacity: 0.52;
+  filter: brightness(0.85) contrast(1.08) saturate(1.15);
 }
 
 [data-theme="light"] .wall-bg-track-wrapper {
-  opacity: 0.16;
+  opacity: 0.55;
+  filter: brightness(0.96) contrast(1.05) saturate(1.1);
 }
 
 .wall-track {
   display: flex;
   flex-direction: column;
-  gap: 22px;
-  animation: wallScrollDown linear infinite;
+  gap: 24px;
+  animation: wallScrollDiagonal linear infinite;
   will-change: transform;
 }
 
+/* Mixed aspect ratios for tall, medium, and wide wallpapers */
 .wall-card {
-  width: 250px;
-  height: 155px;
+  width: 165px;
   border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
 }
 
+.wall-card-tall { height: 275px; } /* Mobile tall 9:16 ratio */
+.wall-card-med  { height: 215px; } /* Standard/Square 3:4 ratio */
+.wall-card-wide { height: 155px; } /* Landscape/Wide 16:9 ratio */
+
 .wall-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
 }
 
-@keyframes wallScrollDown {
+/* Smooth motion from top-right to bottom-left while keeping cards 100% upright */
+@keyframes wallScrollDiagonal {
   0% {
-    transform: translateY(-50%);
+    transform: translate(0, -50%);
   }
   100% {
-    transform: translateY(0%);
+    transform: translate(-320px, 0%);
   }
 }
 
@@ -632,13 +617,13 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.68) 0%, rgba(8, 8, 8, 0.94) 85%);
-  backdrop-filter: blur(1.5px);
+  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.48) 0%, rgba(8, 8, 8, 0.88) 85%);
+  backdrop-filter: blur(1px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.72) 0%, rgba(244, 243, 239, 0.95) 85%);
-  backdrop-filter: blur(1.5px);
+  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.38) 0%, rgba(244, 243, 239, 0.82) 85%);
+  backdrop-filter: blur(1px);
 }
 </style>
 </head>
@@ -649,9 +634,8 @@ footer{
   <div class="wall-bg-overlay"></div>
 </div>
 
-<div class="bug-field" id="bugField"></div>
 <div id="progress"></div>
-<div id="c-ring">🐛</div>
+<div id="c-ring">✨</div>
 <div id="toast">✓ Email copied to clipboard</div>
 
 <nav>
@@ -879,69 +863,6 @@ footer{
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-/* ── Falling bug background ── */
-(function () {
-  const field = document.getElementById('bugField');
-  const SPECIES = [
-    { ch: '🐛', flip: 1 },   // caterpillar - looks right falling as-is
-    { ch: '🪲', flip: -1 },  // beetle
-    { ch: '🐞', flip: -1 },  // ladybug
-    { ch: '🕷️', flip: -1 }, // spider
-    { ch: '🦗', flip: 1 },   // grasshopper - looks right falling as-is
-    { ch: '🐜', flip: 1 }    // ant - looks right falling as-is
-  ];
-  const EASES = ['ease-in-out', 'cubic-bezier(0.45,0,0.55,1)'];
-  const MAX_BUGS = 16;
-
-  function spawnBug(initial) {
-    if (field.children.length >= MAX_BUGS) return;
-
-    const species = SPECIES[Math.floor(Math.random() * SPECIES.length)];
-    const bug = document.createElement('div');
-    bug.className = 'bug';
-    const inner = document.createElement('span');
-    inner.className = 'bug-inner';
-    inner.textContent = species.ch;
-    bug.appendChild(inner);
-
-    const x = Math.random() * 100;                     // vw position
-    const size = 14 + Math.random() * 26;               // 14-40px
-    const dur = 12 + Math.random() * 22;                 // 12-34s fall
-    const delay = initial ? -Math.random() * dur : 0;    // stagger only the initial fill
-    const rot = -14 + Math.random() * 28;                // -14..14deg gentle tilt
-    const sway = 4 + Math.random() * 12;                 // 4-16px subtle horizontal drift
-    const swayDur = 4 + Math.random() * 3;               // slower, calmer sway
-    const swayEase = EASES[Math.floor(Math.random() * EASES.length)];
-    const opacity = (0.1 + Math.random() * 0.2).toFixed(2); // depth variance
-
-    bug.style.setProperty('--x', x + 'vw');
-    bug.style.setProperty('--size', size + 'px');
-    bug.style.setProperty('--dur', dur + 's');
-    bug.style.setProperty('--delay', delay + 's');
-    bug.style.opacity = opacity;
-    inner.style.setProperty('--rot', rot + 'deg');
-    inner.style.setProperty('--sway', sway + 'px');
-    inner.style.setProperty('--sway-dur', swayDur + 's');
-    inner.style.setProperty('--sway-ease', swayEase);
-    inner.style.setProperty('--flip', species.flip);
-
-    field.appendChild(bug);
-
-    // clean up once the bug has actually finished its fall, so bugs never pile up
-    const remaining = Math.max((dur - Math.abs(delay)), 0.3) * 1000 + 200;
-    setTimeout(() => bug.remove(), remaining);
-  }
-
-  // fill the screen naturally on load (staggered negative delays = mid-fall already)
-  for (let i = 0; i < 9; i++) spawnBug(true);
-
-  // keep spawning new bugs at randomized, organic intervals forever
-  (function loop() {
-    spawnBug(false);
-    setTimeout(loop, 600 + Math.random() * 1600);
-  })();
-})();
-
 function buildLetterLine(el, text) {
   el.innerHTML = '';
   for (let i = 0; i < text.length; i++) {
@@ -1072,6 +993,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v3';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1091,6 +1013,17 @@ function handleEmail(){
   }
 
   async function fetchWallpaperUrls() {
+    // 1. Instant load from localStorage cache if available
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.timestamp && Date.now() - parsed.timestamp < 3 * 3600 * 1000 && Array.isArray(parsed.urls) && parsed.urls.length > 0) {
+          return parsed.urls;
+        }
+      }
+    } catch (e) {}
+
     let user = GITHUB_USER;
     let repo = GITHUB_REPO;
 
@@ -1113,7 +1046,11 @@ function handleEmail(){
             file.type === 'file' && /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(file.name)
           );
           if (imageFiles.length > 0) {
-            return imageFiles.map(f => `${FOLDER_NAME}/${encodeURIComponent(f.name)}`);
+            const urls = imageFiles.map(f => `${FOLDER_NAME}/${encodeURIComponent(f.name)}`);
+            try {
+              localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), urls }));
+            } catch (e) {}
+            return urls;
           }
         }
       }
@@ -1125,15 +1062,22 @@ function handleEmail(){
 
   async function buildWallpaperGrid() {
     const container = document.getElementById('wallBgTrackWrapper');
+    const wallBg = document.getElementById('wallBgContainer');
     if (!container) return;
 
     const urls = await fetchWallpaperUrls();
     if (!urls || urls.length === 0) return;
 
     const shuffled = shuffle(urls);
-    const trackCount = Math.max(8, Math.ceil(window.innerWidth * 2.4 / 270));
-    const itemsPerTrack = 10;
+    const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.8 / 185));
+    const itemsPerTrack = 8;
 
+    const CARD_VARIANTS = [
+      'wall-card-tall', 'wall-card-tall', 'wall-card-tall', 
+      'wall-card-tall', 'wall-card-tall', 'wall-card-tall', 'wall-card-tall',
+      'wall-card-med', 'wall-card-med', 'wall-card-wide'
+    ];
+    let variantCounter = 0;
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
 
@@ -1141,9 +1085,9 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      const speed = 110 + (t % 5) * 14 + Math.random() * 10;
+      const speed = 45 + (t % 5) * 6 + Math.random() * 5;
       track.style.animationDuration = `${speed}s`;
-      track.style.animationDelay = `-${(t * 15) % 60}s`;
+      track.style.animationDelay = `-${(t * 12) % 45}s`;
 
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
@@ -1155,7 +1099,9 @@ function handleEmail(){
 
       fullList.forEach(url => {
         const card = document.createElement('div');
-        card.className = 'wall-card';
+        const variant = CARD_VARIANTS[(variantCounter++) % CARD_VARIANTS.length];
+        card.className = `wall-card ${variant}`;
+
         const img = document.createElement('img');
         img.src = url;
         img.alt = 'Background Wallpaper';
@@ -1168,7 +1114,44 @@ function handleEmail(){
     }
 
     container.appendChild(fragment);
+
+    // Trigger Buttery Smooth Fluid Iris Center Reveal Animation
+    requestAnimationFrame(() => {
+      if (wallBg) {
+        wallBg.classList.add('reveal-active');
+      }
+    });
   }
+
+  // Silky Lerp Physics Mouse Scroll Parallax Engine
+  let targetScrollY = 0;
+  let currentScrollY = 0;
+  let isParallaxRunning = false;
+
+  function updateParallaxInertia() {
+    targetScrollY = window.scrollY;
+    // Fluid lerp physics (0.08 step for smooth inertia)
+    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+
+    const wrapper = document.getElementById('wallBgTrackWrapper');
+    if (wrapper) {
+      const parallaxY = -currentScrollY * 0.24;
+      wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
+    }
+
+    if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
+      requestAnimationFrame(updateParallaxInertia);
+    } else {
+      isParallaxRunning = false;
+    }
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!isParallaxRunning) {
+      isParallaxRunning = true;
+      requestAnimationFrame(updateParallaxInertia);
+    }
+  }, { passive: true });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
