@@ -69,20 +69,6 @@ body::after{
 
 ::selection{background:var(--ink);color:var(--bg);}
 
-#c-ring{
-  position:fixed;top:0;left:0;z-index:9998;
-  width:34px;height:34px;
-  pointer-events:none;
-  font-size:24px;line-height:1;
-  display:flex;align-items:center;justify-content:center;
-  transition:font-size .32s var(--transition),opacity .28s;
-  will-change:transform;
-  filter:drop-shadow(0 2px 5px rgba(0,0,0,0.45));
-}
-body.cur-hover #c-ring{font-size:34px;}
-@media(hover:none){#c-ring{display:none;}}
-@media(hover:hover){ html,body,a,button,.project-row,.feature-card,.tech-item,.theme-btn{cursor:none;} }
-
 #progress{position:fixed;top:0;left:0;z-index:9500;height:1px;width:100%;background:var(--ink);opacity:0.38;transform:scaleX(0);transform-origin:0 0;will-change:transform;}
 
 nav{
@@ -552,30 +538,30 @@ footer{
   height: 200vh;
   display: flex;
   justify-content: space-around;
-  gap: 24px;
+  gap: 28px;
   transform: translate3d(0, var(--parallax-y, 0px), 0);
   will-change: transform;
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
-  opacity: 0.52;
-  filter: brightness(0.85) contrast(1.08) saturate(1.15);
+  opacity: 0.58;
+  filter: brightness(0.88) contrast(1.08) saturate(1.15);
 }
 
 [data-theme="light"] .wall-bg-track-wrapper {
-  opacity: 0.55;
-  filter: brightness(0.96) contrast(1.05) saturate(1.1);
+  opacity: 0.88;
+  filter: brightness(0.98) contrast(1.05) saturate(1.15);
 }
 
 .wall-track {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
   animation: wallScrollDiagonal linear infinite;
   will-change: transform;
 }
 
-/* Mixed aspect ratios for tall, medium, and wide wallpapers */
+/* Mixed aspect ratios per column for zero overlapping and clean grid spacing */
 .wall-card {
   width: 165px;
   border-radius: var(--r-md);
@@ -586,7 +572,7 @@ footer{
   background: var(--bg-card);
 }
 
-.wall-card-tall { height: 275px; } /* Mobile tall 9:16 ratio */
+.wall-card-tall { height: 285px; } /* Mobile tall 9:16 ratio */
 .wall-card-med  { height: 215px; } /* Standard/Square 3:4 ratio */
 .wall-card-wide { height: 155px; } /* Landscape/Wide 16:9 ratio */
 
@@ -617,13 +603,13 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.48) 0%, rgba(8, 8, 8, 0.88) 85%);
+  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.42) 0%, rgba(8, 8, 8, 0.85) 85%);
   backdrop-filter: blur(1px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.38) 0%, rgba(244, 243, 239, 0.82) 85%);
-  backdrop-filter: blur(1px);
+  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.15) 0%, rgba(244, 243, 239, 0.58) 85%);
+  backdrop-filter: blur(0.5px);
 }
 </style>
 </head>
@@ -635,7 +621,6 @@ footer{
 </div>
 
 <div id="progress"></div>
-<div id="c-ring">✨</div>
 <div id="toast">✓ Email copied to clipboard</div>
 
 <nav>
@@ -905,21 +890,6 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   });
 });
 
-const ring = document.getElementById('c-ring');
-let cx = 0, cy = 0, cursorTicking = false;
-function updateCursor(){
-  ring.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
-  cursorTicking = false;
-}
-window.addEventListener('mousemove', e => {
-  cx = e.clientX; cy = e.clientY;
-  if (!cursorTicking) { requestAnimationFrame(updateCursor); cursorTicking = true; }
-}, {passive:true});
-document.querySelectorAll('a,button,.project-row,.feature-card,.tech-item').forEach(el => {
-  el.addEventListener('mouseenter', () => document.body.classList.add('cur-hover'));
-  el.addEventListener('mouseleave', () => document.body.classList.remove('cur-hover'));
-});
-
 let cardTicking = false;
 let pendingCardEvent = null;
 document.querySelectorAll('.feature-card,.tech-item').forEach(card => {
@@ -993,7 +963,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v3';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v4';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1013,7 +983,6 @@ function handleEmail(){
   }
 
   async function fetchWallpaperUrls() {
-    // 1. Instant load from localStorage cache if available
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
@@ -1072,12 +1041,12 @@ function handleEmail(){
     const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.8 / 185));
     const itemsPerTrack = 8;
 
-    const CARD_VARIANTS = [
-      'wall-card-tall', 'wall-card-tall', 'wall-card-tall', 
-      'wall-card-tall', 'wall-card-tall', 'wall-card-tall', 'wall-card-tall',
-      'wall-card-med', 'wall-card-med', 'wall-card-wide'
+    // Fixed track heights per column (70% tall, 20% med, 10% wide) for zero overlapping and clean 28px gaps!
+    const TRACK_VARIANTS = [
+      'wall-card-tall', 'wall-card-tall', 'wall-card-med', 
+      'wall-card-tall', 'wall-card-tall', 'wall-card-wide', 
+      'wall-card-tall', 'wall-card-tall', 'wall-card-med', 'wall-card-tall'
     ];
-    let variantCounter = 0;
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
 
@@ -1089,6 +1058,7 @@ function handleEmail(){
       track.style.animationDuration = `${speed}s`;
       track.style.animationDelay = `-${(t * 12) % 45}s`;
 
+      const trackVariant = TRACK_VARIANTS[t % TRACK_VARIANTS.length];
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
         trackUrls.push(shuffled[urlIdx % shuffled.length]);
@@ -1099,8 +1069,7 @@ function handleEmail(){
 
       fullList.forEach(url => {
         const card = document.createElement('div');
-        const variant = CARD_VARIANTS[(variantCounter++) % CARD_VARIANTS.length];
-        card.className = `wall-card ${variant}`;
+        card.className = `wall-card ${trackVariant}`;
 
         const img = document.createElement('img');
         img.src = url;
