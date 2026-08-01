@@ -521,13 +521,12 @@ footer{
               opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
               filter 1.4s cubic-bezier(0.16, 1, 0.3, 1),
               transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.wall-bg-container.reveal-active {
-  clip-path: circle(150% at 50% 50%);
-  opacity: 1;
-  filter: blur(0px);
-  transform: scale(1);
+  /* Fades cards in/out smoothly at the top and bottom of the viewport
+     instead of letting them appear or disappear with a hard clip. Applied
+     here (viewport-sized) rather than on the oversized inner wrapper, so
+     the fade zone actually lines up with the visible screen edges. */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
 }
 
 .wall-bg-track-wrapper {
@@ -542,6 +541,13 @@ footer{
   transform: translate3d(0, var(--parallax-y, 0px), 0);
   transform-origin: center center;
   will-change: transform;
+}
+
+.wall-bg-container.reveal-active {
+  clip-path: circle(150% at 50% 50%);
+  opacity: 1;
+  filter: blur(0px);
+  transform: scale(1);
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
@@ -1077,11 +1083,12 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      // All tracks share the same phase so neighboring columns move in
-      // lockstep. With the wrapper rotated 26deg, staggered per-track
-      // delays made the eye drift diagonally across columns mid-scroll,
-      // which looked like a single card's photo swapping to another one.
-      track.style.animationDuration = `54s`;
+      // Tracks now move straight (no rotation), so it's safe to vary
+      // column speed for depth without causing any cross-column illusion.
+      // Cycles through 3 speeds so neighboring columns feel layered
+      // rather than a flat, uniform conveyor belt.
+      const speeds = [46, 54, 62];
+      track.style.animationDuration = `${speeds[t % speeds.length]}s`;
       // Alternating tracks get a static vertical offset (half a card's
       // height + gap) so columns form a staggered, brick-like layout
       // instead of perfectly aligned rows. This only shifts the starting
