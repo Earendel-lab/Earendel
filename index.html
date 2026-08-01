@@ -569,11 +569,27 @@ footer{
   height: 377px;
   border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22), inset 0 0 26px rgba(0, 0, 0, 0.28);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  position: relative;
+  transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
+}
+
+.wall-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0;
+  background: radial-gradient(220px circle at var(--cmx, 50%) var(--cmy, 50%), rgba(255, 255, 255, 0.16), transparent 60%);
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.wall-card:hover::after {
+  opacity: 1;
 }
 
 .wall-card img {
@@ -602,12 +618,16 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.294) 0%, rgba(8, 8, 8, 0.595) 85%);
+  background:
+    linear-gradient(160deg, rgba(120, 130, 190, 0.10) 0%, transparent 40%, rgba(190, 130, 150, 0.08) 100%),
+    radial-gradient(circle at center, rgba(8, 8, 8, 0.294) 0%, rgba(8, 8, 8, 0.595) 85%);
   backdrop-filter: blur(1px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.105) 0%, rgba(244, 243, 239, 0.406) 85%);
+  background:
+    linear-gradient(160deg, rgba(120, 130, 190, 0.06) 0%, transparent 40%, rgba(190, 130, 150, 0.05) 100%),
+    radial-gradient(circle at center, rgba(244, 243, 239, 0.105) 0%, rgba(244, 243, 239, 0.406) 85%);
   backdrop-filter: blur(0.5px);
 }
 
@@ -1077,6 +1097,7 @@ function handleEmail(){
       
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
+      const depthBlur = ['0px', '0.5px', '1.6px'][speedIdx];
 
       
       const offsets = ['0px', '70px', '145px', '215px'];
@@ -1095,6 +1116,7 @@ function handleEmail(){
         card.className = 'wall-card';
         card.style.transform = `scale(${depthScale})`;
         card.style.opacity = depthOpacity;
+        card.style.filter = depthBlur !== '0px' ? `blur(${depthBlur})` : '';
 
         const img = document.createElement('img');
         img.src = url;
@@ -1145,6 +1167,29 @@ function handleEmail(){
       if (!isParallaxRunning) {
         isParallaxRunning = true;
         requestAnimationFrame(updateParallaxInertia);
+      }
+    }, { passive: true });
+
+    let glowTicking = false;
+    let pendingGlowEvent = null;
+    let lastGlowCard = null;
+    document.addEventListener('mousemove', e => {
+      pendingGlowEvent = e;
+      if (!glowTicking) {
+        requestAnimationFrame(() => {
+          if (pendingGlowEvent) {
+            const card = pendingGlowEvent.target.closest && pendingGlowEvent.target.closest('.wall-card');
+            if (card) {
+              const r = card.getBoundingClientRect();
+              card.style.setProperty('--cmx', ((pendingGlowEvent.clientX - r.left) / r.width * 100).toFixed(1) + '%');
+              card.style.setProperty('--cmy', ((pendingGlowEvent.clientY - r.top) / r.height * 100).toFixed(1) + '%');
+              lastGlowCard = card;
+            }
+            pendingGlowEvent = null;
+          }
+          glowTicking = false;
+        });
+        glowTicking = true;
       }
     }, { passive: true });
   }
