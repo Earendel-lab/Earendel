@@ -532,14 +532,15 @@ footer{
 
 .wall-bg-track-wrapper {
   position: absolute;
-  top: -60%;
-  left: -30%;
-  width: 220vw;
-  height: 220vh;
+  top: -65%;
+  left: -50%;
+  width: 250vw;
+  height: 250vh;
   display: flex;
   justify-content: space-around;
-  gap: 28px;
-  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  gap: 32px;
+  transform: rotate(26deg) translate3d(0, var(--parallax-y, 0px), 0);
+  transform-origin: center center;
   will-change: transform;
 }
 
@@ -556,12 +557,12 @@ footer{
 .wall-track {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  animation: wallScrollDiagonal 52s linear infinite;
+  gap: 32px;
+  animation: wallScrollDown 54s linear infinite;
   will-change: transform;
 }
 
-/* Uniform mobile tall card dimensions for 100% edge-to-edge coverage and zero spacing bugs */
+/* Uniform mobile tall card dimensions with counter-rotation for 100% straight upright images & zero column overlap */
 .wall-card {
   width: 175px;
   height: 290px;
@@ -571,6 +572,8 @@ footer{
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
+  transform: rotate(-26deg);
+  transform-origin: center center;
 }
 
 .wall-card img {
@@ -581,13 +584,13 @@ footer{
   display: block;
 }
 
-/* Smooth motion from top-right to bottom-left while keeping cards 100% upright */
-@keyframes wallScrollDiagonal {
+/* Parallel track motion from top-right to bottom-left with zero lateral column drift */
+@keyframes wallScrollDown {
   0% {
-    transform: translate(0, -50%);
+    transform: translateY(-50%);
   }
   100% {
-    transform: translate(-320px, 0%);
+    transform: translateY(0%);
   }
 }
 
@@ -960,7 +963,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v5';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v6';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1035,7 +1038,7 @@ function handleEmail(){
     if (!urls || urls.length === 0) return;
 
     const shuffled = shuffle(urls);
-    const trackCount = Math.max(10, Math.ceil(window.innerWidth * 2.2 / 195));
+    const trackCount = Math.max(12, Math.ceil(window.innerWidth * 2.5 / 195));
     const itemsPerTrack = 8;
 
     let urlIdx = 0;
@@ -1045,9 +1048,9 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      // Synchronized duration with staggered position delays for perfect alignment
-      track.style.animationDuration = `52s`;
-      track.style.animationDelay = `-${(t * 7.5) % 52}s`;
+      // Parallel downward track scrolling with staggered position delays
+      track.style.animationDuration = `54s`;
+      track.style.animationDelay = `-${(t * 7.5) % 54}s`;
 
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
