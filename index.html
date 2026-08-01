@@ -538,7 +538,7 @@ footer{
   display: flex;
   justify-content: space-around;
   gap: 32px;
-  transform: rotate(26deg) translate3d(0, var(--parallax-y, 0px), 0);
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
   transform-origin: center center;
   will-change: transform;
 }
@@ -1084,18 +1084,18 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      // Rotation is back on (top-right to bottom-left diagonal motion), so
-      // all tracks stay on the exact same duration/phase — varying speed
-      // per column would gradually drift out of sync at this angle and
-      // reintroduce the earlier cross-column "jump" illusion. Depth is
-      // still cued visually via scale/opacity below, which is static per
-      // card and carries no timing risk.
-      track.style.animationDuration = `54s`;
-      const speedIdx = t % 3;
+      // Tracks now move straight (no rotation), so it's safe to vary
+      // column speed for depth without causing any cross-column illusion.
+      // Cycles through 3 speeds so neighboring columns feel layered
+      // rather than a flat, uniform conveyor belt.
+      const speeds = [46, 54, 62];
+      const speedIdx = t % speeds.length;
+      track.style.animationDuration = `${speeds[speedIdx]}s`;
 
-      // Depth cueing: alternating "closer" columns render slightly larger
-      // and brighter, "farther" columns slightly smaller and dimmer —
-      // purely visual, not tied to animation speed.
+      // Depth cueing: faster/closer columns render slightly larger and
+      // brighter, slower/farther columns slightly smaller and dimmer.
+      // Ties the speed variance to a visual depth cue instead of just
+      // differing speed on its own.
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
 
