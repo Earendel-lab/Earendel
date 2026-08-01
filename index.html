@@ -188,7 +188,7 @@ nav{
   pointer-events:none;
 }
 .intro-letter.fill-anim::before{
-  animation:letterFill 0.65s var(--transition) forwards;
+  animation:letterFill 0.5s var(--transition) forwards;
 }
 @keyframes letterFill{
   0%  {transform:scaleX(0);opacity:0.3;}
@@ -878,11 +878,14 @@ buildLetterLine(document.getElementById('heroLine2'), 'Tester');
 function animateLetters(lineEl, startDelay) {
   const letters = lineEl.querySelectorAll('.intro-letter');
   letters.forEach((letter, i) => {
-    setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 230);
+    setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 110);
   });
 }
-setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 1180);
-setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 1320);
+// Timed so the longest word ("Tester", 6 letters) finishes filling at
+// 650 + (5*110) + 500 = 1700ms — comfortably under 2s, before the
+// wallpaper grid starts building and competing for the main thread.
+setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 550);
+setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 650);
 
 const root = document.documentElement;
 let dark = true;
