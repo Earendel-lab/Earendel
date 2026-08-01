@@ -802,7 +802,7 @@ footer{
 
     <div class="tech-item fade-in fade-in-d3">
       <div class="tech-icon-wrap">
-        <svg class="tech-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg width="36" height="36" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path fill="#F24E1E" d="M8 24c2.208 0 4-1.792 4-4v-4H8c-2.208 0-4 1.792-4 4s1.792 4 4 4z"/>
           <path fill="#FF7262" d="M4 12c0-2.208 1.792-4 4-4h4v8H8c-2.208 0-4-1.792-4-4z"/>
           <path fill="#A259FF" d="M4 4c0-2.208 1.792-4 4-4h4v8H8C5.792 8 4 6.208 4 4z"/>
@@ -1027,6 +1027,19 @@ function handleEmail(){
     return getFallbackWallpapers();
   }
 
+  // Preload every wallpaper URL into the browser's HTTP cache before any
+  // card is created. This is what prevents images from "popping in" or
+  // appearing to swap mid-scroll: by the time img.src is set on the real
+  // wall-card elements below, the bytes are already cached and paint
+  // instantly instead of triggering a fresh network fetch.
+  function preloadAll(urls) {
+    return Promise.all(urls.map(url => new Promise(resolve => {
+      const im = new Image();
+      im.onload = im.onerror = resolve; // resolve either way so one bad url can't hang the page
+      im.src = url;
+    })));
+  }
+
   async function buildWallpaperGrid() {
     const container = document.getElementById('wallBgTrackWrapper');
     const wallBg = document.getElementById('wallBgContainer');
@@ -1034,6 +1047,8 @@ function handleEmail(){
 
     const urls = await fetchWallpaperUrls();
     if (!urls || urls.length === 0) return;
+
+    await preloadAll(urls);
 
     const shuffled = shuffle(urls);
     const trackCount = Math.max(12, Math.ceil(window.innerWidth * 2.5 / 195));
@@ -1065,7 +1080,6 @@ function handleEmail(){
         const img = document.createElement('img');
         img.src = url;
         img.alt = 'Background Wallpaper';
-        img.loading = 'lazy';
         card.appendChild(img);
         track.appendChild(card);
       });
