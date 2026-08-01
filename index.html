@@ -105,7 +105,6 @@ nav{
 [data-theme="light"] .icon-moon{opacity:0;transform:scale(0.35) rotate(85deg);}
 [data-theme="light"] .icon-sun{opacity:1;transform:scale(1) rotate(0deg);}
 
-/* Instant theme snap: everything re-paints immediately when the theme flips. */
 .theme-instant,
 .theme-instant *{
   transition:none !important;
@@ -276,7 +275,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .feature-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
 .feature-icon svg{width:18px;height:18px;}
 
-/* ── Projects Section ── */
 #work{padding-bottom:var(--space-10);}
 .project-header-row{
   display:grid;grid-template-columns:72px 1fr 260px;
@@ -315,7 +313,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .project-row:hover::before{left:140%;}
 
-/* ── App Icon in Project Row ── */
 .project-icon-wrap{
   display:flex;
   align-items:center;
@@ -462,7 +459,6 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 .btn-discord{background:#5865f2;color:#fff;border-color:#5865f2;}
 .btn-discord:hover{background:#6672f3;border-color:#6672f3;}
 
-/* Always-on shimmer for contact card buttons */
 .contact-actions .btn::after{
   content:'';
   position:absolute;top:0;left:-60%;width:35%;height:100%;
@@ -504,7 +500,6 @@ footer{
 .project-list{position:relative;padding:0;}
 .project-list-line{display:none;}
 
-/* ── Dynamic Wallpaper Animated Background ── */
 .wall-bg-container {
   position: fixed;
   inset: 0;
@@ -515,18 +510,15 @@ footer{
   will-change: transform, opacity, clip-path, filter;
   clip-path: circle(0% at 50% 50%);
   opacity: 0;
-  filter: blur(14px);
+  filter: blur(20px);
   transform: scale(1.12);
+  perspective: 1500px;
   transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1),
               opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
               filter 1.4s cubic-bezier(0.16, 1, 0.3, 1),
               transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  /* Fades cards in/out smoothly at the top and bottom of the viewport
-     instead of letting them appear or disappear with a hard clip. Applied
-     here (viewport-sized) rather than on the oversized inner wrapper, so
-     the fade zone actually lines up with the visible screen edges. */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 85%);
+  mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 85%);
 }
 
 .wall-bg-track-wrapper {
@@ -538,8 +530,9 @@ footer{
   display: flex;
   justify-content: space-around;
   gap: 32px;
-  transform: translate3d(0, var(--parallax-y, 0px), 0);
+  transform: translate3d(0, var(--parallax-y, 0px), 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(1.2);
   transform-origin: center center;
+  transform-style: preserve-3d;
   will-change: transform;
 }
 
@@ -551,8 +544,8 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
-  opacity: 0.58;
-  filter: brightness(0.88) contrast(1.08) saturate(1.15);
+  opacity: 0.65;
+  filter: brightness(0.9) contrast(1.1) saturate(1.2);
 }
 
 [data-theme="light"] .wall-bg-track-wrapper {
@@ -568,13 +561,12 @@ footer{
   will-change: transform;
 }
 
-/* Cards naturally follow the container angle — no counter-rotation so grid tiles with zero diagonal gaps */
 .wall-card {
-  width: 175px;
-  height: 290px;
-  border-radius: var(--r-md);
+  width: 180px;
+  height: 300px;
+  border-radius: var(--r-lg);
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
@@ -589,7 +581,6 @@ footer{
   display: block;
 }
 
-/* Parallel track motion from top-right to bottom-left with zero lateral column drift */
 @keyframes wallScrollDown {
   0% {
     transform: translateY(-50%);
@@ -608,18 +599,15 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.42) 0%, rgba(8, 8, 8, 0.85) 85%);
-  backdrop-filter: blur(1px);
+  background: radial-gradient(circle at 50% 50%, rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.95) 90%);
+  backdrop-filter: blur(3px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.15) 0%, rgba(244, 243, 239, 0.58) 85%);
-  backdrop-filter: blur(0.5px);
+  background: radial-gradient(circle at 50% 50%, rgba(244,243,239,0.1) 0%, rgba(244,243,239,0.9) 90%);
+  backdrop-filter: blur(2px);
 }
 
-/* backdrop-filter is one of the most GPU-expensive CSS properties on mobile
-   and is a major cause of scroll jank during fast fling scrolling. The
-   radial-gradient dimming alone is enough on smaller screens. */
 @media (max-width: 768px) {
   .wall-bg-overlay {
     backdrop-filter: none;
@@ -735,7 +723,6 @@ footer{
   <div class="project-list">
     <div class="project-list-line"></div>
 
-    <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-row fade-in fade-in-d2">
       <div class="project-icon-wrap">
         <img src="icons/Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
@@ -744,7 +731,6 @@ footer{
       <span class="project-desc">Minimalist Nothing OS inspired currency converter for Android.</span>
     </a>
 
-    <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-row fade-in fade-in-d3">
       <div class="project-icon-wrap">
         <img src="icons/Flow.png" alt="Flow" class="project-icon-img" loading="lazy">
@@ -753,7 +739,6 @@ footer{
       <span class="project-desc">Focused countdown timer made for deep work sessions.</span>
     </a>
 
-    <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-row fade-in fade-in-d4">
       <div class="project-icon-wrap">
         <img src="icons/Compass.png" alt="Compass" class="project-icon-img" loading="lazy">
@@ -762,7 +747,6 @@ footer{
       <span class="project-desc">Simple, beautiful compass app with a clean minimal interface.</span>
     </a>
 
-    <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="project-row fade-in fade-in-d5">
       <div class="project-icon-wrap">
         <img src="icons/Glyphtorch.png" alt="Glyph Torch" class="project-icon-img" loading="lazy">
@@ -888,9 +872,6 @@ function animateLetters(lineEl, startDelay) {
     setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 150);
   });
 }
-// Timed so the longest word ("Tester", 6 letters) finishes filling at
-// 880 + (5*150) + 650 = 2280ms — around 2.3-2.4s total, still safely
-// before the wallpaper grid starts building at ~3s.
 setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 750);
 setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 880);
 
@@ -900,7 +881,6 @@ document.getElementById('themeBtn').addEventListener('click', () => {
   dark = !dark;
   root.classList.add('theme-instant');
   root.setAttribute('data-theme', dark ? 'dark' : 'light');
-  // force a reflow so the attribute change paints with transitions already off
   void root.offsetHeight;
   requestAnimationFrame(() => {
     requestAnimationFrame(() => root.classList.remove('theme-instant'));
@@ -975,7 +955,6 @@ function handleEmail(){
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
 
-/* ── Dynamic GitHub Wallpaper Background Engine ── */
 (function initWallpaperBackground() {
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
@@ -1040,25 +1019,18 @@ function handleEmail(){
           }
         }
       }
-    } catch (err) {
-      console.warn('GitHub API fetch failed or offline, using local WALL list:', err);
-    }
+    } catch (err) {}
     return getFallbackWallpapers();
   }
 
-  // Preload every wallpaper URL into the browser's HTTP cache before any
-  // card is created. This is what prevents images from "popping in" or
-  // appearing to swap mid-scroll: by the time img.src is set on the real
-  // wall-card elements below, the bytes are already cached and paint
-  // instantly instead of triggering a fresh network fetch.
   function preloadAll(urls) {
-    const keepAlive = []; // prevents GC from cancelling in-flight requests
+    const keepAlive = [];
     return Promise.all(urls.map(url => {
       const im = new Image();
       keepAlive.push(im);
       im.src = url;
       return im.decode
-        ? im.decode().catch(() => {}) // resolves once fully decoded; ignore decode errors so one bad url can't hang the page
+        ? im.decode().catch(() => {})
         : new Promise(resolve => { im.onload = im.onerror = resolve; });
     }));
   }
@@ -1084,24 +1056,13 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      // Tracks now move straight (no rotation), so it's safe to vary
-      // column speed for depth without causing any cross-column illusion.
-      // Cycles through 3 speeds so neighboring columns feel layered
-      // rather than a flat, uniform conveyor belt.
       const speeds = [46, 54, 62];
       const speedIdx = t % speeds.length;
       track.style.animationDuration = `${speeds[speedIdx]}s`;
 
-      // Depth cueing: faster/closer columns render slightly larger and
-      // brighter, slower/farther columns slightly smaller and dimmer.
-      // Ties the speed variance to a visual depth cue instead of just
-      // differing speed on its own.
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
 
-      // Cycles through 4 varied vertical offsets rather than a strict
-      // 2-value alternation, so the staggered layout reads as organic
-      // rather than an obviously repeating pattern.
       const offsets = ['0px', '70px', '145px', '215px'];
       track.style.marginTop = offsets[t % offsets.length];
 
@@ -1131,7 +1092,6 @@ function handleEmail(){
 
     container.appendChild(fragment);
 
-    // Trigger Buttery Smooth Fluid Iris Center Reveal Animation
     requestAnimationFrame(() => {
       if (wallBg) {
         wallBg.classList.add('reveal-active');
@@ -1139,10 +1099,6 @@ function handleEmail(){
     });
   }
 
-  // Silky Lerp Physics Mouse Scroll Parallax Engine
-  // Skipped entirely on touch devices: the extra rAF work on every scroll
-  // event adds main-thread load during fast fling scrolling on mobile,
-  // where the effect is barely noticeable anyway.
   const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   let targetScrollY = 0;
@@ -1151,7 +1107,6 @@ function handleEmail(){
 
   function updateParallaxInertia() {
     targetScrollY = window.scrollY;
-    // Fluid lerp physics (0.08 step for smooth inertia)
     currentScrollY += (targetScrollY - currentScrollY) * 0.08;
 
     const wrapper = document.getElementById('wallBgTrackWrapper');
@@ -1177,9 +1132,9 @@ function handleEmail(){
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
+    document.addEventListener('DOMContentLoaded', () => setTimeout(buildWallpaperGrid, 2400));
   } else {
-    buildWallpaperGrid();
+    setTimeout(buildWallpaperGrid, 2400);
   }
 })();
 </script>
