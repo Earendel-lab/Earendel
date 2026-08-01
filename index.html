@@ -638,22 +638,6 @@ footer{
   }
 }
 
-/* ── Glyph-pulse accent (signature nod to Nothing OS glyph interface) ── */
-.glyph-dots{
-  display:inline-flex;align-items:center;gap:4px;margin-left:2px;
-}
-.glyph-dot{
-  border-radius:50%;background:var(--ink);
-  animation:glyphPulse 2.6s ease-in-out infinite;
-}
-.glyph-dot:nth-child(1){width:5px;height:5px;animation-delay:0s;}
-.glyph-dot:nth-child(2){width:4px;height:4px;animation-delay:0.45s;}
-.glyph-dot:nth-child(3){width:3px;height:3px;animation-delay:0.9s;}
-@keyframes glyphPulse{
-  0%,100%{opacity:0.18;transform:scale(0.8);}
-  50%{opacity:1;transform:scale(1.15);}
-}
-
 /* ── Ambient cursor spotlight (global, subtle, desktop only) ── */
 #cursorSpotlight{
   position:fixed;inset:0;z-index:5;pointer-events:none;
@@ -704,7 +688,6 @@ footer{
   <div class="nav-left">
     <img src="icons/Logo.jpg" alt="Earendel Lab" class="nav-logo" loading="lazy">
     <span class="nav-wordmark">Earendel Lab</span>
-    <span class="glyph-dots" aria-hidden="true"><span class="glyph-dot"></span><span class="glyph-dot"></span><span class="glyph-dot"></span></span>
   </div>
   <div class="nav-links">
     <a href="#home"     class="nav-a">Home</a>
