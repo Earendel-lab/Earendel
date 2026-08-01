@@ -437,7 +437,7 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 #contact{padding:var(--space-10) var(--space-7);}
 .contact-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--space-8);}
 .contact-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,11vw,9.5rem);color:var(--ink);line-height:0.9;letter-spacing:var(--tracking-tight);transition:color var(--speed-slow);}
-.contact-sub{font-size:var(--text-sm);color:var(--ink-2);font-weight:300;line-height:1.78;max-width:320px;margin-top:var(--space-5);letter-spacing:0.01em;}
+.contact-sub{font-size:var(--text-sm);color:var(--ink-2);font-weight:500;line-height:1.78;max-width:320px;margin-top:var(--space-5);letter-spacing:0.01em;}
 .contact-actions{display:flex;flex-direction:column;gap:10px;min-width:200px;}
 @media(max-width:768px){
   .contact-grid{grid-template-columns:1fr;}
@@ -460,6 +460,10 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 .btn-ghost:hover{color:var(--ink);border-color:var(--ink-3);background:var(--accent-glow);}
 .btn-discord{background:#5865f2;color:#fff;border-color:#5865f2;}
 .btn-discord:hover{background:#6672f3;border-color:#6672f3;}
+.btn-email{background:#4285F4;color:#fff;border-color:#4285F4;}
+.btn-email:hover{background:#5a95f5;border-color:#5a95f5;}
+.btn-github{background:#111111;color:#fff;border-color:#111111;}
+.btn-github:hover{background:#242424;border-color:#242424;}
 
 /* Shimmer for contact card buttons */
 .contact-actions .btn::after{
@@ -895,8 +899,8 @@ footer{
       <p class="contact-sub fade-in fade-in-d2">If you're building something interesting or need another pair of eyes for testing, feel free to get in touch.</p>
     </div>
     <div class="contact-actions fade-in fade-in-d2">
-      <button class="btn btn-solid" onclick="handleEmail()">Email Me</button>
-      <a href="https://github.com/Earendel-lab" target="_blank" class="btn btn-ghost">GitHub</a>
+      <button class="btn btn-email" onclick="handleEmail()">Email Me</button>
+      <a href="https://github.com/Earendel-lab" target="_blank" class="btn btn-github">GitHub</a>
       <a href="https://discord.com/users/1393491217299275778" target="_blank" class="btn btn-discord">Discord</a>
     </div>
   </div>
