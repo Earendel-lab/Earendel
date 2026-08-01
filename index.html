@@ -1065,9 +1065,11 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      // Parallel downward track scrolling with staggered position delays
+      // All tracks share the same phase so neighboring columns move in
+      // lockstep. With the wrapper rotated 26deg, staggered per-track
+      // delays made the eye drift diagonally across columns mid-scroll,
+      // which looked like a single card's photo swapping to another one.
       track.style.animationDuration = `54s`;
-      track.style.animationDelay = `-${(t * 7.5) % 54}s`;
 
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
