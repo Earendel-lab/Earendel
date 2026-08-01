@@ -1033,11 +1033,15 @@ function handleEmail(){
   // wall-card elements below, the bytes are already cached and paint
   // instantly instead of triggering a fresh network fetch.
   function preloadAll(urls) {
-    return Promise.all(urls.map(url => new Promise(resolve => {
+    const keepAlive = []; // prevents GC from cancelling in-flight requests
+    return Promise.all(urls.map(url => {
       const im = new Image();
-      im.onload = im.onerror = resolve; // resolve either way so one bad url can't hang the page
+      keepAlive.push(im);
       im.src = url;
-    })));
+      return im.decode
+        ? im.decode().catch(() => {}) // resolves once fully decoded; ignore decode errors so one bad url can't hang the page
+        : new Promise(resolve => { im.onload = im.onerror = resolve; });
+    }));
   }
 
   async function buildWallpaperGrid() {
