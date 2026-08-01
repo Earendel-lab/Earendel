@@ -1090,24 +1090,18 @@ function handleEmail(){
     });
   }
 
-  // Silky Lerp Physics Mouse Scroll Parallax Engine
-  // Positive parallaxY = background drifts DOWN when user scrolls down (natural feel)
+  // Silky Lerp Physics Scroll Parallax — wallpapers drift with page scroll
   let targetScrollY = 0;
   let currentScrollY = 0;
   let isParallaxRunning = false;
 
   function updateParallaxInertia() {
     targetScrollY = window.scrollY;
-    // Fluid lerp physics (0.08 step for smooth inertia)
     currentScrollY += (targetScrollY - currentScrollY) * 0.08;
-
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
-      // Positive: background moves DOWN with scroll = correct natural parallax direction
-      const parallaxY = currentScrollY * 0.18;
-      wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
+      wrapper.style.setProperty('--parallax-y', `${(currentScrollY * 0.18).toFixed(2)}px`);
     }
-
     if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
       requestAnimationFrame(updateParallaxInertia);
     } else {
