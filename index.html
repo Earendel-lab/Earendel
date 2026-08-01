@@ -188,7 +188,7 @@ nav{
   pointer-events:none;
 }
 .intro-letter.fill-anim::before{
-  animation:letterFill 0.5s var(--transition) forwards;
+  animation:letterFill 0.65s var(--transition) forwards;
 }
 @keyframes letterFill{
   0%  {transform:scaleX(0);opacity:0.3;}
@@ -878,14 +878,14 @@ buildLetterLine(document.getElementById('heroLine2'), 'Tester');
 function animateLetters(lineEl, startDelay) {
   const letters = lineEl.querySelectorAll('.intro-letter');
   letters.forEach((letter, i) => {
-    setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 110);
+    setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 150);
   });
 }
 // Timed so the longest word ("Tester", 6 letters) finishes filling at
-// 650 + (5*110) + 500 = 1700ms — comfortably under 2s, before the
-// wallpaper grid starts building and competing for the main thread.
-setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 550);
-setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 650);
+// 880 + (5*150) + 650 = 2280ms — around 2.3-2.4s total, still safely
+// before the wallpaper grid starts building at ~3s.
+setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 750);
+setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 880);
 
 const root = document.documentElement;
 let dark = true;
@@ -1082,6 +1082,12 @@ function handleEmail(){
       // delays made the eye drift diagonally across columns mid-scroll,
       // which looked like a single card's photo swapping to another one.
       track.style.animationDuration = `54s`;
+      // Alternating tracks get a static vertical offset (half a card's
+      // height + gap) so columns form a staggered, brick-like layout
+      // instead of perfectly aligned rows. This only shifts the starting
+      // position, not the animation phase, so all tracks still move in
+      // lockstep — avoiding the cross-track jump illusion from before.
+      track.style.marginTop = (t % 2 === 0) ? '0px' : '161px';
 
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
