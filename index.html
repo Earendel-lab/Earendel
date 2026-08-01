@@ -609,6 +609,15 @@ footer{
   background: radial-gradient(circle at center, rgba(244, 243, 239, 0.15) 0%, rgba(244, 243, 239, 0.58) 85%);
   backdrop-filter: blur(0.5px);
 }
+
+/* backdrop-filter is one of the most GPU-expensive CSS properties on mobile
+   and is a major cause of scroll jank during fast fling scrolling. The
+   radial-gradient dimming alone is enough on smaller screens. */
+@media (max-width: 768px) {
+  .wall-bg-overlay {
+    backdrop-filter: none;
+  }
+}
 </style>
 </head>
 <body>
@@ -1104,6 +1113,11 @@ function handleEmail(){
   }
 
   // Silky Lerp Physics Mouse Scroll Parallax Engine
+  // Skipped entirely on touch devices: the extra rAF work on every scroll
+  // event adds main-thread load during fast fling scrolling on mobile,
+  // where the effect is barely noticeable anyway.
+  const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
   let targetScrollY = 0;
   let currentScrollY = 0;
   let isParallaxRunning = false;
@@ -1126,12 +1140,14 @@ function handleEmail(){
     }
   }
 
-  window.addEventListener('scroll', () => {
-    if (!isParallaxRunning) {
-      isParallaxRunning = true;
-      requestAnimationFrame(updateParallaxInertia);
-    }
-  }, { passive: true });
+  if (!isCoarsePointer) {
+    window.addEventListener('scroll', () => {
+      if (!isParallaxRunning) {
+        isParallaxRunning = true;
+        requestAnimationFrame(updateParallaxInertia);
+      }
+    }, { passive: true });
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
