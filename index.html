@@ -573,12 +573,16 @@ footer{
   height: 377px;
   border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22), inset 0 0 26px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
   position: relative;
-  transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
+  contain: strict;
+  content-visibility: auto;
+  contain-intrinsic-size: 228px 377px;
+  transform: translateZ(0);
+  transition: opacity 0.3s ease;
 }
 
 .wall-card::after {
@@ -625,21 +629,12 @@ footer{
   background:
     linear-gradient(160deg, rgba(120, 130, 190, 0.10) 0%, transparent 40%, rgba(190, 130, 150, 0.08) 100%),
     radial-gradient(circle at center, rgba(8, 8, 8, 0.294) 0%, rgba(8, 8, 8, 0.595) 85%);
-  backdrop-filter: blur(1px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
   background:
     linear-gradient(160deg, rgba(120, 130, 190, 0.06) 0%, transparent 40%, rgba(190, 130, 150, 0.05) 100%),
     radial-gradient(circle at center, rgba(244, 243, 239, 0.105) 0%, rgba(244, 243, 239, 0.406) 85%);
-  backdrop-filter: blur(0.5px);
-}
-
-
-@media (max-width: 768px) {
-  .wall-bg-overlay {
-    backdrop-filter: none;
-  }
 }
 
 /* ── Ambient cursor spotlight (global, subtle, desktop only) ── */
@@ -1143,8 +1138,8 @@ function handleEmail(){
     await preloadAll(urls);
 
     const shuffled = shuffle(urls);
-    const trackCount = Math.max(12, Math.ceil(window.innerWidth * 2.5 / 195));
-    const itemsPerTrack = 8;
+    const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.7 / 195));
+    const itemsPerTrack = 6;
 
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
@@ -1161,7 +1156,6 @@ function handleEmail(){
       
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
-      const depthBlur = ['0px', '0.5px', '1.6px'][speedIdx];
 
       
       const offsets = ['0px', '70px', '145px', '215px'];
@@ -1178,9 +1172,8 @@ function handleEmail(){
       fullList.forEach(url => {
         const card = document.createElement('div');
         card.className = 'wall-card';
-        card.style.transform = `scale(${depthScale})`;
+        card.style.transform = `scale(${depthScale}) translateZ(0)`;
         card.style.opacity = depthOpacity;
-        card.style.filter = depthBlur !== '0px' ? `blur(${depthBlur})` : '';
 
         const img = document.createElement('img');
         img.src = url;
