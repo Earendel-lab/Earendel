@@ -507,18 +507,15 @@ footer{
   overflow: hidden;
   pointer-events: none;
   background-color: var(--bg);
-  will-change: transform, opacity, clip-path, filter;
+  will-change: transform, opacity, clip-path;
   clip-path: circle(0% at 50% 50%);
   opacity: 0;
-  filter: blur(20px);
-  transform: scale(1.12);
+  filter: blur(0px);
+  transform: scale(1.05);
   perspective: 1500px;
-  transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              filter 1.4s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-  -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 85%);
-  mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 15%, rgba(0,0,0,0) 85%);
+  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .wall-bg-track-wrapper {
@@ -539,18 +536,17 @@ footer{
 .wall-bg-container.reveal-active {
   clip-path: circle(150% at 50% 50%);
   opacity: 1;
-  filter: blur(0px);
   transform: scale(1);
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
-  opacity: 0.65;
-  filter: brightness(0.9) contrast(1.1) saturate(1.2);
+  opacity: 0.75;
+  filter: brightness(0.95) contrast(1.1) saturate(1.25);
 }
 
 [data-theme="light"] .wall-bg-track-wrapper {
-  opacity: 0.88;
-  filter: brightness(0.98) contrast(1.05) saturate(1.15);
+  opacity: 0.92;
+  filter: brightness(1.0) contrast(1.05) saturate(1.15);
 }
 
 .wall-track {
@@ -599,13 +595,11 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.95) 90%);
-  backdrop-filter: blur(3px);
+  background: radial-gradient(circle at 50% 50%, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.85) 90%);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(244,243,239,0.1) 0%, rgba(244,243,239,0.9) 90%);
-  backdrop-filter: blur(2px);
+  background: radial-gradient(circle at 50% 50%, rgba(244,243,239,0.05) 0%, rgba(244,243,239,0.8) 90%);
 }
 
 @media (max-width: 768px) {
@@ -1103,22 +1097,31 @@ function handleEmail(){
 
   let targetScrollY = 0;
   let currentScrollY = 0;
+  let lastScrollY = window.scrollY;
+  let scrollVelocity = 0;
   let isParallaxRunning = false;
 
   function updateParallaxInertia() {
     targetScrollY = window.scrollY;
-    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+    scrollVelocity = targetScrollY - lastScrollY;
+    lastScrollY = targetScrollY;
+    currentScrollY += (targetScrollY - currentScrollY) * 0.1;
 
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
       const parallaxY = -currentScrollY * 0.24;
-      wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
+      const stretch = Math.min(Math.max(1 + Math.abs(scrollVelocity) * 0.0025, 1), 1.12);
+      wrapper.style.transform = `translate3d(0, ${parallaxY.toFixed(2)}px, 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(${1.2 * stretch})`;
     }
 
-    if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
+    if (Math.abs(targetScrollY - currentScrollY) > 0.1 || Math.abs(scrollVelocity) > 0.1) {
+      scrollVelocity *= 0.85;
       requestAnimationFrame(updateParallaxInertia);
     } else {
       isParallaxRunning = false;
+      if (wrapper) {
+        wrapper.style.transform = `translate3d(0, ${(-currentScrollY * 0.24).toFixed(2)}px, 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(1.2)`;
+      }
     }
   }
 
@@ -1132,9 +1135,9 @@ function handleEmail(){
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(buildWallpaperGrid, 2400));
+    document.addEventListener('DOMContentLoaded', () => setTimeout(buildWallpaperGrid, 900));
   } else {
-    setTimeout(buildWallpaperGrid, 2400);
+    setTimeout(buildWallpaperGrid, 900);
   }
 })();
 </script>
