@@ -582,10 +582,14 @@ footer{
   display: block;
 }
 
-/* Pixel-precise seamless loop: each card is 290px + 32px gap = 322px. 14 cards = 4508px. Translate exactly that for a gapless loop. */
+/* Parallel track motion from top-right to bottom-left with zero lateral column drift */
 @keyframes wallScrollDown {
-  0%   { transform: translateY(0); }
-  100% { transform: translateY(-4508px); }
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
 }
 
 .wall-bg-overlay {
@@ -957,7 +961,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v8';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v7';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1033,17 +1037,7 @@ function handleEmail(){
 
     const shuffled = shuffle(urls);
     const trackCount = Math.max(12, Math.ceil(window.innerWidth * 2.5 / 195));
-    // 14 unique items per track → duplicated to 28 for seamless loop
-    // Each card = 290px + 32px gap = 322px. 14 cards = 4508px (matches keyframe).
-    const CARD_H = 290;
-    const GAP = 32;
-    const itemsPerTrack = 14;
-    const loopPixels = itemsPerTrack * (CARD_H + GAP);
-    // Update the animation keyframe pixel value dynamically
-    const styleEl = document.getElementById('wallAnimStyle') || document.createElement('style');
-    styleEl.id = 'wallAnimStyle';
-    styleEl.textContent = `@keyframes wallScrollDown { 0% { transform: translateY(0); } 100% { transform: translateY(-${loopPixels}px); } }`;
-    document.head.appendChild(styleEl);
+    const itemsPerTrack = 8;
 
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
@@ -1062,7 +1056,6 @@ function handleEmail(){
         urlIdx++;
       }
 
-      // Duplicate the exact same set for seamless pixel-perfect loop
       const fullList = [...trackUrls, ...trackUrls];
 
       fullList.forEach(url => {
@@ -1090,18 +1083,22 @@ function handleEmail(){
     });
   }
 
-  // Silky Lerp Physics Scroll Parallax — wallpapers drift with page scroll
+  // Silky Lerp Physics Mouse Scroll Parallax Engine
   let targetScrollY = 0;
   let currentScrollY = 0;
   let isParallaxRunning = false;
 
   function updateParallaxInertia() {
     targetScrollY = window.scrollY;
+    // Fluid lerp physics (0.08 step for smooth inertia)
     currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
-      wrapper.style.setProperty('--parallax-y', `${(currentScrollY * 0.18).toFixed(2)}px`);
+      const parallaxY = -currentScrollY * 0.24;
+      wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
     }
+
     if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
       requestAnimationFrame(updateParallaxInertia);
     } else {
