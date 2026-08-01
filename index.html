@@ -562,7 +562,7 @@ footer{
   will-change: transform;
 }
 
-/* Uniform mobile tall card dimensions with counter-rotation for 100% straight upright images & zero column overlap */
+/* Cards naturally follow the container angle — no counter-rotation so grid tiles with zero diagonal gaps */
 .wall-card {
   width: 175px;
   height: 290px;
@@ -572,8 +572,6 @@ footer{
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
-  transform: rotate(-26deg);
-  transform-origin: center center;
 }
 
 .wall-card img {
@@ -963,7 +961,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v6';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v7';
 
   function shuffle(arr) {
     const a = [...arr];
