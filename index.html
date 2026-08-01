@@ -532,10 +532,10 @@ footer{
 
 .wall-bg-track-wrapper {
   position: absolute;
-  top: -50%;
-  left: -20%;
-  width: 170vw;
-  height: 200vh;
+  top: -60%;
+  left: -30%;
+  width: 220vw;
+  height: 220vh;
   display: flex;
   justify-content: space-around;
   gap: 28px;
@@ -557,13 +557,14 @@ footer{
   display: flex;
   flex-direction: column;
   gap: 28px;
-  animation: wallScrollDiagonal linear infinite;
+  animation: wallScrollDiagonal 52s linear infinite;
   will-change: transform;
 }
 
-/* Mixed aspect ratios per column for zero overlapping and clean grid spacing */
+/* Uniform mobile tall card dimensions for 100% edge-to-edge coverage and zero spacing bugs */
 .wall-card {
-  width: 165px;
+  width: 175px;
+  height: 290px;
   border-radius: var(--r-md);
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
@@ -571,10 +572,6 @@ footer{
   flex-shrink: 0;
   background: var(--bg-card);
 }
-
-.wall-card-tall { height: 285px; } /* Mobile tall 9:16 ratio */
-.wall-card-med  { height: 215px; } /* Standard/Square 3:4 ratio */
-.wall-card-wide { height: 155px; } /* Landscape/Wide 16:9 ratio */
 
 .wall-card img {
   width: 100%;
@@ -963,7 +960,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v4';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v5';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1038,15 +1035,9 @@ function handleEmail(){
     if (!urls || urls.length === 0) return;
 
     const shuffled = shuffle(urls);
-    const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.8 / 185));
+    const trackCount = Math.max(10, Math.ceil(window.innerWidth * 2.2 / 195));
     const itemsPerTrack = 8;
 
-    // Fixed track heights per column (70% tall, 20% med, 10% wide) for zero overlapping and clean 28px gaps!
-    const TRACK_VARIANTS = [
-      'wall-card-tall', 'wall-card-tall', 'wall-card-med', 
-      'wall-card-tall', 'wall-card-tall', 'wall-card-wide', 
-      'wall-card-tall', 'wall-card-tall', 'wall-card-med', 'wall-card-tall'
-    ];
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
 
@@ -1054,11 +1045,10 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
-      const speed = 45 + (t % 5) * 6 + Math.random() * 5;
-      track.style.animationDuration = `${speed}s`;
-      track.style.animationDelay = `-${(t * 12) % 45}s`;
+      // Synchronized duration with staggered position delays for perfect alignment
+      track.style.animationDuration = `52s`;
+      track.style.animationDelay = `-${(t * 7.5) % 52}s`;
 
-      const trackVariant = TRACK_VARIANTS[t % TRACK_VARIANTS.length];
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
         trackUrls.push(shuffled[urlIdx % shuffled.length]);
@@ -1069,7 +1059,7 @@ function handleEmail(){
 
       fullList.forEach(url => {
         const card = document.createElement('div');
-        card.className = `wall-card ${trackVariant}`;
+        card.className = 'wall-card';
 
         const img = document.createElement('img');
         img.src = url;
