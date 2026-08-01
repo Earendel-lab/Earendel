@@ -275,6 +275,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .feature-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
 .feature-icon svg{width:18px;height:18px;}
 
+/* ── Projects Section ── */
 #work{padding-bottom:var(--space-10);}
 .project-header-row{
   display:grid;grid-template-columns:72px 1fr 260px;
@@ -313,6 +314,7 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .project-row:hover::before{left:140%;}
 
+/* ── App Icon in Project Row ── */
 .project-icon-wrap{
   display:flex;
   align-items:center;
@@ -459,6 +461,7 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 .btn-discord{background:#5865f2;color:#fff;border-color:#5865f2;}
 .btn-discord:hover{background:#6672f3;border-color:#6672f3;}
 
+/* Shimmer for contact card buttons */
 .contact-actions .btn::after{
   content:'';
   position:absolute;top:0;left:-60%;width:35%;height:100%;
@@ -500,6 +503,7 @@ footer{
 .project-list{position:relative;padding:0;}
 .project-list-line{display:none;}
 
+/* ── Dynamic Wallpaper Animated Background ── */
 .wall-bg-container {
   position: fixed;
   inset: 0;
@@ -507,15 +511,18 @@ footer{
   overflow: hidden;
   pointer-events: none;
   background-color: var(--bg);
-  will-change: transform, opacity, clip-path;
+  will-change: transform, opacity, clip-path, filter;
   clip-path: circle(0% at 50% 50%);
   opacity: 0;
-  filter: blur(0px);
-  transform: scale(1.05);
-  perspective: 1500px;
-  transition: clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: blur(14px);
+  transform: scale(1.12);
+  transition: clip-path 1.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%);
 }
 
 .wall-bg-track-wrapper {
@@ -527,26 +534,26 @@ footer{
   display: flex;
   justify-content: space-around;
   gap: 32px;
-  transform: translate3d(0, var(--parallax-y, 0px), 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(1.2);
+  transform: translate3d(0, var(--parallax-y, 0px), 0);
   transform-origin: center center;
-  transform-style: preserve-3d;
   will-change: transform;
 }
 
 .wall-bg-container.reveal-active {
   clip-path: circle(150% at 50% 50%);
   opacity: 1;
+  filter: blur(0px);
   transform: scale(1);
 }
 
 [data-theme="dark"] .wall-bg-track-wrapper {
-  opacity: 0.75;
-  filter: brightness(0.95) contrast(1.1) saturate(1.25);
+  opacity: 0.58;
+  filter: brightness(0.88) contrast(1.08) saturate(1.15);
 }
 
 [data-theme="light"] .wall-bg-track-wrapper {
-  opacity: 0.92;
-  filter: brightness(1.0) contrast(1.05) saturate(1.15);
+  opacity: 0.88;
+  filter: brightness(0.98) contrast(1.05) saturate(1.15);
 }
 
 .wall-track {
@@ -558,11 +565,11 @@ footer{
 }
 
 .wall-card {
-  width: 180px;
-  height: 300px;
-  border-radius: var(--r-lg);
+  width: 175px;
+  height: 290px;
+  border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
@@ -595,12 +602,15 @@ footer{
 }
 
 [data-theme="dark"] .wall-bg-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.85) 90%);
+  background: radial-gradient(circle at center, rgba(8, 8, 8, 0.42) 0%, rgba(8, 8, 8, 0.85) 85%);
+  backdrop-filter: blur(1px);
 }
 
 [data-theme="light"] .wall-bg-overlay {
-  background: radial-gradient(circle at 50% 50%, rgba(244,243,239,0.05) 0%, rgba(244,243,239,0.8) 90%);
+  background: radial-gradient(circle at center, rgba(244, 243, 239, 0.15) 0%, rgba(244, 243, 239, 0.58) 85%);
+  backdrop-filter: blur(0.5px);
 }
+
 
 @media (max-width: 768px) {
   .wall-bg-overlay {
@@ -717,6 +727,7 @@ footer{
   <div class="project-list">
     <div class="project-list-line"></div>
 
+    <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-row fade-in fade-in-d2">
       <div class="project-icon-wrap">
         <img src="icons/Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
@@ -725,6 +736,7 @@ footer{
       <span class="project-desc">Minimalist Nothing OS inspired currency converter for Android.</span>
     </a>
 
+    <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-row fade-in fade-in-d3">
       <div class="project-icon-wrap">
         <img src="icons/Flow.png" alt="Flow" class="project-icon-img" loading="lazy">
@@ -733,6 +745,7 @@ footer{
       <span class="project-desc">Focused countdown timer made for deep work sessions.</span>
     </a>
 
+    <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-row fade-in fade-in-d4">
       <div class="project-icon-wrap">
         <img src="icons/Compass.png" alt="Compass" class="project-icon-img" loading="lazy">
@@ -741,6 +754,7 @@ footer{
       <span class="project-desc">Simple, beautiful compass app with a clean minimal interface.</span>
     </a>
 
+    <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="project-row fade-in fade-in-d5">
       <div class="project-icon-wrap">
         <img src="icons/Glyphtorch.png" alt="Glyph Torch" class="project-icon-img" loading="lazy">
@@ -866,6 +880,7 @@ function animateLetters(lineEl, startDelay) {
     setTimeout(() => { letter.classList.add('fill-anim'); }, startDelay + i * 150);
   });
 }
+
 setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 750);
 setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 880);
 
@@ -949,6 +964,7 @@ function handleEmail(){
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
 
+/* ── Dynamic GitHub Wallpaper Background Engine ── */
 (function initWallpaperBackground() {
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
@@ -1013,18 +1029,21 @@ function handleEmail(){
           }
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.warn('GitHub API fetch failed or offline, using local WALL list:', err);
+    }
     return getFallbackWallpapers();
   }
 
+ 
   function preloadAll(urls) {
-    const keepAlive = [];
+    const keepAlive = []; 
     return Promise.all(urls.map(url => {
       const im = new Image();
       keepAlive.push(im);
       im.src = url;
       return im.decode
-        ? im.decode().catch(() => {})
+        ? im.decode().catch(() => {}) 
         : new Promise(resolve => { im.onload = im.onerror = resolve; });
     }));
   }
@@ -1050,13 +1069,16 @@ function handleEmail(){
       const track = document.createElement('div');
       track.className = 'wall-track';
       
+     
       const speeds = [46, 54, 62];
       const speedIdx = t % speeds.length;
       track.style.animationDuration = `${speeds[speedIdx]}s`;
 
+      
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
 
+      
       const offsets = ['0px', '70px', '145px', '215px'];
       track.style.marginTop = offsets[t % offsets.length];
 
@@ -1086,6 +1108,7 @@ function handleEmail(){
 
     container.appendChild(fragment);
 
+    
     requestAnimationFrame(() => {
       if (wallBg) {
         wallBg.classList.add('reveal-active');
@@ -1093,35 +1116,27 @@ function handleEmail(){
     });
   }
 
+  
   const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
   let targetScrollY = 0;
   let currentScrollY = 0;
-  let lastScrollY = window.scrollY;
-  let scrollVelocity = 0;
   let isParallaxRunning = false;
 
   function updateParallaxInertia() {
     targetScrollY = window.scrollY;
-    scrollVelocity = targetScrollY - lastScrollY;
-    lastScrollY = targetScrollY;
-    currentScrollY += (targetScrollY - currentScrollY) * 0.1;
+    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
 
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
       const parallaxY = -currentScrollY * 0.24;
-      const stretch = Math.min(Math.max(1 + Math.abs(scrollVelocity) * 0.0025, 1), 1.12);
-      wrapper.style.transform = `translate3d(0, ${parallaxY.toFixed(2)}px, 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(${1.2 * stretch})`;
+      wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
     }
 
-    if (Math.abs(targetScrollY - currentScrollY) > 0.1 || Math.abs(scrollVelocity) > 0.1) {
-      scrollVelocity *= 0.85;
+    if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
       requestAnimationFrame(updateParallaxInertia);
     } else {
       isParallaxRunning = false;
-      if (wrapper) {
-        wrapper.style.transform = `translate3d(0, ${(-currentScrollY * 0.24).toFixed(2)}px, 0) rotateX(25deg) rotateY(-12deg) rotateZ(-10deg) scale(1.2)`;
-      }
     }
   }
 
@@ -1135,9 +1150,9 @@ function handleEmail(){
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(buildWallpaperGrid, 900));
+    document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
   } else {
-    setTimeout(buildWallpaperGrid, 900);
+    buildWallpaperGrid();
   }
 })();
 </script>
