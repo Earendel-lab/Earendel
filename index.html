@@ -582,14 +582,10 @@ footer{
   display: block;
 }
 
-/* Parallel track motion from top-right to bottom-left with zero lateral column drift */
+/* Pixel-precise seamless loop: each card is 290px + 32px gap = 322px. 14 cards = 4508px. Translate exactly that for a gapless loop. */
 @keyframes wallScrollDown {
-  0% {
-    transform: translateY(-50%);
-  }
-  100% {
-    transform: translateY(0%);
-  }
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(-4508px); }
 }
 
 .wall-bg-overlay {
@@ -961,7 +957,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v7';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v8';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1037,7 +1033,17 @@ function handleEmail(){
 
     const shuffled = shuffle(urls);
     const trackCount = Math.max(12, Math.ceil(window.innerWidth * 2.5 / 195));
-    const itemsPerTrack = 8;
+    // 14 unique items per track → duplicated to 28 for seamless loop
+    // Each card = 290px + 32px gap = 322px. 14 cards = 4508px (matches keyframe).
+    const CARD_H = 290;
+    const GAP = 32;
+    const itemsPerTrack = 14;
+    const loopPixels = itemsPerTrack * (CARD_H + GAP);
+    // Update the animation keyframe pixel value dynamically
+    const styleEl = document.getElementById('wallAnimStyle') || document.createElement('style');
+    styleEl.id = 'wallAnimStyle';
+    styleEl.textContent = `@keyframes wallScrollDown { 0% { transform: translateY(0); } 100% { transform: translateY(-${loopPixels}px); } }`;
+    document.head.appendChild(styleEl);
 
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
@@ -1056,6 +1062,7 @@ function handleEmail(){
         urlIdx++;
       }
 
+      // Duplicate the exact same set for seamless pixel-perfect loop
       const fullList = [...trackUrls, ...trackUrls];
 
       fullList.forEach(url => {
@@ -1084,6 +1091,7 @@ function handleEmail(){
   }
 
   // Silky Lerp Physics Mouse Scroll Parallax Engine
+  // Positive parallaxY = background drifts DOWN when user scrolls down (natural feel)
   let targetScrollY = 0;
   let currentScrollY = 0;
   let isParallaxRunning = false;
@@ -1095,7 +1103,8 @@ function handleEmail(){
 
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
-      const parallaxY = -currentScrollY * 0.24;
+      // Positive: background moves DOWN with scroll = correct natural parallax direction
+      const parallaxY = currentScrollY * 0.18;
       wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
     }
 
