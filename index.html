@@ -574,10 +574,11 @@ footer{
   height: 290px;
   border-radius: var(--r-md);
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
   border: 1px solid var(--border-hi);
   flex-shrink: 0;
   background: var(--bg-card);
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .wall-card img {
@@ -1088,13 +1089,21 @@ function handleEmail(){
       // Cycles through 3 speeds so neighboring columns feel layered
       // rather than a flat, uniform conveyor belt.
       const speeds = [46, 54, 62];
-      track.style.animationDuration = `${speeds[t % speeds.length]}s`;
-      // Alternating tracks get a static vertical offset (half a card's
-      // height + gap) so columns form a staggered, brick-like layout
-      // instead of perfectly aligned rows. This only shifts the starting
-      // position, not the animation phase, so all tracks still move in
-      // lockstep — avoiding the cross-track jump illusion from before.
-      track.style.marginTop = (t % 2 === 0) ? '0px' : '161px';
+      const speedIdx = t % speeds.length;
+      track.style.animationDuration = `${speeds[speedIdx]}s`;
+
+      // Depth cueing: faster/closer columns render slightly larger and
+      // brighter, slower/farther columns slightly smaller and dimmer.
+      // Ties the speed variance to a visual depth cue instead of just
+      // differing speed on its own.
+      const depthScale = [1.05, 1.0, 0.92][speedIdx];
+      const depthOpacity = [1, 0.92, 0.78][speedIdx];
+
+      // Cycles through 4 varied vertical offsets rather than a strict
+      // 2-value alternation, so the staggered layout reads as organic
+      // rather than an obviously repeating pattern.
+      const offsets = ['0px', '70px', '145px', '215px'];
+      track.style.marginTop = offsets[t % offsets.length];
 
       const trackUrls = [];
       for (let i = 0; i < itemsPerTrack; i++) {
@@ -1107,6 +1116,8 @@ function handleEmail(){
       fullList.forEach(url => {
         const card = document.createElement('div');
         card.className = 'wall-card';
+        card.style.transform = `scale(${depthScale})`;
+        card.style.opacity = depthOpacity;
 
         const img = document.createElement('img');
         img.src = url;
