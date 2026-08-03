@@ -573,9 +573,6 @@ footer{
   gap: 32px;
   width: 100%;
   height: 100%;
-  transform: translate3d(0, 0, 0);
-  transform-origin: center center;
-  will-change: transform;
 }
 
 .wall-bg-container.reveal-active {
@@ -1200,6 +1197,9 @@ function handleEmail(){
   }
 
  
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const isSlowConnection = !!(conn && (conn.saveData || ['slow-2g', '2g', '3g'].includes(conn.effectiveType)));
+
   async function buildWallpaperGrid() {
     const container = document.getElementById('wallBgTrackWrapper');
     const wallBg = document.getElementById('wallBgContainer');
@@ -1251,7 +1251,8 @@ function handleEmail(){
         card.style.opacity = '0';
 
         const img = document.createElement('img');
-        img.loading = 'lazy';
+        img.loading = isSlowConnection ? 'lazy' : 'eager';
+        img.fetchPriority = 'low';
         img.decoding = 'async';
         img.alt = '';
         img.onload = () => { card.style.opacity = String(depthOpacity); };
@@ -1277,51 +1278,7 @@ function handleEmail(){
   
   const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-  let parallaxTicking = false;
-  let parallaxPaused = false;
-  let resumeParallaxTimeout = null;
-  const wallWrapper = document.getElementById('wallBgTrackWrapper');
-
-  function updateParallax() {
-    if (wallWrapper) {
-      const parallaxY = -window.scrollY * 0.24;
-      wallWrapper.style.transform = `translate3d(0, ${parallaxY.toFixed(2)}px, 0)`;
-    }
-    parallaxTicking = false;
-  }
-
-  function resumeParallax() {
-    parallaxPaused = false;
-    requestAnimationFrame(updateParallax); // snap to the final resting position
-  }
-
-  // Nav-tab jumps trigger a long native smooth-scroll animation; pausing our
-  // per-frame parallax write during that window removes the main-thread
-  // contention that was causing the exaggerated lag on section jumps.
-  document.querySelectorAll('.nav-a[href^="#"]').forEach(link => {
-    link.addEventListener('click', () => {
-      parallaxPaused = true;
-      clearTimeout(resumeParallaxTimeout);
-      resumeParallaxTimeout = setTimeout(resumeParallax, 1000); // fallback if scrollend never fires
-    });
-  });
-
-  window.addEventListener('scrollend', () => {
-    if (parallaxPaused) {
-      clearTimeout(resumeParallaxTimeout);
-      resumeParallax();
-    }
-  });
-
   if (!isCoarsePointer) {
-    window.addEventListener('scroll', () => {
-      if (parallaxPaused) return;
-      if (!parallaxTicking) {
-        parallaxTicking = true;
-        requestAnimationFrame(updateParallax);
-      }
-    }, { passive: true });
-
     let glowTicking = false;
     let pendingGlowEvent = null;
     let lastGlowCard = null;
