@@ -532,7 +532,7 @@ footer{
 .wall-bg-track-wrapper {
   position: absolute;
   top: -65%;
-  left: -50%;
+  left: -45%;
   width: 250vw;
   height: 250vh;
   display: flex;
@@ -1048,7 +1048,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v7';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v8';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1061,7 +1061,7 @@ function handleEmail(){
 
   function getFallbackWallpapers() {
     const list = [];
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 500; i++) {
       list.push(`WALL/Wall (${i}).jpg`);
     }
     return list;
@@ -1139,7 +1139,11 @@ function handleEmail(){
 
     const shuffled = shuffle(urls);
     const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.7 / 195));
-    const itemsPerTrack = 6;
+
+    // Distribute the FULL pool of wallpapers across the tracks instead of a
+    // fixed 6-per-track slice, so every image gets used and each track's
+    // loop cycle covers most of the library before it repeats.
+    const itemsPerTrack = Math.max(6, Math.ceil(shuffled.length / trackCount));
 
     let urlIdx = 0;
     const fragment = document.createDocumentFragment();
