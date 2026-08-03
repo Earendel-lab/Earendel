@@ -113,6 +113,36 @@ nav{
 
 @media(max-width:768px){nav{padding:0 var(--space-5);}.nav-links{display:none;}}
 
+.menu-btn{
+  display:none;
+  width:34px;height:34px;border-radius:var(--r-full);
+  border:1px solid var(--border-hi);background:transparent;color:var(--ink-2);
+  align-items:center;justify-content:center;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  transition:color var(--speed-fast),border-color var(--speed-fast),background var(--speed-fast);
+}
+.menu-btn:hover{color:var(--ink);background:var(--accent-glow);}
+.menu-btn svg{width:18px;height:18px;}
+.menu-btn .icon-close{display:none;}
+.menu-btn.open .icon-burger{display:none;}
+.menu-btn.open .icon-close{display:block;}
+
+.mobile-menu{
+  position:fixed;top:56px;left:0;right:0;z-index:999;
+  background:var(--nav-bg);border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;padding:var(--space-3) var(--space-5) var(--space-5);
+  gap:2px;
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height 0.38s var(--transition),opacity 0.3s var(--transition);
+}
+.mobile-menu.open{max-height:340px;opacity:1;}
+.mobile-menu .nav-a{padding:14px 6px;font-size:var(--text-sm);border-bottom:1px solid var(--border);border-radius:0;}
+.mobile-menu .nav-a:last-child{border-bottom:none;}
+
+@media(max-width:768px){
+  .menu-btn{display:flex;}
+}
+
 #home{
   min-height:100svh;
   padding:0 var(--space-7);
@@ -696,6 +726,14 @@ footer{
     <a href="#contact"  class="nav-a">Contact</a>
   </div>
   <div class="nav-right">
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">
+      <svg class="icon-burger" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
     <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
       <svg class="icon-moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill="currentColor" d="M20.354 15.354A9 9 0 0 1 8.646 3.646a.75.75 0 0 0-.933-1.03A10.5 10.5 0 1 0 22.5 15.62a.75.75 0 0 0-2.146-.266Z"/>
@@ -716,6 +754,14 @@ footer{
     </button>
   </div>
 </nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home"     class="nav-a">Home</a>
+  <a href="#about"    class="nav-a">Scope</a>
+  <a href="#work"     class="nav-a">Lab</a>
+  <a href="#starshot" class="nav-a">Vision</a>
+  <a href="#contact"  class="nav-a">Contact</a>
+</div>
 
 <section id="home">
   <div class="intro-meta">
@@ -940,8 +986,7 @@ setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 880);
 
 const root = document.documentElement;
 let dark = true;
-document.getElementById('themeBtn').addEventListener('click', () => {
-  dark = !dark;
+document.getElementById('themeBtn').addEventListener('click', () => {  dark = !dark;
   root.classList.add('theme-instant');
   root.setAttribute('data-theme', dark ? 'dark' : 'light');
   void root.offsetHeight;
@@ -949,6 +994,33 @@ document.getElementById('themeBtn').addEventListener('click', () => {
     requestAnimationFrame(() => root.classList.remove('theme-instant'));
   });
 });
+
+(function initMobileMenu(){
+  const menuBtn = document.getElementById('menuBtn');
+  const menu = document.getElementById('mobileMenu');
+  if (!menuBtn || !menu) return;
+
+  function closeMenu(){
+    menuBtn.classList.remove('open');
+    menu.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }
+  function openMenu(){
+    menuBtn.classList.add('open');
+    menu.classList.add('open');
+    menuBtn.setAttribute('aria-expanded', 'true');
+  }
+
+  menuBtn.addEventListener('click', () => {
+    if (menu.classList.contains('open')) closeMenu(); else openMenu();
+  });
+  menu.querySelectorAll('.nav-a').forEach(a => a.addEventListener('click', closeMenu));
+  document.addEventListener('click', e => {
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+      closeMenu();
+    }
+  });
+})();
 
 let cardTicking = false;
 let pendingCardEvent = null;
@@ -1061,19 +1133,23 @@ function handleEmail(){
 
   function getFallbackWallpapers() {
     const list = [];
-    for (let i = 1; i <= 500; i++) {
+    for (let i = 1; i <= 250; i++) {
       list.push(`WALL/Wall (${i}).jpg`);
     }
     return list;
   }
 
   async function fetchWallpaperUrls() {
+    let staleCache = null;
     try {
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         const parsed = JSON.parse(cached);
-        if (parsed.timestamp && Date.now() - parsed.timestamp < 3 * 3600 * 1000 && Array.isArray(parsed.urls) && parsed.urls.length > 0) {
-          return parsed.urls;
+        if (Array.isArray(parsed.urls) && parsed.urls.length > 0) {
+          staleCache = parsed.urls;
+          if (parsed.timestamp && Date.now() - parsed.timestamp < 6 * 3600 * 1000) {
+            return staleCache; // still fresh enough — use immediately, no network call
+          }
         }
       }
     } catch (e) {}
@@ -1109,24 +1185,14 @@ function handleEmail(){
         }
       }
     } catch (err) {
-      console.warn('GitHub API fetch failed or offline, using local WALL list:', err);
+      console.warn('GitHub API fetch failed or offline, falling back:', err);
     }
+    // Live fetch failed — a stale-but-real list beats guessed filenames every time
+    if (staleCache) return staleCache;
     return getFallbackWallpapers();
   }
 
  
-  function preloadAll(urls) {
-    const keepAlive = []; 
-    return Promise.all(urls.map(url => {
-      const im = new Image();
-      keepAlive.push(im);
-      im.src = url;
-      return im.decode
-        ? im.decode().catch(() => {}) 
-        : new Promise(resolve => { im.onload = im.onerror = resolve; });
-    }));
-  }
-
   async function buildWallpaperGrid() {
     const container = document.getElementById('wallBgTrackWrapper');
     const wallBg = document.getElementById('wallBgContainer');
@@ -1134,8 +1200,6 @@ function handleEmail(){
 
     const urls = await fetchWallpaperUrls();
     if (!urls || urls.length === 0) return;
-
-    await preloadAll(urls);
 
     const shuffled = shuffle(urls);
     const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.7 / 195));
@@ -1177,11 +1241,15 @@ function handleEmail(){
         const card = document.createElement('div');
         card.className = 'wall-card';
         card.style.transform = `scale(${depthScale}) translateZ(0)`;
-        card.style.opacity = depthOpacity;
+        card.style.opacity = '0';
 
         const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.alt = '';
+        img.onload = () => { card.style.opacity = String(depthOpacity); };
+        img.onerror = () => { card.remove(); };
         img.src = url;
-        img.alt = 'Background Wallpaper';
         card.appendChild(img);
         track.appendChild(card);
       });
@@ -1255,10 +1323,18 @@ function handleEmail(){
     }, { passive: true });
   }
 
+  function scheduleWallpaperBuild() {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(buildWallpaperGrid, { timeout: 1800 });
+    } else {
+      setTimeout(buildWallpaperGrid, 1000);
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', buildWallpaperGrid);
+    document.addEventListener('DOMContentLoaded', scheduleWallpaperBuild);
   } else {
-    buildWallpaperGrid();
+    scheduleWallpaperBuild();
   }
 })();
 </script>
