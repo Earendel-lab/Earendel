@@ -1120,7 +1120,7 @@ function handleEmail(){
   const GITHUB_USER = 'Earendel-lab';
   const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v8';
+  const CACHE_KEY = 'earendel_wallpaper_urls_v9';
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1133,7 +1133,7 @@ function handleEmail(){
 
   function getFallbackWallpapers() {
     const list = [];
-    for (let i = 1; i <= 250; i++) {
+    for (let i = 1; i <= 280; i++) {
       list.push(`WALL/Wall (${i}).jpg`);
     }
     return list;
@@ -1147,7 +1147,7 @@ function handleEmail(){
         const parsed = JSON.parse(cached);
         if (Array.isArray(parsed.urls) && parsed.urls.length > 0) {
           staleCache = parsed.urls;
-          if (parsed.timestamp && Date.now() - parsed.timestamp < 6 * 3600 * 1000) {
+          if (parsed.timestamp && Date.now() - parsed.timestamp < 1 * 3600 * 1000) {
             return staleCache; // still fresh enough — use immediately, no network call
           }
         }
