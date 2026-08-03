@@ -1270,32 +1270,22 @@ function handleEmail(){
   
   const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-  let targetScrollY = 0;
-  let currentScrollY = 0;
-  let isParallaxRunning = false;
+  let parallaxTicking = false;
 
-  function updateParallaxInertia() {
-    targetScrollY = window.scrollY;
-    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
-
+  function updateParallax() {
     const wrapper = document.getElementById('wallBgTrackWrapper');
     if (wrapper) {
-      const parallaxY = -currentScrollY * 0.24;
+      const parallaxY = -window.scrollY * 0.24;
       wrapper.style.setProperty('--parallax-y', `${parallaxY.toFixed(2)}px`);
     }
-
-    if (Math.abs(targetScrollY - currentScrollY) > 0.1) {
-      requestAnimationFrame(updateParallaxInertia);
-    } else {
-      isParallaxRunning = false;
-    }
+    parallaxTicking = false;
   }
 
   if (!isCoarsePointer) {
     window.addEventListener('scroll', () => {
-      if (!isParallaxRunning) {
-        isParallaxRunning = true;
-        requestAnimationFrame(updateParallaxInertia);
+      if (!parallaxTicking) {
+        parallaxTicking = true;
+        requestAnimationFrame(updateParallax);
       }
     }, { passive: true });
 
