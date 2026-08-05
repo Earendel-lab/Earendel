@@ -243,7 +243,7 @@ nav{
     padding-bottom:var(--space-8);
     padding-top:56px;
     min-height:100svh;
-    justify-content:flex-end;
+    justify-content:center;
   }
   .intro-meta{margin-bottom:var(--space-4);}
   .intro-meta-text,#typewriter{font-size:1.1rem;}
@@ -305,7 +305,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 .feature-icon:hover{border-color:var(--border-hi);color:var(--ink);background:var(--accent-glow);transform:scale(1.08);}
 .feature-icon svg{width:18px;height:18px;}
 
-/* ── Projects Section ── */
 #work{padding-bottom:var(--space-10);}
 .project-header-row{
   display:grid;grid-template-columns:72px 1fr 260px;
@@ -344,7 +343,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .project-row:hover::before{left:140%;}
 
-/* ── App Icon in Project Row ── */
 .project-icon-wrap{
   display:flex;
   align-items:center;
@@ -495,7 +493,6 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
 .btn-github{background:#111111;color:#fff;border-color:#111111;}
 .btn-github:hover{background:#242424;border-color:#242424;}
 
-/* Shimmer for contact card buttons */
 .contact-actions .btn::after{
   content:'';
   position:absolute;top:0;left:-60%;width:35%;height:100%;
@@ -537,7 +534,6 @@ footer{
 .project-list{position:relative;padding:0;}
 .project-list-line{display:none;}
 
-/* ── Dynamic Wallpaper Animated Background ── */
 .wall-bg-container {
   position: fixed;
   inset: 0;
@@ -669,7 +665,6 @@ footer{
     radial-gradient(circle at center, rgba(244, 243, 239, 0.105) 0%, rgba(244, 243, 239, 0.406) 85%);
 }
 
-/* ── Ambient cursor spotlight (global, subtle, desktop only) ── */
 #cursorSpotlight{
   position:fixed;inset:0;z-index:5;pointer-events:none;
   opacity:0;transition:opacity 0.4s ease;
@@ -684,7 +679,6 @@ footer{
 }
 @media(max-width:768px){#cursorSpotlight{display:none;}}
 
-/* ── Project row hover reveal ── */
 .project-icon-wrap,.project-name,.project-desc{position:relative;z-index:2;}
 .project-row::after{
   content:'';position:absolute;inset:0;z-index:0;
@@ -831,7 +825,6 @@ footer{
   <div class="project-list">
     <div class="project-list-line"></div>
 
-    <!-- Currency -->
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-row fade-in fade-in-d2">
       <div class="project-icon-wrap">
         <img src="icons/Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
@@ -840,7 +833,6 @@ footer{
       <span class="project-desc">Minimalist Nothing OS inspired currency converter for Android.</span>
     </a>
 
-    <!-- Flow -->
     <a href="https://github.com/Earendel-lab/Flow" target="_blank" class="project-row fade-in fade-in-d3">
       <div class="project-icon-wrap">
         <img src="icons/Flow.png" alt="Flow" class="project-icon-img" loading="lazy">
@@ -849,7 +841,6 @@ footer{
       <span class="project-desc">Focused countdown timer made for deep work sessions.</span>
     </a>
 
-    <!-- Compass -->
     <a href="https://github.com/Earendel-lab/Compass" target="_blank" class="project-row fade-in fade-in-d4">
       <div class="project-icon-wrap">
         <img src="icons/Compass.png" alt="Compass" class="project-icon-img" loading="lazy">
@@ -858,7 +849,6 @@ footer{
       <span class="project-desc">Simple, beautiful compass app with a clean minimal interface.</span>
     </a>
 
-    <!-- Glyph Torch -->
     <a href="https://github.com/Earendel-lab/GlyphTorch" target="_blank" class="project-row fade-in fade-in-d5">
       <div class="project-icon-wrap">
         <img src="icons/Glyphtorch.png" alt="Glyph Torch" class="project-icon-img" loading="lazy">
@@ -1119,7 +1109,6 @@ function handleEmail(){
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
 
-/* ── Local Wallpaper Background Engine (forced, no network) ── */
 (function initWallpaperBackground() {
   const FOLDER_NAME = 'WALL';
   const WALLPAPER_COUNT = 253;
@@ -1155,9 +1144,6 @@ function handleEmail(){
     const shuffled = shuffle(urls);
     const trackCount = Math.max(8, Math.ceil(window.innerWidth * 1.7 / 195));
 
-    // Distribute the FULL pool of wallpapers across the tracks instead of a
-    // fixed 6-per-track slice, so every image gets used and each track's
-    // loop cycle covers most of the library before it repeats.
     const itemsPerTrack = Math.max(6, Math.ceil(shuffled.length / trackCount));
 
     let urlIdx = 0;
