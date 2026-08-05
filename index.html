@@ -573,9 +573,6 @@ footer{
   gap: 32px;
   width: 100%;
   height: 100%;
-  transform: translate3d(0, 0, 0);
-  transform-origin: center center;
-  will-change: transform;
 }
 
 .wall-bg-container.reveal-active {
@@ -1122,12 +1119,10 @@ function handleEmail(){
   setTimeout(()=>{t.classList.remove('show');window.location.href='mailto:'+m;},1600);
 }
 
-/* ── Dynamic GitHub Wallpaper Background Engine ── */
+/* ── Local Wallpaper Background Engine (forced, no network) ── */
 (function initWallpaperBackground() {
-  const GITHUB_USER = 'Earendel-lab';
-  const GITHUB_REPO = 'Portfolio';
   const FOLDER_NAME = 'WALL';
-  const CACHE_KEY = 'earendel_wallpaper_urls_v9';
+  const WALLPAPER_COUNT = 253;
 
   function shuffle(arr) {
     const a = [...arr];
@@ -1138,74 +1133,23 @@ function handleEmail(){
     return a;
   }
 
-  function getFallbackWallpapers() {
+  function getWallpapers() {
     const list = [];
-    for (let i = 1; i <= 280; i++) {
-      list.push(`WALL/Wall (${i}).jpg`);
+    for (let i = 1; i <= WALLPAPER_COUNT; i++) {
+      list.push(`${FOLDER_NAME}/${encodeURIComponent(`Wall (${i}).webp`)}`);
     }
     return list;
   }
 
-  async function fetchWallpaperUrls() {
-    let staleCache = null;
-    try {
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        if (Array.isArray(parsed.urls) && parsed.urls.length > 0) {
-          staleCache = parsed.urls;
-          if (parsed.timestamp && Date.now() - parsed.timestamp < 1 * 3600 * 1000) {
-            return staleCache; // still fresh enough — use immediately, no network call
-          }
-        }
-      }
-    } catch (e) {}
+  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  const isSlowConnection = !!(conn && (conn.saveData || ['slow-2g', '2g', '3g'].includes(conn.effectiveType)));
 
-    let user = GITHUB_USER;
-    let repo = GITHUB_REPO;
-
-    if (window.location.hostname.endsWith('.github.io')) {
-      user = window.location.hostname.split('.')[0];
-      const pathParts = window.location.pathname.split('/').filter(Boolean);
-      if (pathParts.length > 0) {
-        repo = pathParts[0];
-      }
-    }
-
-    const apiUrl = `https://api.github.com/repos/${user}/${repo}/contents/${FOLDER_NAME}`;
-
-    try {
-      const res = await fetch(apiUrl);
-      if (res.ok) {
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          const imageFiles = data.filter(file =>
-            file.type === 'file' && /\.(jpg|jpeg|png|webp|avif|gif)$/i.test(file.name)
-          );
-          if (imageFiles.length > 0) {
-            const urls = imageFiles.map(f => `${FOLDER_NAME}/${encodeURIComponent(f.name)}`);
-            try {
-              localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), urls }));
-            } catch (e) {}
-            return urls;
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('GitHub API fetch failed or offline, falling back:', err);
-    }
-    // Live fetch failed — a stale-but-real list beats guessed filenames every time
-    if (staleCache) return staleCache;
-    return getFallbackWallpapers();
-  }
-
- 
-  async function buildWallpaperGrid() {
+  function buildWallpaperGrid() {
     const container = document.getElementById('wallBgTrackWrapper');
     const wallBg = document.getElementById('wallBgContainer');
     if (!container) return;
 
-    const urls = await fetchWallpaperUrls();
+    const urls = getWallpapers();
     if (!urls || urls.length === 0) return;
 
     const shuffled = shuffle(urls);
@@ -1251,7 +1195,8 @@ function handleEmail(){
         card.style.opacity = '0';
 
         const img = document.createElement('img');
-        img.loading = 'lazy';
+        img.loading = isSlowConnection ? 'lazy' : 'eager';
+        img.fetchPriority = 'low';
         img.decoding = 'async';
         img.alt = '';
         img.onload = () => { card.style.opacity = String(depthOpacity); };
@@ -1277,51 +1222,7 @@ function handleEmail(){
   
   const isCoarsePointer = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
-  let parallaxTicking = false;
-  let parallaxPaused = false;
-  let resumeParallaxTimeout = null;
-  const wallWrapper = document.getElementById('wallBgTrackWrapper');
-
-  function updateParallax() {
-    if (wallWrapper) {
-      const parallaxY = -window.scrollY * 0.24;
-      wallWrapper.style.transform = `translate3d(0, ${parallaxY.toFixed(2)}px, 0)`;
-    }
-    parallaxTicking = false;
-  }
-
-  function resumeParallax() {
-    parallaxPaused = false;
-    requestAnimationFrame(updateParallax); // snap to the final resting position
-  }
-
-  // Nav-tab jumps trigger a long native smooth-scroll animation; pausing our
-  // per-frame parallax write during that window removes the main-thread
-  // contention that was causing the exaggerated lag on section jumps.
-  document.querySelectorAll('.nav-a[href^="#"]').forEach(link => {
-    link.addEventListener('click', () => {
-      parallaxPaused = true;
-      clearTimeout(resumeParallaxTimeout);
-      resumeParallaxTimeout = setTimeout(resumeParallax, 1000); // fallback if scrollend never fires
-    });
-  });
-
-  window.addEventListener('scrollend', () => {
-    if (parallaxPaused) {
-      clearTimeout(resumeParallaxTimeout);
-      resumeParallax();
-    }
-  });
-
   if (!isCoarsePointer) {
-    window.addEventListener('scroll', () => {
-      if (parallaxPaused) return;
-      if (!parallaxTicking) {
-        parallaxTicking = true;
-        requestAnimationFrame(updateParallax);
-      }
-    }, { passive: true });
-
     let glowTicking = false;
     let pendingGlowEvent = null;
     let lastGlowCard = null;
