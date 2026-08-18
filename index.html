@@ -629,16 +629,11 @@ footer{
 }
 
 .wall-card img {
-  position: absolute;
-  top: -20%;
-  left: 0;
   width: 100%;
-  height: 140%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  transform: translateY(calc(var(--wall-shift, 0px) * var(--depth-mult, 1)));
-  will-change: transform;
 }
 
 @keyframes wallScrollDown {
@@ -1174,8 +1169,6 @@ function handleEmail(){
       
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
-      const depthParallax = [1.35, 1.0, 0.65][speedIdx];
-      track.style.setProperty('--depth-mult', depthParallax);
 
       
       const offsets = ['0px', '70px', '145px', '215px'];
@@ -1261,38 +1254,6 @@ function handleEmail(){
   } else {
     scheduleWallpaperBuild();
   }
-
-  
-  function initWallpaperParallax() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const AMPLITUDE = 42;
-    const PERIOD = 700;
-    const root = document.documentElement;
-    let ticking = false;
-
-    function triangleWave(x, period) {
-      const t = ((x % period) + period) % period;
-      const half = period / 2;
-      const tri = t < half ? t : period - t;
-      return (tri / half) * 2 - 1;
-    }
-
-    function update() {
-      const y = window.scrollY || window.pageYOffset || 0;
-      const shift = triangleWave(y, PERIOD) * AMPLITUDE;
-      root.style.setProperty('--wall-shift', shift.toFixed(1) + 'px');
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) { requestAnimationFrame(update); ticking = true; }
-    }, { passive: true });
-
-    update();
-  }
-
-  initWallpaperParallax();
 })();
 </script>
 </body>
