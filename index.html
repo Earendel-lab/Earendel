@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<!--
+  Finally someone who checked the code.
+
+Riddle: I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?
+-->
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
@@ -659,16 +664,11 @@ footer{
 }
 
 .wall-card img {
-  position: absolute;
-  top: -25%;
-  left: 0;
   width: 100%;
-  height: 150%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  transform: translateY(calc(var(--wall-shift, 0px) * var(--depth-mult, 1)));
-  will-change: transform;
 }
 
 @keyframes wallScrollDown {
@@ -1098,14 +1098,19 @@ document.querySelectorAll('.btn').forEach(btn => {
 
 const bar = document.getElementById('progress');
 let scrollTicking = false;
-function updateProgress(){
+let scrollDirection = 'down';
+let lastScrollY = window.scrollY || 0;
+
+function onScrollFrame(){
   const s = document.documentElement.scrollTop;
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   bar.style.transform = `scaleX(${h > 0 ? s / h : 0})`;
+  scrollDirection = s > lastScrollY ? 'down' : 'up';
+  lastScrollY = s;
   scrollTicking = false;
 }
 window.addEventListener('scroll', () => {
-  if (!scrollTicking) { requestAnimationFrame(updateProgress); scrollTicking = true; }
+  if (!scrollTicking) { requestAnimationFrame(onScrollFrame); scrollTicking = true; }
 }, {passive:true});
 
 function wrapWordsForReveal(el){
@@ -1132,14 +1137,6 @@ function wrapWordsForReveal(el){
   walk(el);
 }
 document.querySelectorAll('.text-reveal').forEach(wrapWordsForReveal);
-
-let scrollDirection = 'down';
-let lastScrollY = window.scrollY || 0;
-window.addEventListener('scroll', () => {
-  const y = window.scrollY || 0;
-  scrollDirection = y > lastScrollY ? 'down' : 'up';
-  lastScrollY = y;
-}, {passive:true});
 
 const io = new IntersectionObserver(entries => {
   entries.forEach(e => {
@@ -1243,8 +1240,6 @@ function handleEmail(){
       
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
-      const depthParallax = [1.3, 1.0, 0.6][speedIdx];
-      track.style.setProperty('--depth-mult', depthParallax);
 
       
       const offsets = ['0px', '70px', '145px', '215px'];
@@ -1330,33 +1325,6 @@ function handleEmail(){
   } else {
     scheduleWallpaperBuild();
   }
-
-  
-  function initWallpaperParallax() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    const AMPLITUDE = 50; // px of reveal for a depth-mult of 1, spread across the WHOLE page
-    const root = document.documentElement;
-    let ticking = false;
-
-    function update() {
-      const y = window.scrollY || window.pageYOffset || 0;
-      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      const progress = Math.min(1, y / maxScroll);
-      const shift = -(progress * AMPLITUDE);
-      root.style.setProperty('--wall-shift', shift.toFixed(1) + 'px');
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) { requestAnimationFrame(update); ticking = true; }
-    }, { passive: true });
-    window.addEventListener('resize', update, { passive: true });
-
-    update();
-  }
-
-  initWallpaperParallax();
 })();
 </script>
 </body>
