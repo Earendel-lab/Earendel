@@ -204,6 +204,14 @@ nav{
   line-height:0.9;
   letter-spacing:var(--tracking-tight);
   position:relative;
+  opacity:0;
+  transform:translateX(-7px);
+  transition:opacity .5s var(--transition),transform .5s var(--transition);
+  will-change:opacity,transform;
+}
+.intro-letter.letter-in{
+  opacity:1;
+  transform:translateX(0);
 }
 .intro-letter::before{
   content:attr(data-char);
@@ -217,7 +225,7 @@ nav{
   pointer-events:none;
 }
 .intro-letter.fill-anim::before{
-  animation:letterFill 0.65s var(--transition) forwards;
+  animation:letterFill 0.6s var(--transition) forwards;
 }
 @keyframes letterFill{
   0%  {transform:scaleX(0);opacity:0.3;}
@@ -268,9 +276,27 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   margin-bottom:var(--space-7);transition:color var(--speed-slow);
 }
 
-.fade-in{opacity:0;transform:translateY(20px);transition:opacity .65s var(--transition),transform .65s var(--transition);}
-.fade-in.on{opacity:1;transform:translateY(0);}
+.fade-in{
+  opacity:0;
+  transform:translateY(var(--fade-offset,24px)) scale(var(--fade-scale,0.985));
+  filter:blur(var(--fade-blur,7px));
+  transition:opacity .92s var(--transition),transform .92s var(--transition),filter .92s var(--transition);
+}
+.fade-in.animating:not(.text-reveal){will-change:opacity,transform,filter;}
+.fade-in.on{opacity:1;transform:translateY(0) scale(1);filter:blur(0px);}
 .fade-in-d1{transition-delay:.07s;}.fade-in-d2{transition-delay:.14s;}.fade-in-d3{transition-delay:.21s;}.fade-in-d4{transition-delay:.28s;}
+
+.fade-in.text-reveal{opacity:1;transform:none;filter:none;transition:none;}
+.text-reveal .rword{
+  display:inline-block;
+  opacity:0;
+  transform:translateY(var(--fade-offset,16px)) scale(0.98);
+  filter:blur(6px);
+  transition:opacity .62s var(--transition),transform .62s var(--transition),filter .62s var(--transition);
+  transition-delay:var(--w-delay,0s);
+}
+.text-reveal .rword.rw-animating{will-change:opacity,transform,filter;}
+.text-reveal.on .rword{opacity:1;transform:translateY(0) scale(1);filter:blur(0px);}
 
 #about{padding-top:var(--space-10);}
 .feature-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-rows:auto;gap:10px;}
@@ -461,6 +487,10 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
   background:linear-gradient(90deg,var(--ink-2),var(--ink-3));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
+.vision-quote em .rword{
+  background:linear-gradient(90deg,var(--ink-2),var(--ink-3));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 
 #contact{padding:var(--space-10) var(--space-7);}
 .contact-grid{display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--space-8);}
@@ -629,11 +659,16 @@ footer{
 }
 
 .wall-card img {
+  position: absolute;
+  top: -25%;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 150%;
   object-fit: cover;
   object-position: center;
   display: block;
+  transform: translateY(calc(var(--wall-shift, 0px) * var(--depth-mult, 1)));
+  will-change: transform;
 }
 
 @keyframes wallScrollDown {
@@ -665,20 +700,6 @@ footer{
     radial-gradient(circle at center, rgba(244, 243, 239, 0.105) 0%, rgba(244, 243, 239, 0.406) 85%);
 }
 
-#cursorSpotlight{
-  position:fixed;inset:0;z-index:5;pointer-events:none;
-  opacity:0;transition:opacity 0.4s ease;
-  mix-blend-mode:soft-light;
-}
-#cursorSpotlight.active{opacity:1;}
-[data-theme="dark"] #cursorSpotlight{
-  background:radial-gradient(560px circle at var(--sx,50%) var(--sy,50%), rgba(255,255,255,0.10), transparent 70%);
-}
-[data-theme="light"] #cursorSpotlight{
-  background:radial-gradient(560px circle at var(--sx,50%) var(--sy,50%), rgba(0,0,0,0.07), transparent 70%);
-}
-@media(max-width:768px){#cursorSpotlight{display:none;}}
-
 .project-icon-wrap,.project-name,.project-desc{position:relative;z-index:2;}
 .project-row::after{
   content:'';position:absolute;inset:0;z-index:0;
@@ -706,7 +727,6 @@ footer{
   <div class="wall-bg-overlay"></div>
 </div>
 
-<div id="cursorSpotlight"></div>
 
 <div id="progress"></div>
 <div id="toast">✓ Email copied to clipboard</div>
@@ -929,8 +949,11 @@ footer{
 <section id="starshot">
   <div class="vision-inner">
   <h2 class="sec-h2 fade-in fade-in-d1">Project Starshot</h2>
-    <p class="vision-quote fade-in fade-in-d1">
-      Space has fascinated me for as long as I can remember. Watching <em>Project Starshot</em> become reality would be incredible, and I'd love to see what it discovers one day.
+    <p class="vision-quote fade-in fade-in-d1 text-reveal">
+      Space has always been a thing for me.<br>
+      It would be incredible to see<br>
+      <em>Project Starshot</em> actually happen.<br>
+      I just want to know what it finds out there.
     </p>
   </div>
 </section>
@@ -939,7 +962,7 @@ footer{
   <div class="contact-grid">
     <div>
       <div class="contact-title fade-in fade-in-d1">Let's<br>Talk.</div>
-      <p class="contact-sub fade-in fade-in-d2">If you're building something interesting or need another pair of eyes for testing, feel free to get in touch.</p>
+      <p class="contact-sub fade-in fade-in-d2 text-reveal">If you're building something interesting or need another pair of eyes for testing, feel free to get in touch.</p>
     </div>
     <div class="contact-actions fade-in fade-in-d2">
       <button class="btn btn-email" onclick="handleEmail()">Email Me</button>
@@ -976,6 +999,13 @@ function buildLetterLine(el, text) {
 buildLetterLine(document.getElementById('heroLine1'), 'QA');
 buildLetterLine(document.getElementById('heroLine2'), 'Tester');
 
+function revealOutline(lineEl, startDelay) {
+  const letters = lineEl.querySelectorAll('.intro-letter');
+  letters.forEach((letter, i) => {
+    setTimeout(() => { letter.classList.add('letter-in'); }, startDelay + i * 40);
+  });
+}
+
 function animateLetters(lineEl, startDelay) {
   const letters = lineEl.querySelectorAll('.intro-letter');
   letters.forEach((letter, i) => {
@@ -983,8 +1013,21 @@ function animateLetters(lineEl, startDelay) {
   });
 }
 
-setTimeout(() => animateLetters(document.getElementById('heroLine1'), 0), 750);
-setTimeout(() => animateLetters(document.getElementById('heroLine2'), 0), 880);
+function revealHero(){
+  const line1 = document.getElementById('heroLine1');
+  const line2 = document.getElementById('heroLine2');
+  setTimeout(() => revealOutline(line1, 0), 480);
+  setTimeout(() => animateLetters(line1, 0), 750);
+  setTimeout(() => revealOutline(line2, 0), 610);
+  setTimeout(() => animateLetters(line2, 0), 880);
+}
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.load("400 1em 'Bebas Neue'").catch(() => {});
+  document.fonts.ready.then(revealHero).catch(revealHero);
+} else {
+  revealHero();
+}
 
 const root = document.documentElement;
 let dark = true;
@@ -1053,31 +1096,6 @@ document.querySelectorAll('.btn').forEach(btn => {
   btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
 });
 
-(function initCursorSpotlight(){
-  const isCoarse = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-  if (isCoarse) return;
-  const spotlight = document.getElementById('cursorSpotlight');
-  if (!spotlight) return;
-  let ticking = false;
-  let pending = null;
-  document.addEventListener('mousemove', e => {
-    pending = e;
-    spotlight.classList.add('active');
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        if (pending) {
-          spotlight.style.setProperty('--sx', pending.clientX + 'px');
-          spotlight.style.setProperty('--sy', pending.clientY + 'px');
-          pending = null;
-        }
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-  document.addEventListener('mouseleave', () => spotlight.classList.remove('active'));
-})();
-
 const bar = document.getElementById('progress');
 let scrollTicking = false;
 function updateProgress(){
@@ -1090,10 +1108,66 @@ window.addEventListener('scroll', () => {
   if (!scrollTicking) { requestAnimationFrame(updateProgress); scrollTicking = true; }
 }, {passive:true});
 
+function wrapWordsForReveal(el){
+  let i = 0;
+  function walk(node){
+    Array.from(node.childNodes).forEach(child => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(token => {
+          if (token.trim() === '') { frag.appendChild(document.createTextNode(token)); return; }
+          const span = document.createElement('span');
+          span.className = 'rword';
+          span.textContent = token;
+          span.style.setProperty('--w-delay', (i * 0.045).toFixed(3) + 's');
+          i++;
+          frag.appendChild(span);
+        });
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        walk(child);
+      }
+    });
+  }
+  walk(el);
+}
+document.querySelectorAll('.text-reveal').forEach(wrapWordsForReveal);
+
+let scrollDirection = 'down';
+let lastScrollY = window.scrollY || 0;
+window.addEventListener('scroll', () => {
+  const y = window.scrollY || 0;
+  scrollDirection = y > lastScrollY ? 'down' : 'up';
+  lastScrollY = y;
+}, {passive:true});
+
 const io = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);} });
-},{threshold:0.08});
-document.querySelectorAll('.fade-in').forEach(el => io.observe(el));
+  entries.forEach(e => {
+    const el = e.target;
+    const words = el.classList.contains('text-reveal') ? el.querySelectorAll('.rword') : null;
+    if (e.isIntersecting) {
+      el.style.setProperty('--fade-offset', scrollDirection === 'up' ? '-24px' : '24px');
+      el.classList.add('animating');
+      el.classList.add('on');
+      if (words) words.forEach(w => w.classList.add('rw-animating'));
+    } else {
+      el.classList.add('animating');
+      el.classList.remove('on');
+      if (words) words.forEach(w => w.classList.add('rw-animating'));
+    }
+  });
+}, {threshold:0.12, rootMargin:'0px 0px -6% 0px'});
+document.querySelectorAll('.fade-in').forEach(el => {
+  el.addEventListener('transitionend', () => el.classList.remove('animating'));
+  if (el.classList.contains('text-reveal')) {
+    el.addEventListener('transitionend', e => {
+      if (e.target.classList && e.target.classList.contains('rword')) {
+        e.target.classList.remove('rw-animating');
+      }
+    });
+  }
+  io.observe(el);
+});
 
 const words=['DJ','Earendel'];
 const tw=document.getElementById('typewriter');
@@ -1169,6 +1243,8 @@ function handleEmail(){
       
       const depthScale = [1.05, 1.0, 0.92][speedIdx];
       const depthOpacity = [1, 0.92, 0.78][speedIdx];
+      const depthParallax = [1.3, 1.0, 0.6][speedIdx];
+      track.style.setProperty('--depth-mult', depthParallax);
 
       
       const offsets = ['0px', '70px', '145px', '215px'];
@@ -1254,6 +1330,33 @@ function handleEmail(){
   } else {
     scheduleWallpaperBuild();
   }
+
+  
+  function initWallpaperParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const AMPLITUDE = 50; // px of reveal for a depth-mult of 1, spread across the WHOLE page
+    const root = document.documentElement;
+    let ticking = false;
+
+    function update() {
+      const y = window.scrollY || window.pageYOffset || 0;
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      const progress = Math.min(1, y / maxScroll);
+      const shift = -(progress * AMPLITUDE);
+      root.style.setProperty('--wall-shift', shift.toFixed(1) + 'px');
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+
+    update();
+  }
+
+  initWallpaperParallax();
 })();
 </script>
 </body>
