@@ -2,7 +2,7 @@
 <!--
   Finally someone who checked the code.
 
-Riddle for you: I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?
+Riddle: I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?
 -->
 <html lang="en" data-theme="dark">
 <head>
@@ -311,12 +311,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   transition:background var(--speed-mid);
 }
 .feature-card:hover{background:var(--bg-card2);}
-.feature-card::after{
-  content:'';position:absolute;inset:0;border-radius:var(--r-xl);
-  background:radial-gradient(500px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.045),transparent 45%);
-  opacity:0;transition:opacity 0.4s;pointer-events:none;
-}
-.feature-card:hover::after{opacity:1;}
 .feature-wide{grid-column:span 7;}  .feature-med{grid-column:span 5;}  .feature-half{grid-column:3 / 11;}
 .feature-med{grid-column:span 5;}
 .feature-half{grid-column:1 / -1;}@media(max-width:1024px){.feature-wide,.feature-med,.feature-half{grid-column:span 12;}}
@@ -449,12 +443,6 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   position:relative;overflow:hidden;cursor:default;
   transition:background 0.3s;
 }
-.tech-item::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(90px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.08),transparent 70%);
-  opacity:0;transition:opacity 0.35s;pointer-events:none;
-}
-.tech-item:hover::before{opacity:1;}
 .tech-item::after{
   content:'';position:absolute;bottom:0;left:15%;right:15%;height:1px;
   background:linear-gradient(90deg,transparent,var(--border-hi),transparent);
@@ -502,6 +490,30 @@ img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
     backdrop-filter:none !important;
     -webkit-backdrop-filter:none !important;
     border:none;outline:none;
+  }
+}
+
+/* Contact buttons — frosted glass, desktop only */
+@media(min-width:769px){
+  .contact-actions .btn{
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+  }
+  .btn-solid{background:color-mix(in srgb, var(--ink) 62%, transparent);}
+  .btn-solid:hover{background:color-mix(in srgb, var(--ink) 72%, transparent);}
+  .btn-ghost{background:rgba(255,255,255,0.04);}
+  [data-theme="light"] .btn-ghost{background:rgba(0,0,0,0.03);}
+  .btn-discord{background:rgba(88,101,242,0.55);}
+  .btn-discord:hover{background:rgba(102,114,243,0.65);}
+  .btn-email{background:rgba(66,133,244,0.55);}
+  .btn-email:hover{background:rgba(90,149,245,0.65);}
+  .btn-github{background:rgba(17,17,17,0.55);}
+  .btn-github:hover{background:rgba(36,36,36,0.65);}
+}
+@media(max-width:768px){
+  .contact-actions .btn{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
   }
 }
 
@@ -727,12 +739,6 @@ footer{
 }
 
 .project-icon-wrap,.project-name,.project-desc{position:relative;z-index:2;}
-.project-row::after{
-  content:'';position:absolute;inset:0;z-index:0;
-  opacity:0;background:radial-gradient(280px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,0.05),transparent 60%);
-  transition:opacity 0.4s ease;pointer-events:none;
-}
-.project-row:hover::after{opacity:1;}
 .project-icon-img{
   transition:transform var(--speed-mid) var(--transition),filter var(--speed-mid) var(--transition);
 }
