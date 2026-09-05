@@ -2,7 +2,7 @@
 <!--
   Finally someone who checked the code.
 
-Riddle: I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?
+Riddle for you: I speak without a mouth and hear without ears. I have no body, but I come alive with the wind. What am I?
 -->
 <html lang="en" data-theme="dark">
 <head>
@@ -478,6 +478,32 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
 }
 .tech-item:hover span{color:var(--ink);}
 img.si-icon{display:block;width:56px;height:56px;object-fit:contain;}
+
+/* Gaussian blur cards — desktop only, no borders/outline */
+@media(min-width:769px){
+  .feature-card,.project-row,.tech-item{
+    background:rgba(255,255,255,0.035);
+    backdrop-filter:blur(22px) saturate(150%);
+    -webkit-backdrop-filter:blur(22px) saturate(150%);
+    border:none;outline:none;
+  }
+  .feature-card:hover,.project-row:hover,.tech-item:hover{
+    background:rgba(255,255,255,0.06);
+  }
+  [data-theme="light"] .feature-card,[data-theme="light"] .project-row,[data-theme="light"] .tech-item{
+    background:rgba(0,0,0,0.03);
+  }
+  [data-theme="light"] .feature-card:hover,[data-theme="light"] .project-row:hover,[data-theme="light"] .tech-item:hover{
+    background:rgba(0,0,0,0.05);
+  }
+}
+@media(max-width:768px){
+  .feature-card,.project-row,.tech-item{
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    border:none;outline:none;
+  }
+}
 
 #starshot{padding:var(--space-10) var(--space-7);display:flex;align-items:center;min-height:68vh;}
 .vision-inner{max-width:860px;}
