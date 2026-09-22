@@ -311,9 +311,10 @@ section{padding:var(--space-10) var(--space-7);max-width:1600px;margin:0 auto;wi
   transition:background var(--speed-mid);
 }
 .feature-card:hover{background:var(--bg-card2);}
-.feature-wide{grid-column:span 7;}  .feature-med{grid-column:span 5;}  .feature-half{grid-column:3 / 11;}
+.feature-wide{grid-column:span 7;}
 .feature-med{grid-column:span 5;}
-.feature-half{grid-column:1 / -1;}@media(max-width:1024px){.feature-wide,.feature-med,.feature-half{grid-column:span 12;}}
+.feature-half{grid-column:1 / -1;}
+@media(max-width:1024px){.feature-wide,.feature-med,.feature-half{grid-column:span 12;}}
 @media(min-width:1025px) and (max-width:1280px){.feature-wide{grid-column:span 8;}.feature-med{grid-column:span 4;}}
 
 .feature-label{font-family:'Geist Mono',monospace;font-size:var(--text-2xs);color:var(--ink-2);letter-spacing:var(--tracking-wider);text-transform:uppercase;margin-bottom:var(--space-3);position:relative;z-index:1;}
@@ -843,11 +844,6 @@ footer{
     </div>
 
     <div class="feature-card feature-med fade-in fade-in-d2">
-      <div class="feature-title">Documentation</div>
-      <p class="feature-body">Clear documentation makes a project feel complete, so I spend time improving it.</p>
-    </div>
-
-    <div class="feature-card feature-half fade-in fade-in-d3">
       <div class="feature-title">Icon Designing</div>
       <p class="feature-body">I make clean, minimal icons that fit naturally with the app they are made for.</p>
       <div class="feature-icon-row">
@@ -861,6 +857,11 @@ footer{
           </svg>
         </a>
       </div>
+    </div>
+
+    <div class="feature-card feature-half fade-in fade-in-d3">
+      <div class="feature-title">App Development</div>
+      <p class="feature-body">I build minimal, clean, and simple utility apps that solve real problems and are genuinely useful in everyday life.</p>
     </div>
   </div>
 </section>
@@ -876,7 +877,15 @@ footer{
 
   <div class="project-list">
     <div class="project-list-line"></div>
-
+    
+    <a href="https://github.com/Earendel-lab/Tapbar" target="_blank" class="project-row fade-in fade-in-d2">
+      <div class="project-icon-wrap">
+        <img src="icons/Tapbar.png" alt="Tapbar" class="project-icon-img" loading="lazy">
+      </div>
+      <span class="project-name">Tapbar<span class="project-tag">Utility</span></span>
+      <span class="project-desc">Simple app to launch any app from the status bar or anywhere on your screen.</span>
+    </a>
+    
     <a href="https://github.com/Earendel-lab/Currency" target="_blank" class="project-row fade-in fade-in-d2">
       <div class="project-icon-wrap">
         <img src="icons/Currency.png" alt="Currency" class="project-icon-img" loading="lazy">
